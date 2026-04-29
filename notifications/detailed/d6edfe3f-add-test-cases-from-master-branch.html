@@ -1,0 +1,844 @@
+<!doctype html><html><head><meta charset="utf-8"><title>d6edfe3f — Add Test Cases from master branch</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add Test Cases from master branch <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>d6edfe3f367961e2fac82036e7fec89e6d0397f3</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-29T12:55:05+05:30</td></tr><tr><td>Diff</td><td>+706 / -0 across 15 file(s)</td></tr><tr><td>Buckets</td><td>auth, config, feature, messaging, tests</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (706 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>__tests__/service/automatedNotification.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/blockedNumber.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/call.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/chat.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/index.test.ts</code></td><td>+36</td><td>-0</td></tr><tr><td><code>__tests__/service/memo.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/messageHandlers/globalDBHandler.test.ts</code></td><td>+51</td><td>-0</td></tr><tr><td><code>__tests__/service/messageHandlers/index.test.ts</code></td><td>+28</td><td>-0</td></tr><tr><td><code>__tests__/service/messageHandlers/notificationHandler.test.ts</code></td><td>+51</td><td>-0</td></tr><tr><td><code>__tests__/service/notification.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/recruiter.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/setting.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/userToken.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>jest.config.ts</code></td><td>+205</td><td>-0</td></tr><tr><td><code>package.json</code></td><td>+2</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/__tests__/service/automatedNotification.test.ts b/__tests__/service/automatedNotification.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..5f48a9c</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/automatedNotification.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/automated-notification.ts</span>
+<span class="diff-add">+ * Tests the AutomatedNotificationService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { AutomatedNotificationService } from &#x27;../../service/automated-notification&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;AutomatedNotificationService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: AutomatedNotificationService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new AutomatedNotificationService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(AutomatedNotificationService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new AutomatedNotificationService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/blockedNumber.test.ts b/__tests__/service/blockedNumber.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..7e3f928</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/blockedNumber.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/blocked-number.ts</span>
+<span class="diff-add">+ * Tests the BlockedNumberService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { BlockedNumberService } from &#x27;../../service/blocked-number&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;BlockedNumberService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: BlockedNumberService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new BlockedNumberService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(BlockedNumberService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new BlockedNumberService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/call.test.ts b/__tests__/service/call.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..88cd2b3</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/call.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/call.ts</span>
+<span class="diff-add">+ * Tests the CallService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { CallService } from &#x27;../../service/call&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;CallService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: CallService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new CallService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(CallService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new CallService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/chat.test.ts b/__tests__/service/chat.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..44508b8</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/chat.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/chat.ts</span>
+<span class="diff-add">+ * Tests the ChatService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { ChatService } from &#x27;../../service/chat&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;ChatService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: ChatService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new ChatService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(ChatService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new ChatService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/index.test.ts b/__tests__/service/index.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..4724579</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/index.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,36 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/index.ts</span>
+<span class="diff-add">+ * Tests the service module exports</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;notifications service index&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;module exports&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should export services&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(Object.keys(moduleExports).length).toBeGreaterThan(0);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should have all exports defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      Object.values(moduleExports).forEach(exp =&gt; {</span>
+<span class="diff-add">+        expect(exp).toBeDefined();</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;service availability&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be able to import from module&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; {</span>
+<span class="diff-add">+        require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      }).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/memo.test.ts b/__tests__/service/memo.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..509eaab</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/memo.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/memo.ts</span>
+<span class="diff-add">+ * Tests the MemoService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { MemoService } from &#x27;../../service/memo&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;MemoService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: MemoService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new MemoService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(MemoService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new MemoService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/messageHandlers/globalDBHandler.test.ts b/__tests__/service/messageHandlers/globalDBHandler.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..5613a96</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/messageHandlers/globalDBHandler.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,51 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/messageHandlers/globalDBHandler.ts</span>
+<span class="diff-add">+ * Tests the globalDBHandler message handler</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { globalDBHandler } from &#x27;../../../service/messageHandlers/globalDBHandler&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../../service&#x27;);</span>
+<span class="diff-add">+jest.mock(&#x27;../../../utils/logger&#x27;, () =&gt; ({</span>
+<span class="diff-add">+  __esModule: true,</span>
+<span class="diff-add">+  default: {</span>
+<span class="diff-add">+    info: jest.fn(),</span>
+<span class="diff-add">+    error: jest.fn(),</span>
+<span class="diff-add">+    warn: jest.fn(),</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+}));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;globalDBHandler&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;function definition&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be a function&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(typeof globalDBHandler).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;message handling&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should accept message objects&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const message = { body: { type: &#x27;test&#x27;, data: { event: &#x27;test&#x27; } } };</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await globalDBHandler(message);</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle invalid messages&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await globalDBHandler({ body: null });</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/messageHandlers/index.test.ts b/__tests__/service/messageHandlers/index.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..6f87d93</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/messageHandlers/index.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,28 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/messageHandlers/index.ts</span>
+<span class="diff-add">+ * Tests the message handlers module exports</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;notifications messageHandlers index&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;module exports&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should export handlers&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../../service/messageHandlers&#x27;);</span>
+<span class="diff-add">+      expect(Object.keys(moduleExports).length).toBeGreaterThan(0);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should have all exports defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../../service/messageHandlers&#x27;);</span>
+<span class="diff-add">+      Object.values(moduleExports).forEach(exp =&gt; {</span>
+<span class="diff-add">+        expect(exp).toBeDefined();</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/messageHandlers/notificationHandler.test.ts b/__tests__/service/messageHandlers/notificationHandler.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..e0d448e</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/messageHandlers/notificationHandler.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,51 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/messageHandlers/notificationHandler.ts</span>
+<span class="diff-add">+ * Tests the notificationHandler message handler</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { notificationHandler } from &#x27;../../../service/messageHandlers/notificationHandler&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../../service&#x27;);</span>
+<span class="diff-add">+jest.mock(&#x27;../../../utils/logger&#x27;, () =&gt; ({</span>
+<span class="diff-add">+  __esModule: true,</span>
+<span class="diff-add">+  default: {</span>
+<span class="diff-add">+    info: jest.fn(),</span>
+<span class="diff-add">+    error: jest.fn(),</span>
+<span class="diff-add">+    warn: jest.fn(),</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+}));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;notificationHandler&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;function definition&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be a function&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(typeof notificationHandler).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;message handling&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should accept message objects&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const message = { body: { type: &#x27;test&#x27;, data: { event: &#x27;test&#x27; } } };</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await notificationHandler(message);</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle invalid messages&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await notificationHandler({ body: null });</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/notification.test.ts b/__tests__/service/notification.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..cf11c66</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/notification.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/notification.ts</span>
+<span class="diff-add">+ * Tests the NotificationService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { NotificationService } from &#x27;../../service/notification&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;NotificationService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: NotificationService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new NotificationService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(NotificationService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new NotificationService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/recruiter.test.ts b/__tests__/service/recruiter.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..fd68f86</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/recruiter.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/recruiter.ts</span>
+<span class="diff-add">+ * Tests the RecruiterService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { RecruiterService } from &#x27;../../service/recruiter&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;RecruiterService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: RecruiterService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new RecruiterService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(RecruiterService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new RecruiterService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/setting.test.ts b/__tests__/service/setting.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..0eadc52</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/setting.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/setting.ts</span>
+<span class="diff-add">+ * Tests the SettingService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { SettingService } from &#x27;../../service/setting&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;SettingService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: SettingService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new SettingService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(SettingService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new SettingService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/userToken.test.ts b/__tests__/service/userToken.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..125ba05</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/userToken.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for notifications/service/user_token.ts</span>
+<span class="diff-add">+ * Tests the UserTokenService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { UserTokenService } from &#x27;../../service/user_token&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;UserTokenService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: UserTokenService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new UserTokenService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(UserTokenService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new UserTokenService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/jest.config.ts b/jest.config.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..4416dec</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/jest.config.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,205 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * For a detailed explanation regarding each configuration property, visit:</span>
+<span class="diff-add">+ * https://jestjs.io/docs/configuration</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import type { Config } from &#x27;jest&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const config: Config = {</span>
+<span class="diff-add">+  // All imported modules in your tests should be mocked automatically</span>
+<span class="diff-add">+  // automock: false,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Stop running tests after `n` failures</span>
+<span class="diff-add">+  // bail: 0,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The directory where Jest should store its cached dependency information</span>
+<span class="diff-add">+  // cacheDirectory: &quot;/tmp/jest_rs&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Automatically clear mock calls, instances, contexts and results before every test</span>
+<span class="diff-add">+  // clearMocks: false,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Indicates whether the coverage information should be collected while executing the test</span>
+<span class="diff-add">+  collectCoverage: true,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of glob patterns indicating a set of files for which coverage information should be collected</span>
+<span class="diff-add">+  // collectCoverageFrom: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The directory where Jest should output its coverage files</span>
+<span class="diff-add">+  coverageDirectory: &quot;coverage&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of regexp pattern strings used to skip coverage collection</span>
+<span class="diff-add">+  // coveragePathIgnorePatterns: [</span>
+<span class="diff-add">+  //   &quot;/node_modules/&quot;</span>
+<span class="diff-add">+  // ],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Indicates which provider should be used to instrument code for coverage</span>
+<span class="diff-add">+  coverageProvider: &quot;v8&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A list of reporter names that Jest uses when writing coverage reports</span>
+<span class="diff-add">+  coverageReporters: [</span>
+<span class="diff-add">+    &quot;json&quot;,</span>
+<span class="diff-add">+    &quot;text&quot;,</span>
+<span class="diff-add">+    &quot;lcov&quot;,</span>
+<span class="diff-add">+    &quot;clover&quot;</span>
+<span class="diff-add">+  ],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An object that configures minimum threshold enforcement for coverage results</span>
+<span class="diff-add">+  // coverageThreshold: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A path to a custom dependency extractor</span>
+<span class="diff-add">+  // dependencyExtractor: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Make calling deprecated APIs throw helpful error messages</span>
+<span class="diff-add">+  // errorOnDeprecated: false,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The default configuration for fake timers</span>
+<span class="diff-add">+  // fakeTimers: {</span>
+<span class="diff-add">+  //   &quot;enableGlobally&quot;: false</span>
+<span class="diff-add">+  // },</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Force coverage collection from ignored files using an array of glob patterns</span>
+<span class="diff-add">+  // forceCoverageMatch: [],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A path to a module which exports an async function that is triggered once before all test suites</span>
+<span class="diff-add">+  // globalSetup: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A path to a module which exports an async function that is triggered once after all test suites</span>
+<span class="diff-add">+  // globalTeardown: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A set of global variables that need to be available in all test environments</span>
+<span class="diff-add">+  // globals: {},</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.</span>
+<span class="diff-add">+  // maxWorkers: &quot;50%&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of directory names to be searched recursively up from the requiring module&#x27;s location</span>
+<span class="diff-add">+  // moduleDirectories: [</span>
+<span class="diff-add">+  //   &quot;node_modules&quot;</span>
+<span class="diff-add">+  // ],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of file extensions your modules use</span>
+<span class="diff-add">+  moduleFileExtensions: [</span>
+<span class="diff-add">+    &quot;js&quot;,</span>
+<span class="diff-add">+    &quot;mjs&quot;,</span>
+<span class="diff-add">+    &quot;cjs&quot;,</span>
+<span class="diff-add">+    &quot;jsx&quot;,</span>
+<span class="diff-add">+    &quot;ts&quot;,</span>
+<span class="diff-add">+    &quot;tsx&quot;,</span>
+<span class="diff-add">+    &quot;json&quot;,</span>
+<span class="diff-add">+    &quot;node&quot;</span>
+<span class="diff-add">+  ],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module</span>
+<span class="diff-add">+  moduleNameMapper: {</span>
+<span class="diff-add">+    &quot;^@/(.*)$&quot;: &quot;&lt;rootDir&gt;/src/$1&quot;,</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of regexp pattern strings, matched against all module paths before considered &#x27;visible&#x27; to the module loader</span>
+<span class="diff-add">+  // modulePathIgnorePatterns: [],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Activates notifications for test results</span>
+<span class="diff-add">+  // notify: false,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An enum that specifies notification mode. Requires { notify: true }</span>
+<span class="diff-add">+  // notifyMode: &quot;failure-change&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A preset that is used as a base for Jest&#x27;s configuration</span>
+<span class="diff-add">+  preset: &quot;ts-jest&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Run tests from one or more projects</span>
+<span class="diff-add">+  // projects: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Use this configuration option to add custom reporters to Jest</span>
+<span class="diff-add">+  // reporters: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Automatically reset mock state before every test</span>
+<span class="diff-add">+  // resetMocks: false,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Reset the module registry before running each individual test</span>
+<span class="diff-add">+  // resetModules: false,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A path to a custom resolver</span>
+<span class="diff-add">+  // resolver: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Automatically restore mock state and implementation before every test</span>
+<span class="diff-add">+  // restoreMocks: false,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The root directory that Jest should scan for tests and modules within</span>
+<span class="diff-add">+  // rootDir: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A list of paths to directories that Jest should use to search for files in</span>
+<span class="diff-add">+  // roots: [</span>
+<span class="diff-add">+  //   &quot;&lt;rootDir&gt;&quot;</span>
+<span class="diff-add">+  // ],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Allows you to use a custom runner instead of Jest&#x27;s default test runner</span>
+<span class="diff-add">+  // runner: &quot;jest-runner&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The paths to modules that run some code to configure or set up the testing environment before each test</span>
+<span class="diff-add">+  // setupFiles: [],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A list of paths to modules that run some code to configure or set up the testing framework before each test</span>
+<span class="diff-add">+  // setupFilesAfterEnv: [],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The number of seconds after which a test is considered as slow and reported as such in the results.</span>
+<span class="diff-add">+  // slowTestThreshold: 5,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A list of paths to snapshot serializer modules Jest should use for snapshot testing</span>
+<span class="diff-add">+  // snapshotSerializers: [],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The test environment that will be used for testing</span>
+<span class="diff-add">+  testEnvironment: &quot;node&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Options that will be passed to the testEnvironment</span>
+<span class="diff-add">+  // testEnvironmentOptions: {},</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Adds a location field to test results</span>
+<span class="diff-add">+  // testLocationInResults: false,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The glob patterns Jest uses to detect test files</span>
+<span class="diff-add">+  // testMatch: [</span>
+<span class="diff-add">+  //   &quot;**/__tests__/**/*.[jt]s?(x)&quot;,</span>
+<span class="diff-add">+  //   &quot;**/?(*.)+(spec|test).[tj]s?(x)&quot;</span>
+<span class="diff-add">+  // ],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped</span>
+<span class="diff-add">+  // testPathIgnorePatterns: [</span>
+<span class="diff-add">+  //   &quot;/node_modules/&quot;</span>
+<span class="diff-add">+  // ],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // The regexp pattern or array of patterns that Jest uses to detect test files</span>
+<span class="diff-add">+  testRegex: &quot;(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // This option allows the use of a custom results processor</span>
+<span class="diff-add">+  // testResultsProcessor: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // This option allows use of a custom test runner</span>
+<span class="diff-add">+  // testRunner: &quot;jest-circus/runner&quot;,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // A map from regular expressions to paths to transformers</span>
+<span class="diff-add">+  transform: {</span>
+<span class="diff-add">+    &quot;^.+\\.tsx?$&quot;: &quot;ts-jest&quot;,</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation</span>
+<span class="diff-add">+  // transformIgnorePatterns: [</span>
+<span class="diff-add">+  //   &quot;/node_modules/&quot;,</span>
+<span class="diff-add">+  //   &quot;\\.pnp\\.[^\\/]+$&quot;</span>
+<span class="diff-add">+  // ],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them</span>
+<span class="diff-add">+  // unmockedModulePathPatterns: undefined,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Indicates whether each individual test should be reported during the run</span>
+<span class="diff-add">+  verbose: true,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode</span>
+<span class="diff-add">+  // watchPathIgnorePatterns: [],</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Whether to use watchman for file crawling</span>
+<span class="diff-add">+  // watchman: true,</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  forceExit: true</span>
+<span class="diff-add">+};</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export default config;</span>
+<span class="diff-hunk">diff --git a/package.json b/package.json</span>
+<span class="diff-hunk">index bd0d1de..318fa2d 100644</span>
+<span class="diff-hunk">--- a/package.json</span>
+<span class="diff-hunk">+++ b/package.json</span>
+<span class="diff-hunk">@@ -33,6 +33,7 @@</span>
+     &quot;he&quot;: &quot;^1.2.0&quot;,
+     &quot;helmet&quot;: &quot;^7.1.0&quot;,
+     &quot;ioredis&quot;: &quot;^5.4.1&quot;,
+<span class="diff-add">+    &quot;jest&quot;: &quot;^30.3.0&quot;,</span>
+     &quot;jsonwebtoken&quot;: &quot;^9.0.2&quot;,
+     &quot;lodash&quot;: &quot;^4.17.21&quot;,
+     &quot;moment&quot;: &quot;^2.30.1&quot;,
+<span class="diff-hunk">@@ -54,6 +55,7 @@</span>
+     &quot;@types/body-parser&quot;: &quot;^1.19.5&quot;,
+     &quot;@types/cors&quot;: &quot;^2.8.17&quot;,
+     &quot;@types/express&quot;: &quot;^4.17.21&quot;,
+<span class="diff-add">+    &quot;@types/jest&quot;: &quot;^30.0.0&quot;,</span>
+     &quot;@types/node&quot;: &quot;^20.11.28&quot;,
+     &quot;@types/swagger-jsdoc&quot;: &quot;^6.0.4&quot;,
+     &quot;@types/swagger-ui-express&quot;: &quot;^4.1.6&quot;,</pre></section>
+</body></html>

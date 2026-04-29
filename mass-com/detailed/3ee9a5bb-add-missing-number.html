@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><title>3ee9a5bb — Add missing number</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← mass-com</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add missing number <span class="badge b-reg">regular</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>3ee9a5bb6ed78f7e0e88bb21a773955b4e656c47</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-10T12:33:08+05:30</td></tr><tr><td>Diff</td><td>+2 / -2 across 1 file(s)</td></tr><tr><td>Buckets</td><td>config, feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><p>No flag triggered.</p></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>config/params.ts</code></td><td>+2</td><td>-2</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/config/params.ts b/config/params.ts</span>
+<span class="diff-hunk">index 9277e5c..efa9f80 100644</span>
+<span class="diff-hunk">--- a/config/params.ts</span>
+<span class="diff-hunk">+++ b/config/params.ts</span>
+<span class="diff-hunk">@@ -32,8 +32,8 @@ const params = {</span>
+     &quot;+14806816940&quot;: { state: &quot;Arizona&quot;, city: &quot;Phoenix&quot; },
+   },
+   stage_numbers: [&quot;+12133156377&quot;, &quot;+18324027367&quot;],
+<span class="diff-del">-  qa_numbers: [&quot;+13617333627&quot;, &quot;+18324027367&quot;, &quot;+19036003627&quot;],</span>
+<span class="diff-del">-  test_numbers: [&quot;+19036003627&quot;, &quot;+12133156377&quot;, &quot;+13617333627&quot;, &quot;+18329245550&quot;, &quot;+18324027367&quot;],</span>
+<span class="diff-add">+  qa_numbers: [&quot;+13617333627&quot;, &quot;+18324027367&quot;, &quot;+19036003627&quot;, &quot;+13463712655&quot;],</span>
+<span class="diff-add">+  test_numbers: [&quot;+19036003627&quot;, &quot;+12133156377&quot;, &quot;+13617333627&quot;, &quot;+18329245550&quot;, &quot;+18324027367&quot;, &quot;+13463712655&quot;],</span>
+   local_numbers: [&quot;9039893627&quot;],
+   //See this Sheet for google voice numbers: https://docs.google.com/spreadsheets/d/1lPGu1NyPZU3pk05p3Ce1RNeIvgRNVwDKyMxdrwAw30s/edit?gid=0#gid=0
+   ringcentral_numbers: [</pre></section>
+</body></html>

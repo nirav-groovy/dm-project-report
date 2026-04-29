@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8"><title>auth — DM-Clinical-Research</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← DM-Clinical-Research</a></div>
+<h1>Functionality: auth</h1>
+<section><table class="kv"><tbody><tr><td>Commits</td><td>12</td></tr><tr><td>Important</td><td>12</td></tr><tr><td>HIPAA findings</td><td>16</td></tr><tr><td>ESLint findings</td><td>0</td></tr></tbody></table></section>
+<section><div class="note">Authentication / authorization / middleware. Highest blast radius for HIPAA Access Control.</div></section>
+<section><table><thead><tr><th>SHA</th><th>Date</th><th>Message</th><th>+/- (files)</th><th>HIPAA</th><th>ESLint</th><th>Status</th><th>Buckets</th></tr></thead><tbody><tr><td><code>8881bbe6</code></td><td>2026-04-28</td><td><a href='detailed/8881bbe6-remove-unwanted-logs.html'>Remove unwanted logs</a></td><td>+5/-83 (1)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, refactor</td></tr><tr><td><code>73685853</code></td><td>2026-04-28</td><td><a href='detailed/73685853-trim-event-name.html'>Trim Event name</a></td><td>+2/-1 (2)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth</td></tr><tr><td><code>e316dacc</code></td><td>2026-04-28</td><td><a href='detailed/e316dacc-add-logs.html'>Add logs</a></td><td>+103/-7 (1)</td><td><a class="count-link" href="detailed/e316dacc-add-logs.html#hipaa">12</a></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, feature</td></tr><tr><td><code>f35821e9</code></td><td>2026-04-28</td><td><a href='detailed/f35821e9-fix--handles-inactive-records.html'>Fix: handles inactive records</a></td><td>+3/-4 (1)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, bugfix</td></tr><tr><td><code>7049e8a7</code></td><td>2026-04-28</td><td><a href='detailed/7049e8a7-add-logs.html'>Add logs</a></td><td>+13/-1 (1)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, feature</td></tr><tr><td><code>fbb7f474</code></td><td>2026-04-28</td><td><a href='detailed/fbb7f474-add-logs.html'>Add logs</a></td><td>+25/-6 (1)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, feature</td></tr><tr><td><code>6b60f8ef</code></td><td>2026-04-27</td><td><a href='detailed/6b60f8ef-feat--migrate-biometric-authentication-from-ecdsa-p-256-to-r.html'>feat: migrate biometric authentication from ECDSA P-256 to RSA 2048</a></td><td>+9/-9 (3)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, db-schema, feature</td></tr><tr><td><code>b005aeb4</code></td><td>2026-04-27</td><td><a href='detailed/b005aeb4-feat--device-specific-biometric-management.html'>feat: device-specific biometric management</a></td><td>+28/-2 (1)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, feature</td></tr><tr><td><code>6c2fc157</code></td><td>2026-04-27</td><td><a href='detailed/6c2fc157-change-msg.html'>Change msg</a></td><td>+1/-1 (1)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth</td></tr><tr><td><code>4668c974</code></td><td>2026-04-27</td><td><a href='detailed/4668c974-feat--refactor-google-token-verification-to-use-userinfo-end.html'>feat: refactor Google token verification to use userinfo endpoint</a></td><td>+7/-11 (1)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, feature</td></tr><tr><td><code>179273d5</code></td><td>2026-04-27</td><td><a href='detailed/179273d5-feat--trim-deviceinfo-to-450-char.html'>feat: trim DeviceInfo to 450 char</a></td><td>+6/-45 (2)</td><td><span class="count-zero">0</span></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, db-schema, feature</td></tr><tr><td><code>762c81ba</code></td><td>2026-04-27</td><td><a href='detailed/762c81ba-add-logs-to-debug-login-issue.html'>Add logs to debug login issue</a></td><td>+54/-5 (1)</td><td><a class="count-link" href="detailed/762c81ba-add-logs-to-debug-login-issue.html#hipaa">4</a></td><td>—</td><td><span class="badge b-imp">IMPORTANT</span></td><td>api-routes, auth, bugfix, feature</td></tr></tbody></table></section>
+</body></html>

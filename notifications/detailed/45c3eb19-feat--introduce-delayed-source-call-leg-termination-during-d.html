@@ -1,0 +1,129 @@
+<!doctype html><html><head><meta charset="utf-8"><title>45c3eb19 — feat: introduce delayed source call leg termination during device switching</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>feat: introduce delayed source call leg termination during device switching <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>45c3eb190b7a808faa7e1100d4b7ccad5f3363d2</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-22T12:25:31+05:30</td></tr><tr><td>Diff</td><td>+33 / -31 across 2 file(s)</td></tr><tr><td>Buckets</td><td>config, feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>config/params.ts</code></td><td>+4</td><td>-0</td></tr><tr><td><code>controllers/call.ts</code></td><td>+29</td><td>-31</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/config/params.ts b/config/params.ts</span>
+<span class="diff-hunk">index 577ed70..3fefdd7 100644</span>
+<span class="diff-hunk">--- a/config/params.ts</span>
+<span class="diff-hunk">+++ b/config/params.ts</span>
+<span class="diff-hunk">@@ -131,6 +131,10 @@ const params = {</span>
+     &quot;https://www.googleapis.com/auth/admin.directory.group.readonly&quot;,
+     &quot;https://www.googleapis.com/auth/admin.directory.group.member.readonly&quot;,
+   ],
+<span class="diff-add">+  // Device switch timing (ms)</span>
+<span class="diff-add">+  switch_claim_initial_check_ms: 100, // Wait before checking if target CallSid available on FE</span>
+<span class="diff-add">+  switch_source_drop_delay_ms: 3000, // Delay before dropping source leg after target claims</span>
+ };
+ 
+<span class="diff-add">+</span>
+ export default params;
+<span class="diff-hunk">diff --git a/controllers/call.ts b/controllers/call.ts</span>
+<span class="diff-hunk">index 581cdda..4fec511 100644</span>
+<span class="diff-hunk">--- a/controllers/call.ts</span>
+<span class="diff-hunk">+++ b/controllers/call.ts</span>
+<span class="diff-hunk">@@ -4508,37 +4508,6 @@ export class CallController {</span>
+ 
+     await this.callService.updateCallCache(parentCallSid, callObj, reqId);
+ 
+<span class="diff-del">-    // Drop the source device&#x27;s call leg. Ending the call itself (as</span>
+<span class="diff-del">-    // opposed to removing the participant from the conference) is</span>
+<span class="diff-del">-    // reliable regardless of cached ConferenceSid and unambiguous even</span>
+<span class="diff-del">-    // if the friendly name resolves to a stale conference: completing</span>
+<span class="diff-del">-    // the call forces Twilio to withdraw it from whichever conference</span>
+<span class="diff-del">-    // holds it, and the source tab&#x27;s Voice SDK fires its disconnect</span>
+<span class="diff-del">-    // event off the real call state.</span>
+<span class="diff-del">-    //</span>
+<span class="diff-del">-    // Belt-and-suspenders: also call participant.remove() with the</span>
+<span class="diff-del">-    // resolved ConferenceSid when we have one from Twilio&#x27;s</span>
+<span class="diff-del">-    // statusCallback — covers the rare case where `calls.update` is</span>
+<span class="diff-del">-    // queued behind a prior state.</span>
+<span class="diff-del">-    try {</span>
+<span class="diff-del">-      const completedCall = await this.client.calls(sw.sourceCallSid).update({ status: &#x27;completed&#x27; });</span>
+<span class="diff-del">-      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin calls.update OK sourceCallSid=${sw.sourceCallSid} status=${completedCall?.status}`);</span>
+<span class="diff-del">-    } catch (completeErr: any) {</span>
+<span class="diff-del">-      appLogger.error(`[SWITCH] Req:${reqId} claimSwitchJoin calls.update FAIL sourceCallSid=${sw.sourceCallSid} err=${completeErr?.message} code=${completeErr?.code} status=${completeErr?.status}`);</span>
+<span class="diff-del">-    }</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-    if (opts?.conferenceSid) {</span>
+<span class="diff-del">-      try {</span>
+<span class="diff-del">-        await this.client.conferences(opts.conferenceSid).participants(sw.sourceCallSid).remove();</span>
+<span class="diff-del">-        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin participants.remove OK conf=${opts.conferenceSid} sourceCallSid=${sw.sourceCallSid}`);</span>
+<span class="diff-del">-      } catch (dropErr: any) {</span>
+<span class="diff-del">-        // Non-fatal — calls.update above already completed the leg.</span>
+<span class="diff-del">-        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin participants.remove soft-fail conf=${opts.conferenceSid} err=${dropErr?.message}`);</span>
+<span class="diff-del">-      }</span>
+<span class="diff-del">-    } else {</span>
+<span class="diff-del">-      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin no ConferenceSid — skipping participant.remove (calls.update is authoritative)`);</span>
+<span class="diff-del">-    }</span>
+<span class="diff-del">-</span>
+     appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin EMIT call-switch-claimed to room=${sw.userEmail} claimedBy=${claimingDeviceId} sourceDeviceId=${sw.sourceDeviceId}`);
+     this.emitSocketMessage(reqId, &#x27;call-switch-claimed&#x27;, {
+       callSid: parentCallSid,
+<span class="diff-hunk">@@ -4547,6 +4516,35 @@ export class CallController {</span>
+     }, sw.userEmail);
+     this.emitSocketMessage(reqId, &#x27;call-update&#x27;, callObj, sw.userEmail);
+ 
+<span class="diff-add">+    // Drop the source device&#x27;s call leg after timeout. Delay allows target device</span>
+<span class="diff-add">+    // to fully join conference before source is removed, preventing active_agents</span>
+<span class="diff-add">+    // from going to zero and triggering unwanted call termination.</span>
+<span class="diff-add">+    const sourceDropDelayMs = params.switch_source_drop_delay_ms || 3000;</span>
+<span class="diff-add">+    const dropStartTime = Date.now();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    setTimeout(async () =&gt; {</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        const elapsedMs = Date.now() - dropStartTime;</span>
+<span class="diff-add">+        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin dropping source after ${sourceDropDelayMs}ms delay (elapsed: ${elapsedMs}ms)`);</span>
+<span class="diff-add">+        const completedCall = await this.client.calls(sw.sourceCallSid).update({ status: &#x27;completed&#x27; });</span>
+<span class="diff-add">+        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin calls.update OK sourceCallSid=${sw.sourceCallSid} status=${completedCall?.status} delayMs=${sourceDropDelayMs}`);</span>
+<span class="diff-add">+      } catch (completeErr: any) {</span>
+<span class="diff-add">+        appLogger.error(`[SWITCH] Req:${reqId} claimSwitchJoin calls.update FAIL sourceCallSid=${sw.sourceCallSid} err=${completeErr?.message} code=${completeErr?.code} status=${completeErr?.status}`);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Belt-and-suspenders: also remove from conference if we have ConferenceSid</span>
+<span class="diff-add">+      if (opts?.conferenceSid) {</span>
+<span class="diff-add">+        try {</span>
+<span class="diff-add">+          await this.client.conferences(opts.conferenceSid).participants(sw.sourceCallSid).remove();</span>
+<span class="diff-add">+          appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin participants.remove OK conf=${opts.conferenceSid} sourceCallSid=${sw.sourceCallSid}`);</span>
+<span class="diff-add">+        } catch (dropErr: any) {</span>
+<span class="diff-add">+          appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin participants.remove soft-fail conf=${opts.conferenceSid} err=${dropErr?.message}`);</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+      } else {</span>
+<span class="diff-add">+        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin no ConferenceSid — skipping participant.remove (calls.update is authoritative)`);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    }, sourceDropDelayMs);</span>
+<span class="diff-add">+</span>
+     delete callObj.switchInProgress;
+     await this.callService.updateCallCache(parentCallSid, callObj, reqId);
+ </pre></section>
+</body></html>

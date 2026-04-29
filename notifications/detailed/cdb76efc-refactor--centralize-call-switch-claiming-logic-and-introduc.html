@@ -1,0 +1,237 @@
+<!doctype html><html><head><meta charset="utf-8"><title>cdb76efc — refactor: centralize call switch claiming logic and introduce confirmSwitchJoin endpoint for deterministic FE-driven switch completion</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>refactor: centralize call switch claiming logic and introduce confirmSwitchJoin endpoint for deterministic FE-driven switch completion <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>cdb76efc7c06f357e315df0e8e0d30daf91be903</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-21T17:08:40+05:30</td></tr><tr><td>Diff</td><td>+111 / -30 across 3 file(s)</td></tr><tr><td>Buckets</td><td>auth, refactor</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>1 HIPAA finding(s)</li><li>large diff (141 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/call.ts</code></td><td>+99</td><td>-29</td></tr><tr><td><code>middlewares/validations/call.ts</code></td><td>+10</td><td>-0</td></tr><tr><td><code>routes/call.ts</code></td><td>+2</td><td>-1</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (1)</h2><table><thead><tr><th>Control</th><th>Location</th><th>Snippet</th><th>Suggested fix</th></tr></thead><tbody><tr><td><strong>Access Control</strong></td><td><code>routes/call.ts:72</code></td><td><pre>router.post(&quot;/calling/confirm-switch-join&quot;, confirmSwitchJoinValidation, validation, callController.confirmSwitchJoin);</pre></td><td><div class='fix'>New route registered without an auth middleware as the first handler. Add verifyToken (or the project&#x27;s equivalent) before the controller.</div></td></tr></tbody></table></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/call.ts b/controllers/call.ts</span>
+<span class="diff-hunk">index 7ce420e..b2339ae 100644</span>
+<span class="diff-hunk">--- a/controllers/call.ts</span>
+<span class="diff-hunk">+++ b/controllers/call.ts</span>
+<span class="diff-hunk">@@ -3204,20 +3204,18 @@ export class CallController {</span>
+           const parentCallSidFromName = switchJoinConferenceName.startsWith(&#x27;call_&#x27;)
+             ? switchJoinConferenceName.replace(/^call_/, &#x27;&#x27;)
+             : &#x27;&#x27;;
+<span class="diff-del">-          const switchConfObj: cachedCall | null = parentCallSidFromName</span>
+<span class="diff-del">-            ? await this.callService.getConfCache(parentCallSidFromName, &#x27;parent_id&#x27;, req.id)</span>
+<span class="diff-del">-            : null;</span>
+<span class="diff-add">+          if (!parentCallSidFromName) return res.status(200).send(&#x27;OK&#x27;);</span>
+ 
+<span class="diff-add">+          const switchConfObj: cachedCall | null = await this.callService.getConfCache(parentCallSidFromName, &#x27;parent_id&#x27;, req.id);</span>
+           if (!switchConfObj?.switchInProgress) {
+             appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switch-join ~ no switchInProgress on call ${parentCallSidFromName}; ignoring`);
+             return res.status(200).send(&#x27;OK&#x27;);
+           }
+ 
+<span class="diff-del">-          const sw = switchConfObj.switchInProgress;</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-          if (sw.claimedBy) {</span>
+<span class="diff-add">+          const claimedAlready = switchConfObj.switchInProgress.claimedBy;</span>
+<span class="diff-add">+          if (claimedAlready &amp;&amp; claimedAlready !== switchJoinDeviceId) {</span>
+             // Race lost — another device already joined. Drop this latecomer.
+<span class="diff-del">-            appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switch-join ~ already claimed by ${sw.claimedBy}; dropping latecomer ${switchJoinDeviceId} (${callSid})`);</span>
+<span class="diff-add">+            appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switch-join ~ already claimed by ${claimedAlready}; dropping latecomer ${switchJoinDeviceId} (${callSid})`);</span>
+             try {
+               await this.client.conferences(conferenceSidBody).participants(callSid).remove();
+             } catch (dropErr: any) {
+<span class="diff-hunk">@@ -3226,28 +3224,9 @@ export class CallController {</span>
+             return res.status(200).send(&#x27;OK&#x27;);
+           }
+ 
+<span class="diff-del">-          // First in: claim, drop the source leg, and broadcast.</span>
+<span class="diff-del">-          sw.claimedBy = switchJoinDeviceId;</span>
+<span class="diff-del">-          sw.claimedAt = new Date().toISOString();</span>
+<span class="diff-del">-          await this.callService.updateCallCache(parentCallSidFromName, switchConfObj, req.id);</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-          try {</span>
+<span class="diff-del">-            await this.client.conferences(conferenceSidBody).participants(sw.sourceCallSid).remove();</span>
+<span class="diff-del">-            appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switch-join ~ source leg ${sw.sourceCallSid} dropped`);</span>
+<span class="diff-del">-          } catch (dropErr: any) {</span>
+<span class="diff-del">-            appLogger.error(&#x27;switch-join ~ failed to drop source leg:&#x27;, dropErr?.message);</span>
+<span class="diff-del">-          }</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-          this.emitSocketMessage(req.id, &#x27;call-switch-claimed&#x27;, {</span>
+<span class="diff-del">-            callSid: parentCallSidFromName,</span>
+<span class="diff-del">-            claimedBy: switchJoinDeviceId,</span>
+<span class="diff-del">-            sourceDeviceId: sw.sourceDeviceId,</span>
+<span class="diff-del">-          }, sw.userEmail);</span>
+<span class="diff-del">-          this.emitSocketMessage(req.id, &#x27;call-update&#x27;, switchConfObj, sw.userEmail);</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-          // Clear switch state — done.</span>
+<span class="diff-del">-          delete switchConfObj.switchInProgress;</span>
+<span class="diff-del">-          await this.callService.updateCallCache(parentCallSidFromName, switchConfObj, req.id);</span>
+<span class="diff-add">+          // Idempotent with confirmSwitchJoin: FE typically claims first;</span>
+<span class="diff-add">+          // this path is the belt-and-suspenders signal from Twilio.</span>
+<span class="diff-add">+          await this.claimSwitchJoin(parentCallSidFromName, switchJoinDeviceId, req.id, { conferenceSid: conferenceSidBody });</span>
+         } catch (e: any) {
+           appLogger.error(&#x27;switch-join handler error:&#x27;, e?.message);
+         }
+<span class="diff-hunk">@@ -4433,6 +4412,97 @@ export class CallController {</span>
+    *   wins; the source leg is dropped at that point.
+    * - 30s watchdog clears state and emits `call-switch-failed` if no claim.
+    */
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Atomically mark a pending switch as claimed by `claimingDeviceId`,</span>
+<span class="diff-add">+   * drop the source device&#x27;s leg from the conference, and broadcast</span>
+<span class="diff-add">+   * `call-switch-claimed` + `call-update` to the user&#x27;s room.</span>
+<span class="diff-add">+   *</span>
+<span class="diff-add">+   * Called from two paths:</span>
+<span class="diff-add">+   *  - confirmSwitchJoin (FE explicit RPC, primary — runs as soon as the</span>
+<span class="diff-add">+   *    target&#x27;s Voice SDK `device.connect` resolves).</span>
+<span class="diff-add">+   *  - handleParticipantStatus switch-join branch (Twilio conference</span>
+<span class="diff-add">+   *    statusCallback, fallback — no-ops if FE already claimed).</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private claimSwitchJoin = async (</span>
+<span class="diff-add">+    parentCallSid: string,</span>
+<span class="diff-add">+    claimingDeviceId: string,</span>
+<span class="diff-add">+    reqId: string,</span>
+<span class="diff-add">+    opts?: { conferenceSid?: string },</span>
+<span class="diff-add">+  ): Promise&lt;&#x27;claimed&#x27; | &#x27;already&#x27; | &#x27;not-pending&#x27; | &#x27;not-found&#x27;&gt; =&gt; {</span>
+<span class="diff-add">+    const callObj: cachedCall = await this.callService.getConfCache(parentCallSid, &#x27;parent_id&#x27;, reqId);</span>
+<span class="diff-add">+    if (!callObj) return &#x27;not-found&#x27;;</span>
+<span class="diff-add">+    if (!callObj.switchInProgress) return &#x27;not-pending&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const sw = callObj.switchInProgress;</span>
+<span class="diff-add">+    if (sw.claimedBy) {</span>
+<span class="diff-add">+      // Already won — same device re-asking is idempotent; other device</span>
+<span class="diff-add">+      // is a race loser (caller decides how to respond).</span>
+<span class="diff-add">+      return sw.claimedBy === claimingDeviceId ? &#x27;already&#x27; : &#x27;already&#x27;;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    sw.claimedBy = claimingDeviceId;</span>
+<span class="diff-add">+    sw.claimedAt = new Date().toISOString();</span>
+<span class="diff-add">+    await this.callService.updateCallCache(parentCallSid, callObj, reqId);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    // Drop source device&#x27;s leg. Prefer the ConferenceSid when available</span>
+<span class="diff-add">+    // (Twilio statusCallback provides it); otherwise fall back to the</span>
+<span class="diff-add">+    // friendly name, which the Twilio client API also accepts.</span>
+<span class="diff-add">+    const confRef = opts?.conferenceSid || `call_${parentCallSid}`;</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      await this.client.conferences(confRef).participants(sw.sourceCallSid).remove();</span>
+<span class="diff-add">+      appLogger.info(`${new Date().toISOString()} Req: ${reqId} ~ claimSwitchJoin ~ source leg ${sw.sourceCallSid} dropped`);</span>
+<span class="diff-add">+    } catch (dropErr: any) {</span>
+<span class="diff-add">+      // Non-fatal: the FE also drops its local leg on receiving</span>
+<span class="diff-add">+      // call-switch-claimed, so the agent&#x27;s audio is released regardless.</span>
+<span class="diff-add">+      appLogger.error(&#x27;claimSwitchJoin ~ failed to drop source leg:&#x27;, dropErr?.message);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    this.emitSocketMessage(reqId, &#x27;call-switch-claimed&#x27;, {</span>
+<span class="diff-add">+      callSid: parentCallSid,</span>
+<span class="diff-add">+      claimedBy: claimingDeviceId,</span>
+<span class="diff-add">+      sourceDeviceId: sw.sourceDeviceId,</span>
+<span class="diff-add">+    }, sw.userEmail);</span>
+<span class="diff-add">+    this.emitSocketMessage(reqId, &#x27;call-update&#x27;, callObj, sw.userEmail);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    delete callObj.switchInProgress;</span>
+<span class="diff-add">+    await this.callService.updateCallCache(parentCallSid, callObj, reqId);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return &#x27;claimed&#x27;;</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * FE → BE confirmation that the target device&#x27;s Voice SDK connected</span>
+<span class="diff-add">+   * into the switch conference. Primary trigger for the claim flow —</span>
+<span class="diff-add">+   * makes the switch deterministic instead of relying on Twilio</span>
+<span class="diff-add">+   * statusCallback timing.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  confirmSwitchJoin = async (req: CustomRequest, res: Response): Promise&lt;Response&gt; =&gt; {</span>
+<span class="diff-add">+    appLogger.info(&quot;--------------------------confirmSwitchJoin--------------------------&quot;);</span>
+<span class="diff-add">+    appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ confirmSwitchJoin ~ body:`, req.body);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const callSid = req.body?.callSid;</span>
+<span class="diff-add">+      const deviceId = req.body?.deviceId;</span>
+<span class="diff-add">+      if (!callSid || !deviceId) {</span>
+<span class="diff-add">+        return res.status(400).json({ status: false, message: &#x27;callSid and deviceId are required&#x27; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await this.claimSwitchJoin(String(callSid), String(deviceId), req.id);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (result === &#x27;not-found&#x27;) {</span>
+<span class="diff-add">+        return res.status(404).json({ status: false, message: &#x27;Call not found&#x27; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      if (result === &#x27;not-pending&#x27;) {</span>
+<span class="diff-add">+        return res.status(409).json({ status: false, message: &#x27;No switch in progress for this call&#x27; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({ status: true, message: &#x27;Switch confirmed&#x27;, data: { result } });</span>
+<span class="diff-add">+    } catch (err: any) {</span>
+<span class="diff-add">+      appLogger.error(&#x27;confirmSwitchJoin error:&#x27;, err);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: err?.message ?? &#x27;Internal server error&#x27; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+   switchDevice = async (req: CustomRequest, res: Response): Promise&lt;Response&gt; =&gt; {
+     appLogger.info(&quot;--------------------------switchDevice--------------------------&quot;);
+     appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switchDevice ~ body:`, req.body);
+<span class="diff-hunk">diff --git a/middlewares/validations/call.ts b/middlewares/validations/call.ts</span>
+<span class="diff-hunk">index 43a33cb..940fd35 100644</span>
+<span class="diff-hunk">--- a/middlewares/validations/call.ts</span>
+<span class="diff-hunk">+++ b/middlewares/validations/call.ts</span>
+<span class="diff-hunk">@@ -69,6 +69,16 @@ export const switchDeviceValidation: ValidationChain[] = [</span>
+   check(&quot;targetDeviceId&quot;, &quot;targetDeviceId must be a string when provided&quot;).optional().isString().trim(),
+ ];
+ 
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Target device confirms it joined the switch conference. Drives the</span>
+<span class="diff-add">+ * claim+drop+broadcast flow deterministically (FE-side trigger),</span>
+<span class="diff-add">+ * independent of Twilio conference statusCallback timing.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export const confirmSwitchJoinValidation: ValidationChain[] = [</span>
+<span class="diff-add">+  check(&quot;callSid&quot;, &quot;callSid is required&quot;).notEmpty().isString().trim(),</span>
+<span class="diff-add">+  check(&quot;deviceId&quot;, &quot;deviceId is required&quot;).notEmpty().isString().trim(),</span>
+<span class="diff-add">+];</span>
+<span class="diff-add">+</span>
+ 
+ /**
+  * Validates the request parameters using express-validator and sends an error response if validation fails.
+<span class="diff-hunk">diff --git a/routes/call.ts b/routes/call.ts</span>
+<span class="diff-hunk">index cbc8cf5..ae22a75 100644</span>
+<span class="diff-hunk">--- a/routes/call.ts</span>
+<span class="diff-hunk">+++ b/routes/call.ts</span>
+<span class="diff-hunk">@@ -1,6 +1,6 @@</span>
+ import { Router } from &quot;express&quot;;
+ import { CallController } from &quot;../controllers&quot;;
+<span class="diff-del">-import { availableUsersValidation, generateTokenValidation, switchDeviceValidation, validation, warmTransferNotifyValidation } from &quot;../middlewares/validations/call&quot;;</span>
+<span class="diff-add">+import { availableUsersValidation, confirmSwitchJoinValidation, generateTokenValidation, switchDeviceValidation, validation, warmTransferNotifyValidation } from &quot;../middlewares/validations/call&quot;;</span>
+ 
+ const callController = CallController.getInstance();
+ 
+<span class="diff-hunk">@@ -69,6 +69,7 @@ export default (router: Router) =&gt; {</span>
+   router.post(&quot;/calling/hold-call&quot;, validation, callController.holdCall);
+   router.post(&quot;/calling/transfer-call&quot;, validation, callController.transferCall);
+   router.post(&quot;/calling/switch-device&quot;, switchDeviceValidation, validation, callController.switchDevice);
+<span class="diff-add">+  router.post(&quot;/calling/confirm-switch-join&quot;, confirmSwitchJoinValidation, validation, callController.confirmSwitchJoin);</span>
+   router.post(&quot;/calling/resume-call&quot;, validation, callController.resumeCall);
+   router.post(&quot;/calling/end-call&quot;, validation, callController.endCall);
+   router.post(&quot;/calling/add-agent&quot;, validation, callController.addAgentToCall);</pre></section>
+</body></html>

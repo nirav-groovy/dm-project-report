@@ -1,0 +1,422 @@
+<!doctype html><html><head><meta charset="utf-8"><title>38ef5bf9 — feat: add device status tracking and implement Twilio test call functionality</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>feat: add device status tracking and implement Twilio test call functionality <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>38ef5bf973a3baeefc0548a2c00fc585fe45c891</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-14T15:59:18+05:30</td></tr><tr><td>Diff</td><td>+214 / -14 across 7 file(s)</td></tr><tr><td>Buckets</td><td>auth, feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>1 HIPAA finding(s)</li><li>large diff (228 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/device-registration.ts</code></td><td>+29</td><td>-1</td></tr><tr><td><code>middlewares/validations/device-registration.ts</code></td><td>+12</td><td>-1</td></tr><tr><td><code>models/device_registration.ts</code></td><td>+23</td><td>-1</td></tr><tr><td><code>repository/device_registration.ts</code></td><td>+26</td><td>-10</td></tr><tr><td><code>routes/device-registration.ts</code></td><td>+66</td><td>-0</td></tr><tr><td><code>service/device_registration.ts</code></td><td>+43</td><td>-1</td></tr><tr><td><code>types/device_registration.ts</code></td><td>+15</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (1)</h2><table><thead><tr><th>Control</th><th>Location</th><th>Snippet</th><th>Suggested fix</th></tr></thead><tbody><tr><td><strong>PHI in logs</strong></td><td><code>service/device_registration.ts:91</code></td><td><pre>appLogger.info(`DeviceRegistrationService/initiateTestCall ~ Test call initiated for ${userEmail}, callSid: ${call.sid}`);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr></tbody></table></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (1)</summary><ul><li><code>models/device_registration.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/notifications/node_modules/typescript/lib/typescript.js:171619
+      if (token !== 1 /* EndOfFile</code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/device-registration.ts b/controllers/device-registration.ts</span>
+<span class="diff-hunk">index 8f64b4f..909c822 100644</span>
+<span class="diff-hunk">--- a/controllers/device-registration.ts</span>
+<span class="diff-hunk">+++ b/controllers/device-registration.ts</span>
+<span class="diff-hunk">@@ -32,7 +32,7 @@ export class DeviceRegistrationController {</span>
+         return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });
+       }
+ 
+<span class="diff-del">-      const { deviceToken, platform, deviceId, deviceName, appVersion } = req.body;</span>
+<span class="diff-add">+      const { deviceToken, platform, deviceId, deviceName, appVersion, fcmToken, sipStatus, pushTokenStatus } = req.body;</span>
+ 
+       const result = await this.deviceRegistrationService.upsertDevice({
+         userEmail,
+<span class="diff-hunk">@@ -41,6 +41,9 @@ export class DeviceRegistrationController {</span>
+         deviceId,
+         deviceName,
+         appVersion,
+<span class="diff-add">+        fcmToken,</span>
+<span class="diff-add">+        sipStatus,</span>
+<span class="diff-add">+        pushTokenStatus,</span>
+       });
+ 
+       return res.status(200).json({ status: true, data: result });
+<span class="diff-hunk">@@ -109,4 +112,29 @@ export class DeviceRegistrationController {</span>
+       return res.status(500).json({ status: false, message: &quot;Internal server error&quot;, code: 500 });
+     }
+   };
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Initiate a test call to verify device SIP registration and push token pipeline.</span>
+<span class="diff-add">+   * POST /device/test-call</span>
+<span class="diff-add">+   * Body: { callerId } — a valid Twilio number to call from</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  testCall = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userEmail = req.user?.Email;</span>
+<span class="diff-add">+      if (!userEmail) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const { callerId } = req.body;</span>
+<span class="diff-add">+      if (!callerId) {</span>
+<span class="diff-add">+        return res.status(400).json({ status: false, message: &quot;callerId is required&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await this.deviceRegistrationService.initiateTestCall(userEmail, callerId);</span>
+<span class="diff-add">+      return res.status(200).json({ status: true, data: result, message: &quot;Test call initiated&quot; });</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationController/testCall error:&quot;, error);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: error.message || &quot;Failed to initiate test call&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+ }
+<span class="diff-hunk">diff --git a/middlewares/validations/device-registration.ts b/middlewares/validations/device-registration.ts</span>
+<span class="diff-hunk">index 2a33d17..621786f 100644</span>
+<span class="diff-hunk">--- a/middlewares/validations/device-registration.ts</span>
+<span class="diff-hunk">+++ b/middlewares/validations/device-registration.ts</span>
+<span class="diff-hunk">@@ -1,6 +1,6 @@</span>
+ import { Request, Response, NextFunction } from &quot;express&quot;;
+ import { check, validationResult, ValidationChain } from &quot;express-validator&quot;;
+<span class="diff-del">-import { DevicePlatform } from &quot;../../types/device_registration&quot;;</span>
+<span class="diff-add">+import { DevicePlatform, SipStatus, PushTokenStatus } from &quot;../../types/device_registration&quot;;</span>
+ 
+ /**
+  * Represents an item containing validation result information.
+<span class="diff-hunk">@@ -25,6 +25,17 @@ export const deviceRegistrationValidation: ValidationChain[] = [</span>
+   check(&quot;deviceId&quot;).trim().notEmpty().withMessage(&quot;Device ID is required&quot;),
+   check(&quot;deviceName&quot;).trim().notEmpty().withMessage(&quot;Device name is required&quot;),
+   check(&quot;appVersion&quot;).trim().notEmpty().withMessage(&quot;App version is required&quot;),
+<span class="diff-add">+  check(&quot;fcmToken&quot;).optional().trim().isString().withMessage(&quot;FCM token must be a string&quot;),</span>
+<span class="diff-add">+  check(&quot;sipStatus&quot;)</span>
+<span class="diff-add">+    .optional()</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .isIn(Object.values(SipStatus))</span>
+<span class="diff-add">+    .withMessage(`SIP status must be one of: ${Object.values(SipStatus).join(&quot;, &quot;)}`),</span>
+<span class="diff-add">+  check(&quot;pushTokenStatus&quot;)</span>
+<span class="diff-add">+    .optional()</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .isIn(Object.values(PushTokenStatus))</span>
+<span class="diff-add">+    .withMessage(`Push token status must be one of: ${Object.values(PushTokenStatus).join(&quot;, &quot;)}`),</span>
+ ];
+ 
+ /**
+<span class="diff-hunk">diff --git a/models/device_registration.ts b/models/device_registration.ts</span>
+<span class="diff-hunk">index 9d249a0..9217b45 100644</span>
+<span class="diff-hunk">--- a/models/device_registration.ts</span>
+<span class="diff-hunk">+++ b/models/device_registration.ts</span>
+<span class="diff-hunk">@@ -1,5 +1,5 @@</span>
+ import { Schema, Document, Model, model } from &quot;mongoose&quot;;
+<span class="diff-del">-import { DevicePlatform, DeviceRegistrationBody } from &quot;../types/device_registration&quot;;</span>
+<span class="diff-add">+import { DevicePlatform, DeviceRegistrationBody, SipStatus, PushTokenStatus } from &quot;../types/device_registration&quot;;</span>
+ 
+ /**
+  * Interface representing a device registration document.
+<span class="diff-hunk">@@ -39,6 +39,28 @@ const DeviceRegistrationSchema: Schema&lt;IDeviceRegistration&gt; = new Schema&lt;IDevice</span>
+       type: Boolean,
+       default: true,
+     },
+<span class="diff-add">+    fcmToken: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+      default: null,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    sipStatus: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+      enum: Object.values(SipStatus),</span>
+<span class="diff-add">+      default: SipStatus.DISCONNECTED,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    pushTokenStatus: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+      enum: Object.values(PushTokenStatus),</span>
+<span class="diff-add">+      default: PushTokenStatus.INACTIVE,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    lastStatusUpdate: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: Date,</span>
+<span class="diff-add">+      default: null,</span>
+<span class="diff-add">+    },</span>
+   },
+   {
+     versionKey: false,
+<span class="diff-hunk">diff --git a/repository/device_registration.ts b/repository/device_registration.ts</span>
+<span class="diff-hunk">index 347f4fe..5dc83ad 100644</span>
+<span class="diff-hunk">--- a/repository/device_registration.ts</span>
+<span class="diff-hunk">+++ b/repository/device_registration.ts</span>
+<span class="diff-hunk">@@ -1,5 +1,5 @@</span>
+ import { DeviceRegistration } from &quot;../models&quot;;
+<span class="diff-del">-import { DevicePlatform, DeviceRegistrationResponse } from &quot;../types/device_registration&quot;;</span>
+<span class="diff-add">+import { DevicePlatform, DeviceRegistrationResponse, SipStatus, PushTokenStatus } from &quot;../types/device_registration&quot;;</span>
+ import appLogger from &quot;../utils/logger&quot;;
+ 
+ /**
+<span class="diff-hunk">@@ -26,19 +26,35 @@ export class DeviceRegistrationRepository {</span>
+     deviceId: string;
+     deviceName: string;
+     appVersion: string;
+<span class="diff-add">+    fcmToken?: string;</span>
+<span class="diff-add">+    sipStatus?: SipStatus;</span>
+<span class="diff-add">+    pushTokenStatus?: PushTokenStatus;</span>
+   }): Promise&lt;DeviceRegistrationResponse | null&gt; {
+     try {
+<span class="diff-add">+      const updateFields: any = {</span>
+<span class="diff-add">+        deviceToken: data.deviceToken,</span>
+<span class="diff-add">+        platform: data.platform,</span>
+<span class="diff-add">+        deviceName: data.deviceName,</span>
+<span class="diff-add">+        appVersion: data.appVersion,</span>
+<span class="diff-add">+        isActive: true,</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (data.fcmToken !== undefined) {</span>
+<span class="diff-add">+        updateFields.fcmToken = data.fcmToken;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      if (data.sipStatus !== undefined) {</span>
+<span class="diff-add">+        updateFields.sipStatus = data.sipStatus;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      if (data.pushTokenStatus !== undefined) {</span>
+<span class="diff-add">+        updateFields.pushTokenStatus = data.pushTokenStatus;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      if (data.sipStatus !== undefined || data.pushTokenStatus !== undefined) {</span>
+<span class="diff-add">+        updateFields.lastStatusUpdate = new Date();</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+       return await DeviceRegistration.findOneAndUpdate(
+         { userEmail: data.userEmail, deviceId: data.deviceId },
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          $set: {</span>
+<span class="diff-del">-            deviceToken: data.deviceToken,</span>
+<span class="diff-del">-            platform: data.platform,</span>
+<span class="diff-del">-            deviceName: data.deviceName,</span>
+<span class="diff-del">-            appVersion: data.appVersion,</span>
+<span class="diff-del">-            isActive: true,</span>
+<span class="diff-del">-          },</span>
+<span class="diff-del">-        },</span>
+<span class="diff-add">+        { $set: updateFields },</span>
+         { upsert: true, new: true }
+       );
+     } catch (error: any) {
+<span class="diff-hunk">diff --git a/routes/device-registration.ts b/routes/device-registration.ts</span>
+<span class="diff-hunk">index fae2e6f..0a89513 100644</span>
+<span class="diff-hunk">--- a/routes/device-registration.ts</span>
+<span class="diff-hunk">+++ b/routes/device-registration.ts</span>
+<span class="diff-hunk">@@ -54,6 +54,17 @@ export default (router: Router) =&gt; {</span>
+    *               appVersion:
+    *                 type: string
+    *                 description: Version of the app
+<span class="diff-add">+   *               fcmToken:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 description: FCM (Android) or APNS (iOS) push notification token</span>
+<span class="diff-add">+   *               sipStatus:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 enum: [connected, disconnected]</span>
+<span class="diff-add">+   *                 description: Current SIP registration status reported by client</span>
+<span class="diff-add">+   *               pushTokenStatus:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 enum: [active, inactive, expired]</span>
+<span class="diff-add">+   *                 description: Current push token status reported by client</span>
+    *     responses:
+    *       200:
+    *         description: Device registered/updated successfully
+<span class="diff-hunk">@@ -159,8 +170,63 @@ export default (router: Router) =&gt; {</span>
+    *                         type: string
+    *                       isActive:
+    *                         type: boolean
+<span class="diff-add">+   *                       fcmToken:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                       sipStatus:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                         enum: [connected, disconnected]</span>
+<span class="diff-add">+   *                       pushTokenStatus:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                         enum: [active, inactive, expired]</span>
+<span class="diff-add">+   *                       lastStatusUpdate:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                         format: date-time</span>
+    *       401:
+    *         description: User not authenticated
+    */
+   router.get(&quot;/device/list&quot;, verifyToken, deviceRegistrationController.listDevices);
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /device/test-call:</span>
+<span class="diff-add">+   *   post:</span>
+<span class="diff-add">+   *     summary: Initiate a test call to verify device SIP registration and push token</span>
+<span class="diff-add">+   *     tags: [DeviceRegistration]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     requestBody:</span>
+<span class="diff-add">+   *       required: true</span>
+<span class="diff-add">+   *       content:</span>
+<span class="diff-add">+   *         application/json:</span>
+<span class="diff-add">+   *           schema:</span>
+<span class="diff-add">+   *             type: object</span>
+<span class="diff-add">+   *             required:</span>
+<span class="diff-add">+   *               - callerId</span>
+<span class="diff-add">+   *             properties:</span>
+<span class="diff-add">+   *               callerId:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 description: A valid Twilio phone number to call from</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: Test call initiated successfully</span>
+<span class="diff-add">+   *         content:</span>
+<span class="diff-add">+   *           application/json:</span>
+<span class="diff-add">+   *             schema:</span>
+<span class="diff-add">+   *               type: object</span>
+<span class="diff-add">+   *               properties:</span>
+<span class="diff-add">+   *                 status:</span>
+<span class="diff-add">+   *                   type: boolean</span>
+<span class="diff-add">+   *                 data:</span>
+<span class="diff-add">+   *                   type: object</span>
+<span class="diff-add">+   *                   properties:</span>
+<span class="diff-add">+   *                     callSid:</span>
+<span class="diff-add">+   *                       type: string</span>
+<span class="diff-add">+   *                 message:</span>
+<span class="diff-add">+   *                   type: string</span>
+<span class="diff-add">+   *       400:</span>
+<span class="diff-add">+   *         description: Missing callerId</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.post(&quot;/device/test-call&quot;, verifyToken, deviceRegistrationController.testCall);</span>
+ };
+<span class="diff-hunk">diff --git a/service/device_registration.ts b/service/device_registration.ts</span>
+<span class="diff-hunk">index edb5aab..7b3ba62 100644</span>
+<span class="diff-hunk">--- a/service/device_registration.ts</span>
+<span class="diff-hunk">+++ b/service/device_registration.ts</span>
+<span class="diff-hunk">@@ -1,12 +1,17 @@</span>
+ import { DeviceRegistrationRepository } from &quot;../repository&quot;;
+<span class="diff-del">-import { DevicePlatform } from &quot;../types/device_registration&quot;;</span>
+<span class="diff-add">+import { DevicePlatform, SipStatus, PushTokenStatus } from &quot;../types/device_registration&quot;;</span>
+<span class="diff-add">+import { CommonUtils } from &quot;../utils&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;../utils/logger&quot;;</span>
+ 
+ /**
+  * Service class for managing device registrations.
+  */
+ export class DeviceRegistrationService {
+<span class="diff-add">+  private readonly commonUtils: CommonUtils;</span>
+   private readonly deviceRegistrationRepository: DeviceRegistrationRepository;
+<span class="diff-add">+</span>
+   private static instance: DeviceRegistrationService | null = null;
+<span class="diff-add">+  private twilioClient: any = null;</span>
+ 
+   public static getInstance() {
+     if (!DeviceRegistrationService.instance) {
+<span class="diff-hunk">@@ -16,9 +21,20 @@ export class DeviceRegistrationService {</span>
+   }
+ 
+   constructor() {
+<span class="diff-add">+    this.commonUtils = CommonUtils.getInstance();</span>
+     this.deviceRegistrationRepository = DeviceRegistrationRepository.getInstance();
+   }
+ 
+<span class="diff-add">+  private async getTwilioClient() {</span>
+<span class="diff-add">+    if (!this.twilioClient) {</span>
+<span class="diff-add">+      const env = process.env.NODE_ENV ?? &quot;local&quot;;</span>
+<span class="diff-add">+      const accountSid = await this.commonUtils.getSecret(`${env}-TWILIO-ACCOUNTSID`);</span>
+<span class="diff-add">+      const authToken = await this.commonUtils.getSecret(`${env}-TWILIO-AUTHTOKEN`);</span>
+<span class="diff-add">+      this.twilioClient = require(&quot;twilio&quot;)(accountSid, authToken);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+    return this.twilioClient;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Register or update a device for a user (upsert by userId+deviceId).
+    */
+<span class="diff-hunk">@@ -29,6 +45,9 @@ export class DeviceRegistrationService {</span>
+     deviceId: string;
+     deviceName: string;
+     appVersion: string;
+<span class="diff-add">+    fcmToken?: string;</span>
+<span class="diff-add">+    sipStatus?: SipStatus;</span>
+<span class="diff-add">+    pushTokenStatus?: PushTokenStatus;</span>
+   }) {
+     return await this.deviceRegistrationRepository.upsert(data);
+   }
+<span class="diff-hunk">@@ -53,4 +72,27 @@ export class DeviceRegistrationService {</span>
+   async listActiveDevices(userEmail: string) {
+     return await this.deviceRegistrationRepository.findActiveByUserId(userEmail);
+   }
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Initiate a test call to the user&#x27;s Twilio client identity.</span>
+<span class="diff-add">+   * This verifies the full pipeline: SIP registration + push token delivery + audio path.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async initiateTestCall(userEmail: string, callerId: string): Promise&lt;{ callSid: string }&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const client = await this.getTwilioClient();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const call = await client.calls.create({</span>
+<span class="diff-add">+        to: `client:${userEmail}`,</span>
+<span class="diff-add">+        from: callerId,</span>
+<span class="diff-add">+        twiml: `&lt;Response&gt;&lt;Say voice=&quot;alice&quot;&gt;This is a test call from Comtrak Lite. Your device is configured correctly.&lt;/Say&gt;&lt;Hangup/&gt;&lt;/Response&gt;`,</span>
+<span class="diff-add">+        timeout: 30,</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      appLogger.info(`DeviceRegistrationService/initiateTestCall ~ Test call initiated for ${userEmail}, callSid: ${call.sid}`);</span>
+<span class="diff-add">+      return { callSid: call.sid };</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationService/initiateTestCall error:&quot;, error);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+ }
+<span class="diff-hunk">diff --git a/types/device_registration.ts b/types/device_registration.ts</span>
+<span class="diff-hunk">index 421c1e7..b9879b7 100644</span>
+<span class="diff-hunk">--- a/types/device_registration.ts</span>
+<span class="diff-hunk">+++ b/types/device_registration.ts</span>
+<span class="diff-hunk">@@ -3,6 +3,17 @@ export enum DevicePlatform {</span>
+   ANDROID = &quot;android&quot;,
+ }
+ 
+<span class="diff-add">+export enum SipStatus {</span>
+<span class="diff-add">+  CONNECTED = &quot;connected&quot;,</span>
+<span class="diff-add">+  DISCONNECTED = &quot;disconnected&quot;,</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export enum PushTokenStatus {</span>
+<span class="diff-add">+  ACTIVE = &quot;active&quot;,</span>
+<span class="diff-add">+  INACTIVE = &quot;inactive&quot;,</span>
+<span class="diff-add">+  EXPIRED = &quot;expired&quot;,</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+ /**
+  * Represents the body of a device registration record.
+  * @interface
+<span class="diff-hunk">@@ -15,6 +26,10 @@ export interface DeviceRegistrationBody {</span>
+   deviceName: string;
+   appVersion: string;
+   isActive: boolean;
+<span class="diff-add">+  fcmToken?: string;</span>
+<span class="diff-add">+  sipStatus?: SipStatus;</span>
+<span class="diff-add">+  pushTokenStatus?: PushTokenStatus;</span>
+<span class="diff-add">+  lastStatusUpdate?: Date;</span>
+ }
+ 
+ export interface DeviceRegistrationResponse extends DeviceRegistrationBody {</pre></section>
+</body></html>

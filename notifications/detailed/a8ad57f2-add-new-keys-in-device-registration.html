@@ -1,0 +1,315 @@
+<!doctype html><html><head><meta charset="utf-8"><title>a8ad57f2 — Add new keys in device registration</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add new keys in device registration <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>a8ad57f2cc1f4a545b4610fe4d825cc146bde9ac</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-14T12:11:36+05:30</td></tr><tr><td>Diff</td><td>+112 / -21 across 7 file(s)</td></tr><tr><td>Buckets</td><td>auth, feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (133 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/device-registration.ts</code></td><td>+4</td><td>-19</td></tr><tr><td><code>middlewares/validations/device-registration.ts</code></td><td>+61</td><td>-0</td></tr><tr><td><code>models/device_registration.ts</code></td><td>+8</td><td>-0</td></tr><tr><td><code>repository/device_registration.ts</code></td><td>+4</td><td>-0</td></tr><tr><td><code>routes/device-registration.ts</code></td><td>+31</td><td>-2</td></tr><tr><td><code>service/device_registration.ts</code></td><td>+2</td><td>-0</td></tr><tr><td><code>types/device_registration.ts</code></td><td>+2</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (1)</summary><ul><li><code>middlewares/validations/device-registration.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/notifications/node_modules/typescript/lib/typescript.js:182719
+            [&quot;navtree-full&quot; /* Nav</code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/device-registration.ts b/controllers/device-registration.ts</span>
+<span class="diff-hunk">index c8d55da..8f64b4f 100644</span>
+<span class="diff-hunk">--- a/controllers/device-registration.ts</span>
+<span class="diff-hunk">+++ b/controllers/device-registration.ts</span>
+<span class="diff-hunk">@@ -1,6 +1,5 @@</span>
+ import { Response } from &quot;express&quot;;
+ import { DeviceRegistrationService } from &quot;../service&quot;;
+<span class="diff-del">-import { DevicePlatform } from &quot;../types/device_registration&quot;;</span>
+ import { UserRequest } from &quot;../types/request&quot;;
+ import appLogger from &quot;../utils/logger&quot;;
+ 
+<span class="diff-hunk">@@ -24,7 +23,7 @@ export class DeviceRegistrationController {</span>
+   /**
+    * Register or update a device (upsert). Called on user login.
+    * POST /device/register
+<span class="diff-del">-   * Body: { deviceToken, platform, deviceId }</span>
+<span class="diff-add">+   * Body: { deviceToken, platform, deviceId, deviceName, appVersion }</span>
+    */
+   upsertDevice = async (req: UserRequest, res: Response) =&gt; {
+     try {
+<span class="diff-hunk">@@ -33,26 +32,15 @@ export class DeviceRegistrationController {</span>
+         return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });
+       }
+ 
+<span class="diff-del">-      const { deviceToken, platform, deviceId } = req.body;</span>
+<span class="diff-del">-      if (!deviceToken || !platform || !deviceId) {</span>
+<span class="diff-del">-        return res.status(400).json({</span>
+<span class="diff-del">-          status: false,</span>
+<span class="diff-del">-          message: &quot;deviceToken, platform, and deviceId are required&quot;,</span>
+<span class="diff-del">-        });</span>
+<span class="diff-del">-      }</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      if (!Object.values(DevicePlatform).includes(platform)) {</span>
+<span class="diff-del">-        return res.status(400).json({</span>
+<span class="diff-del">-          status: false,</span>
+<span class="diff-del">-          message: `platform must be one of: ${Object.values(DevicePlatform).join(&quot;, &quot;)}`,</span>
+<span class="diff-del">-        });</span>
+<span class="diff-del">-      }</span>
+<span class="diff-add">+      const { deviceToken, platform, deviceId, deviceName, appVersion } = req.body;</span>
+ 
+       const result = await this.deviceRegistrationService.upsertDevice({
+         userEmail,
+         deviceToken,
+         platform,
+         deviceId,
+<span class="diff-add">+        deviceName,</span>
+<span class="diff-add">+        appVersion,</span>
+       });
+ 
+       return res.status(200).json({ status: true, data: result });
+<span class="diff-hunk">@@ -75,9 +63,6 @@ export class DeviceRegistrationController {</span>
+       }
+ 
+       const { deviceId } = req.body;
+<span class="diff-del">-      if (!deviceId) {</span>
+<span class="diff-del">-        return res.status(400).json({ status: false, message: &quot;deviceId is required&quot; });</span>
+<span class="diff-del">-      }</span>
+ 
+       const result = await this.deviceRegistrationService.deactivateDevice(userEmail, deviceId);
+       return res.status(200).json({ status: true, data: result });
+<span class="diff-hunk">diff --git a/middlewares/validations/device-registration.ts b/middlewares/validations/device-registration.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..2a33d17</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/middlewares/validations/device-registration.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,61 @@</span>
+<span class="diff-add">+import { Request, Response, NextFunction } from &quot;express&quot;;</span>
+<span class="diff-add">+import { check, validationResult, ValidationChain } from &quot;express-validator&quot;;</span>
+<span class="diff-add">+import { DevicePlatform } from &quot;../../types/device_registration&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Represents an item containing validation result information.</span>
+<span class="diff-add">+ * @interface ValidationResultItem</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+interface ValidationResultItem {</span>
+<span class="diff-add">+  msg: string;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Middleware function array to validate device registration data.</span>
+<span class="diff-add">+ * @type {ValidationChain[]}</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export const deviceRegistrationValidation: ValidationChain[] = [</span>
+<span class="diff-add">+  check(&quot;deviceToken&quot;).trim().notEmpty().withMessage(&quot;Device token is required&quot;),</span>
+<span class="diff-add">+  check(&quot;platform&quot;)</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .notEmpty()</span>
+<span class="diff-add">+    .withMessage(&quot;Platform is required&quot;)</span>
+<span class="diff-add">+    .isIn(Object.values(DevicePlatform))</span>
+<span class="diff-add">+    .withMessage(`Platform must be one of: ${Object.values(DevicePlatform).join(&quot;, &quot;)}`),</span>
+<span class="diff-add">+  check(&quot;deviceId&quot;).trim().notEmpty().withMessage(&quot;Device ID is required&quot;),</span>
+<span class="diff-add">+  check(&quot;deviceName&quot;).trim().notEmpty().withMessage(&quot;Device name is required&quot;),</span>
+<span class="diff-add">+  check(&quot;appVersion&quot;).trim().notEmpty().withMessage(&quot;App version is required&quot;),</span>
+<span class="diff-add">+];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Middleware function array to validate device deactivation data.</span>
+<span class="diff-add">+ * @type {ValidationChain[]}</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export const deviceDeactivationValidation: ValidationChain[] = [</span>
+<span class="diff-add">+  check(&quot;deviceId&quot;).trim().notEmpty().withMessage(&quot;Device ID is required&quot;),</span>
+<span class="diff-add">+];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Middleware function for request validation.</span>
+<span class="diff-add">+ * Validates the request using express-validator library and returns JSON response in case of validation errors.</span>
+<span class="diff-add">+ * @param {Request} req - The Express request object.</span>
+<span class="diff-add">+ * @param {Response} res - The Express response object.</span>
+<span class="diff-add">+ * @param {NextFunction} next - The Express next function.</span>
+<span class="diff-add">+ * @returns {Response|void} Returns a JSON response if validation fails, otherwise calls the next middleware.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export const validation = (req: Request, res: Response, next: NextFunction): Response | void =&gt; {</span>
+<span class="diff-add">+  let error: string[] = [];</span>
+<span class="diff-add">+  const result: ValidationResultItem[] = validationResult(req).array();</span>
+<span class="diff-add">+  if (!result.length) return next();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  result.forEach((validationResultItem) =&gt; {</span>
+<span class="diff-add">+    error.push(validationResultItem.msg);</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  return res.status(400).json({</span>
+<span class="diff-add">+    status: false,</span>
+<span class="diff-add">+    message: error.join(&quot;, &quot;),</span>
+<span class="diff-add">+    data: {},</span>
+<span class="diff-add">+    code: 400,</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+};</span>
+<span class="diff-hunk">diff --git a/models/device_registration.ts b/models/device_registration.ts</span>
+<span class="diff-hunk">index 9a0fc17..9d249a0 100644</span>
+<span class="diff-hunk">--- a/models/device_registration.ts</span>
+<span class="diff-hunk">+++ b/models/device_registration.ts</span>
+<span class="diff-hunk">@@ -26,6 +26,14 @@ const DeviceRegistrationSchema: Schema&lt;IDeviceRegistration&gt; = new Schema&lt;IDevice</span>
+       required: true,
+       type: String,
+     },
+<span class="diff-add">+    deviceName: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    appVersion: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+    },</span>
+     isActive: {
+       required: false,
+       type: Boolean,
+<span class="diff-hunk">diff --git a/repository/device_registration.ts b/repository/device_registration.ts</span>
+<span class="diff-hunk">index 843ba76..347f4fe 100644</span>
+<span class="diff-hunk">--- a/repository/device_registration.ts</span>
+<span class="diff-hunk">+++ b/repository/device_registration.ts</span>
+<span class="diff-hunk">@@ -24,6 +24,8 @@ export class DeviceRegistrationRepository {</span>
+     deviceToken: string;
+     platform: DevicePlatform;
+     deviceId: string;
+<span class="diff-add">+    deviceName: string;</span>
+<span class="diff-add">+    appVersion: string;</span>
+   }): Promise&lt;DeviceRegistrationResponse | null&gt; {
+     try {
+       return await DeviceRegistration.findOneAndUpdate(
+<span class="diff-hunk">@@ -32,6 +34,8 @@ export class DeviceRegistrationRepository {</span>
+           $set: {
+             deviceToken: data.deviceToken,
+             platform: data.platform,
+<span class="diff-add">+            deviceName: data.deviceName,</span>
+<span class="diff-add">+            appVersion: data.appVersion,</span>
+             isActive: true,
+           },
+         },
+<span class="diff-hunk">diff --git a/routes/device-registration.ts b/routes/device-registration.ts</span>
+<span class="diff-hunk">index 7a94af9..fae2e6f 100644</span>
+<span class="diff-hunk">--- a/routes/device-registration.ts</span>
+<span class="diff-hunk">+++ b/routes/device-registration.ts</span>
+<span class="diff-hunk">@@ -1,6 +1,11 @@</span>
+ import { Router } from &quot;express&quot;;
+ import { DeviceRegistrationController } from &quot;../controllers&quot;;
+ import { verifyToken } from &quot;../middlewares/auth&quot;;
+<span class="diff-add">+import {</span>
+<span class="diff-add">+  deviceRegistrationValidation,</span>
+<span class="diff-add">+  deviceDeactivationValidation,</span>
+<span class="diff-add">+  validation,</span>
+<span class="diff-add">+} from &quot;../middlewares/validations/device-registration&quot;;</span>
+ 
+ const deviceRegistrationController = DeviceRegistrationController.getInstance();
+ 
+<span class="diff-hunk">@@ -30,6 +35,8 @@ export default (router: Router) =&gt; {</span>
+    *               - deviceToken
+    *               - platform
+    *               - deviceId
+<span class="diff-add">+   *               - deviceName</span>
+<span class="diff-add">+   *               - appVersion</span>
+    *             properties:
+    *               deviceToken:
+    *                 type: string
+<span class="diff-hunk">@@ -41,6 +48,12 @@ export default (router: Router) =&gt; {</span>
+    *               deviceId:
+    *                 type: string
+    *                 description: Unique device identifier
+<span class="diff-add">+   *               deviceName:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 description: Name of the device</span>
+<span class="diff-add">+   *               appVersion:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 description: Version of the app</span>
+    *     responses:
+    *       200:
+    *         description: Device registered/updated successfully
+<span class="diff-hunk">@@ -49,7 +62,13 @@ export default (router: Router) =&gt; {</span>
+    *       401:
+    *         description: User not authenticated
+    */
+<span class="diff-del">-  router.post(&quot;/device/register&quot;, verifyToken, deviceRegistrationController.upsertDevice);</span>
+<span class="diff-add">+  router.post(</span>
+<span class="diff-add">+    &quot;/device/register&quot;,</span>
+<span class="diff-add">+    verifyToken,</span>
+<span class="diff-add">+    deviceRegistrationValidation,</span>
+<span class="diff-add">+    validation,</span>
+<span class="diff-add">+    deviceRegistrationController.upsertDevice</span>
+<span class="diff-add">+  );</span>
+ 
+   /**
+    * @swagger
+<span class="diff-hunk">@@ -79,7 +98,13 @@ export default (router: Router) =&gt; {</span>
+    *       401:
+    *         description: User not authenticated
+    */
+<span class="diff-del">-  router.post(&quot;/device/deactivate&quot;, verifyToken, deviceRegistrationController.deactivateDevice);</span>
+<span class="diff-add">+  router.post(</span>
+<span class="diff-add">+    &quot;/device/deactivate&quot;,</span>
+<span class="diff-add">+    verifyToken,</span>
+<span class="diff-add">+    deviceDeactivationValidation,</span>
+<span class="diff-add">+    validation,</span>
+<span class="diff-add">+    deviceRegistrationController.deactivateDevice</span>
+<span class="diff-add">+  );</span>
+ 
+   /**
+    * @swagger
+<span class="diff-hunk">@@ -128,6 +153,10 @@ export default (router: Router) =&gt; {</span>
+    *                         type: string
+    *                       deviceId:
+    *                         type: string
+<span class="diff-add">+   *                       deviceName:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                       appVersion:</span>
+<span class="diff-add">+   *                         type: string</span>
+    *                       isActive:
+    *                         type: boolean
+    *       401:
+<span class="diff-hunk">diff --git a/service/device_registration.ts b/service/device_registration.ts</span>
+<span class="diff-hunk">index 9b6b14b..edb5aab 100644</span>
+<span class="diff-hunk">--- a/service/device_registration.ts</span>
+<span class="diff-hunk">+++ b/service/device_registration.ts</span>
+<span class="diff-hunk">@@ -27,6 +27,8 @@ export class DeviceRegistrationService {</span>
+     deviceToken: string;
+     platform: DevicePlatform;
+     deviceId: string;
+<span class="diff-add">+    deviceName: string;</span>
+<span class="diff-add">+    appVersion: string;</span>
+   }) {
+     return await this.deviceRegistrationRepository.upsert(data);
+   }
+<span class="diff-hunk">diff --git a/types/device_registration.ts b/types/device_registration.ts</span>
+<span class="diff-hunk">index 40d675b..421c1e7 100644</span>
+<span class="diff-hunk">--- a/types/device_registration.ts</span>
+<span class="diff-hunk">+++ b/types/device_registration.ts</span>
+<span class="diff-hunk">@@ -12,6 +12,8 @@ export interface DeviceRegistrationBody {</span>
+   deviceToken: string;
+   platform: DevicePlatform;
+   deviceId: string;
+<span class="diff-add">+  deviceName: string;</span>
+<span class="diff-add">+  appVersion: string;</span>
+   isActive: boolean;
+ }
+ </pre></section>
+</body></html>

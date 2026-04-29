@@ -1,0 +1,188 @@
+<!doctype html><html><head><meta charset="utf-8"><title>84faa1b4 — Add logs to track switch feature</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add logs to track switch feature <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>84faa1b48d2fc3811b1674de85b4843722077873</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-21T19:55:02+05:30</td></tr><tr><td>Diff</td><td>+52 / -14 across 1 file(s)</td></tr><tr><td>Buckets</td><td>feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>6 HIPAA finding(s)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/call.ts</code></td><td>+52</td><td>-14</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (6)</h2><table><thead><tr><th>Control</th><th>Location</th><th>Snippet</th><th>Suggested fix</th></tr></thead><tbody><tr><td><strong>PHI in logs</strong></td><td><code>controllers/call.ts:2860</code></td><td><pre>appLogger.info(`[SWITCH] Req:${req.id} handleCallStatus CASCADE callCompleted=true callSid=${callSid} parentCallSid=${confObj?.parentCallSid} active_agents=${active_agents} active_patients=${active_patients}`);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>controllers/call.ts:3523</code></td><td><pre>appLogger.info(`[SWITCH] Req:${req.id} handleParticipantStatus END-CONFERENCE callSid=${callSid} parent=${confObj?.parentCallSid} active_agents=${active_agents} active_patients=${active_patients} participants=${JSON.stringify((confObj?.participants || []).map((p: any) =&gt; ({ type: p.type, callSid: p.</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>controllers/call.ts:4461</code></td><td><pre>appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin CLAIM sourceCallSid=${sw.sourceCallSid} sourceDeviceId=${sw.sourceDeviceId} userEmail=${sw.userEmail}`);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>controllers/call.ts:4542</code></td><td><pre>appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin EMIT call-switch-claimed to room=${sw.userEmail} claimedBy=${claimingDeviceId} sourceDeviceId=${sw.sourceDeviceId}`);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>controllers/call.ts:4565</code></td><td><pre>appLogger.info(`[SWITCH] ${new Date().toISOString()} Req:${req.id} confirmSwitchJoin body=${JSON.stringify(req.body)}`);</pre></td><td><div class='fix'>Logger emits JSON.stringify of an object that may carry PHI (message body / payload / patient / user). Stringify only non-PHI fields.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>controllers/call.ts:4595</code></td><td><pre>appLogger.info(`[SWITCH] ${new Date().toISOString()} Req:${req.id} switchDevice body=${JSON.stringify(req.body)}`);</pre></td><td><div class='fix'>Logger emits JSON.stringify of an object that may carry PHI (message body / payload / patient / user). Stringify only non-PHI fields.</div></td></tr></tbody></table></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/call.ts b/controllers/call.ts</span>
+<span class="diff-hunk">index 3d2d8ef..581cdda 100644</span>
+<span class="diff-hunk">--- a/controllers/call.ts</span>
+<span class="diff-hunk">+++ b/controllers/call.ts</span>
+<span class="diff-hunk">@@ -2857,6 +2857,7 @@ export class CallController {</span>
+     appLogger.info(`${new Date().toISOString()} Req: ${req.id} CallSID: ${callSid}  ~ ~ file: call.ts:562 ~ CallController ~ handleCallStatus= ~ Before condition callCompleted:`, callCompleted);
+     // When agent calls a number and disconnect before patient accepts the call
+     if (callCompleted) {
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${req.id} handleCallStatus CASCADE callCompleted=true callSid=${callSid} parentCallSid=${confObj?.parentCallSid} active_agents=${active_agents} active_patients=${active_patients}`);</span>
+       appLogger.info(`${new Date().toISOString()} Req: ${req.id} CallSID: ${callSid} ~ file: call.ts:345 ~ CallController ~ handleCallStatus= CallSID: ${callSid} ~ In Handler: Inbound call completed`);
+ 
+ 
+<span class="diff-hunk">@@ -3519,6 +3520,7 @@ export class CallController {</span>
+           (active_patients &lt; 2 &amp;&amp; active_agents === 0) || // Will true when no agent is in call &amp; only one patient is left on call
+           (active_patients === 0 &amp;&amp; active_agents &lt; 2)    // Will true when no patient is in call &amp; only one agent is left on call
+         ) {
+<span class="diff-add">+          appLogger.info(`[SWITCH] Req:${req.id} handleParticipantStatus END-CONFERENCE callSid=${callSid} parent=${confObj?.parentCallSid} active_agents=${active_agents} active_patients=${active_patients} participants=${JSON.stringify((confObj?.participants || []).map((p: any) =&gt; ({ type: p.type, callSid: p.callSid, status: p.status })))}`);</span>
+           confObj.status = callStatusType.completed;
+ 
+           /* Update Cache - In case Patient data api took longer? So, HandleCall can get latest call status */
+<span class="diff-hunk">@@ -4434,12 +4436,21 @@ export class CallController {</span>
+     reqId: string,
+     opts?: { conferenceSid?: string; targetCallSid?: string },
+   ): Promise&lt;&#x27;claimed&#x27; | &#x27;already&#x27; | &#x27;not-pending&#x27; | &#x27;not-found&#x27;&gt; =&gt; {
+<span class="diff-add">+    appLogger.info(`[SWITCH] ${new Date().toISOString()} Req:${reqId} claimSwitchJoin ENTER parent=${parentCallSid} claimingDevice=${claimingDeviceId} conferenceSid=${opts?.conferenceSid || &#x27;-&#x27;} targetCallSid=${opts?.targetCallSid || &#x27;-&#x27;}`);</span>
+<span class="diff-add">+</span>
+     const callObj: cachedCall = await this.callService.getConfCache(parentCallSid, &#x27;parent_id&#x27;, reqId);
+<span class="diff-del">-    if (!callObj) return &#x27;not-found&#x27;;</span>
+<span class="diff-del">-    if (!callObj.switchInProgress) return &#x27;not-pending&#x27;;</span>
+<span class="diff-add">+    if (!callObj) {</span>
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin EXIT not-found parent=${parentCallSid}`);</span>
+<span class="diff-add">+      return &#x27;not-found&#x27;;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+    if (!callObj.switchInProgress) {</span>
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin EXIT not-pending parent=${parentCallSid}`);</span>
+<span class="diff-add">+      return &#x27;not-pending&#x27;;</span>
+<span class="diff-add">+    }</span>
+ 
+     const sw = callObj.switchInProgress;
+     if (sw.claimedBy) {
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin EXIT already claimedBy=${sw.claimedBy} requester=${claimingDeviceId}`);</span>
+       // Already won — same device re-asking is idempotent; other device
+       // is a race loser (caller decides how to respond).
+       return sw.claimedBy === claimingDeviceId ? &#x27;already&#x27; : &#x27;already&#x27;;
+<span class="diff-hunk">@@ -4447,6 +4458,7 @@ export class CallController {</span>
+ 
+     sw.claimedBy = claimingDeviceId;
+     sw.claimedAt = new Date().toISOString();
+<span class="diff-add">+    appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin CLAIM sourceCallSid=${sw.sourceCallSid} sourceDeviceId=${sw.sourceDeviceId} userEmail=${sw.userEmail}`);</span>
+ 
+     // Swap the source agent&#x27;s participant entry for the target&#x27;s BEFORE
+     // dropping the source leg. Both devices belong to the same agent
+<span class="diff-hunk">@@ -4463,6 +4475,7 @@ export class CallController {</span>
+         p.type === participantType.agent
+         &amp;&amp; p.callSid === sw.sourceCallSid
+       );
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin participants.before=${JSON.stringify((callObj.participants || []).map((p) =&gt; ({ type: p.type, address: p.address, callSid: p.callSid, status: p.status })))} srcIdx=${srcIdx}`);</span>
+       if (srcIdx &gt;= 0) {
+         callObj.participants[srcIdx] = {
+           ...callObj.participants[srcIdx],
+<span class="diff-hunk">@@ -4472,6 +4485,7 @@ export class CallController {</span>
+           startTime: moment().utc().toDate(),
+           code_from: &#x27;claimSwitchJoin&#x27;,
+         };
+<span class="diff-add">+        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin swapped src-&gt;target at idx=${srcIdx}`);</span>
+       } else {
+         // Fallback: no source entry to swap (edge case). Push a fresh
+         // agent entry so the active-agent count is non-zero.
+<span class="diff-hunk">@@ -4485,24 +4499,47 @@ export class CallController {</span>
+           startTime: moment().utc().toDate(),
+           code_from: &#x27;claimSwitchJoin_fallback&#x27;,
+         });
+<span class="diff-add">+        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin pushed target entry (fallback)`);</span>
+       }
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin participants.after=${JSON.stringify(callObj.participants.map((p) =&gt; ({ type: p.type, address: p.address, callSid: p.callSid, status: p.status })))}`);</span>
+<span class="diff-add">+    } else {</span>
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin NO targetCallSid — skipping participant swap`);</span>
+     }
+ 
+     await this.callService.updateCallCache(parentCallSid, callObj, reqId);
+ 
+<span class="diff-del">-    // Drop source device&#x27;s leg. Prefer the ConferenceSid when available</span>
+<span class="diff-del">-    // (Twilio statusCallback provides it); otherwise fall back to the</span>
+<span class="diff-del">-    // friendly name, which the Twilio client API also accepts.</span>
+<span class="diff-del">-    const confRef = opts?.conferenceSid || `call_${parentCallSid}`;</span>
+<span class="diff-add">+    // Drop the source device&#x27;s call leg. Ending the call itself (as</span>
+<span class="diff-add">+    // opposed to removing the participant from the conference) is</span>
+<span class="diff-add">+    // reliable regardless of cached ConferenceSid and unambiguous even</span>
+<span class="diff-add">+    // if the friendly name resolves to a stale conference: completing</span>
+<span class="diff-add">+    // the call forces Twilio to withdraw it from whichever conference</span>
+<span class="diff-add">+    // holds it, and the source tab&#x27;s Voice SDK fires its disconnect</span>
+<span class="diff-add">+    // event off the real call state.</span>
+<span class="diff-add">+    //</span>
+<span class="diff-add">+    // Belt-and-suspenders: also call participant.remove() with the</span>
+<span class="diff-add">+    // resolved ConferenceSid when we have one from Twilio&#x27;s</span>
+<span class="diff-add">+    // statusCallback — covers the rare case where `calls.update` is</span>
+<span class="diff-add">+    // queued behind a prior state.</span>
+     try {
+<span class="diff-del">-      await this.client.conferences(confRef).participants(sw.sourceCallSid).remove();</span>
+<span class="diff-del">-      appLogger.info(`${new Date().toISOString()} Req: ${reqId} ~ claimSwitchJoin ~ source leg ${sw.sourceCallSid} dropped`);</span>
+<span class="diff-del">-    } catch (dropErr: any) {</span>
+<span class="diff-del">-      // Non-fatal: the FE also drops its local leg on receiving</span>
+<span class="diff-del">-      // call-switch-claimed, so the agent&#x27;s audio is released regardless.</span>
+<span class="diff-del">-      appLogger.error(&#x27;claimSwitchJoin ~ failed to drop source leg:&#x27;, dropErr?.message);</span>
+<span class="diff-add">+      const completedCall = await this.client.calls(sw.sourceCallSid).update({ status: &#x27;completed&#x27; });</span>
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin calls.update OK sourceCallSid=${sw.sourceCallSid} status=${completedCall?.status}`);</span>
+<span class="diff-add">+    } catch (completeErr: any) {</span>
+<span class="diff-add">+      appLogger.error(`[SWITCH] Req:${reqId} claimSwitchJoin calls.update FAIL sourceCallSid=${sw.sourceCallSid} err=${completeErr?.message} code=${completeErr?.code} status=${completeErr?.status}`);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (opts?.conferenceSid) {</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await this.client.conferences(opts.conferenceSid).participants(sw.sourceCallSid).remove();</span>
+<span class="diff-add">+        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin participants.remove OK conf=${opts.conferenceSid} sourceCallSid=${sw.sourceCallSid}`);</span>
+<span class="diff-add">+      } catch (dropErr: any) {</span>
+<span class="diff-add">+        // Non-fatal — calls.update above already completed the leg.</span>
+<span class="diff-add">+        appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin participants.remove soft-fail conf=${opts.conferenceSid} err=${dropErr?.message}`);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    } else {</span>
+<span class="diff-add">+      appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin no ConferenceSid — skipping participant.remove (calls.update is authoritative)`);</span>
+     }
+ 
+<span class="diff-add">+    appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin EMIT call-switch-claimed to room=${sw.userEmail} claimedBy=${claimingDeviceId} sourceDeviceId=${sw.sourceDeviceId}`);</span>
+     this.emitSocketMessage(reqId, &#x27;call-switch-claimed&#x27;, {
+       callSid: parentCallSid,
+       claimedBy: claimingDeviceId,
+<span class="diff-hunk">@@ -4513,6 +4550,7 @@ export class CallController {</span>
+     delete callObj.switchInProgress;
+     await this.callService.updateCallCache(parentCallSid, callObj, reqId);
+ 
+<span class="diff-add">+    appLogger.info(`[SWITCH] Req:${reqId} claimSwitchJoin EXIT claimed parent=${parentCallSid}`);</span>
+     return &#x27;claimed&#x27;;
+   };
+ 
+<span class="diff-hunk">@@ -4524,7 +4562,7 @@ export class CallController {</span>
+    */
+   confirmSwitchJoin = async (req: CustomRequest, res: Response): Promise&lt;Response&gt; =&gt; {
+     appLogger.info(&quot;--------------------------confirmSwitchJoin--------------------------&quot;);
+<span class="diff-del">-    appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ confirmSwitchJoin ~ body:`, req.body);</span>
+<span class="diff-add">+    appLogger.info(`[SWITCH] ${new Date().toISOString()} Req:${req.id} confirmSwitchJoin body=${JSON.stringify(req.body)}`);</span>
+ 
+     try {
+       const callSid = req.body?.callSid;
+<span class="diff-hunk">@@ -4554,7 +4592,7 @@ export class CallController {</span>
+ 
+   switchDevice = async (req: CustomRequest, res: Response): Promise&lt;Response&gt; =&gt; {
+     appLogger.info(&quot;--------------------------switchDevice--------------------------&quot;);
+<span class="diff-del">-    appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switchDevice ~ body:`, req.body);</span>
+<span class="diff-add">+    appLogger.info(`[SWITCH] ${new Date().toISOString()} Req:${req.id} switchDevice body=${JSON.stringify(req.body)}`);</span>
+ 
+     try {
+       const callSid = req.body?.callSid;</pre></section>
+</body></html>

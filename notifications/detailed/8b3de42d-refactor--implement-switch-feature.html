@@ -1,0 +1,580 @@
+<!doctype html><html><head><meta charset="utf-8"><title>8b3de42d — refactor: Implement switch feature</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>refactor: Implement switch feature <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>8b3de42d184016976224601575964f6d9f56520f</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-21T14:43:42+05:30</td></tr><tr><td>Diff</td><td>+333 / -80 across 9 file(s)</td></tr><tr><td>Buckets</td><td>auth, feature, refactor</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>2 HIPAA finding(s)</li><li>large diff (413 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/call.ts</code></td><td>+217</td><td>-1</td></tr><tr><td><code>controllers/device-registration.ts</code></td><td>+0</td><td>-32</td></tr><tr><td><code>middlewares/validations/call.ts</code></td><td>+12</td><td>-0</td></tr><tr><td><code>repository/device_registration.ts</code></td><td>+35</td><td>-0</td></tr><tr><td><code>routes/call.ts</code></td><td>+2</td><td>-1</td></tr><tr><td><code>routes/device-registration.ts</code></td><td>+0</td><td>-46</td></tr><tr><td><code>service/device_registration.ts</code></td><td>+43</td><td>-0</td></tr><tr><td><code>types/call.ts</code></td><td>+19</td><td>-0</td></tr><tr><td><code>types/device_registration.ts</code></td><td>+5</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (2)</h2><table><thead><tr><th>Control</th><th>Location</th><th>Snippet</th><th>Suggested fix</th></tr></thead><tbody><tr><td><strong>Access Control</strong></td><td><code>routes/call.ts:71</code></td><td><pre>router.post(&quot;/calling/switch-device&quot;, switchDeviceValidation, validation, callController.switchDevice);</pre></td><td><div class='fix'>New route registered without an auth middleware as the first handler. Add verifyToken (or the project&#x27;s equivalent) before the controller.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>service/device_registration.ts:186</code></td><td><pre>appLogger.error(&quot;DeviceRegistrationService/sendSwitchPushToMobile error:&quot;, error);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr></tbody></table></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (1)</summary><ul><li><code>middlewares/validations/call.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/notifications/node_modules/typescript/lib/typescript.js:181064
+      &quot;       Debug.assert(!!scrip</code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/call.ts b/controllers/call.ts</span>
+<span class="diff-hunk">index 95656a1..7ce420e 100644</span>
+<span class="diff-hunk">--- a/controllers/call.ts</span>
+<span class="diff-hunk">+++ b/controllers/call.ts</span>
+<span class="diff-hunk">@@ -2,7 +2,7 @@ import { Request, Response } from &quot;express&quot;;</span>
+ import { CustomRequest } from &quot;../types/request&quot;;
+ import _ from &quot;lodash&quot;;
+ import { CommonUtils, SocketManager, formatUSPhoneNumber, CronJob } from &quot;../utils&quot;;
+<span class="diff-del">-import { NotificationService, RecruiterService, BlockedNumberService, SettingService } from &quot;../service&quot;;</span>
+<span class="diff-add">+import { NotificationService, RecruiterService, BlockedNumberService, SettingService, DeviceRegistrationService } from &quot;../service&quot;;</span>
+ import AccessToken, { VoiceGrant } from &quot;twilio/lib/jwt/AccessToken&quot;;
+ import VoiceResponse from &quot;twilio/lib/twiml/VoiceResponse&quot;;
+ import axios from &quot;axios&quot;;
+<span class="diff-hunk">@@ -3189,6 +3189,71 @@ export class CallController {</span>
+       const conferenceSidBody = req.body.ConferenceSid;
+ 
+       appLogger.info(`${new Date().toISOString()} Req: ${req.id} CallSID: ${callSid}  ~ file: call.ts:463 ~ CallController ~ handleParticipantStatus= ~ callStatus:`, callStatus, callSid, callDuration, req.body);
+<span class="diff-add">+      // Device-switch claim: an agent&#x27;s secondary device just joined the</span>
+<span class="diff-add">+      // call&#x27;s conference via the switch-join TwiML. The first device to</span>
+<span class="diff-add">+      // arrive wins; we drop the source leg (sourceCallSid from the</span>
+<span class="diff-add">+      // SwitchInProgress state) and notify the user&#x27;s room. Latecomers</span>
+<span class="diff-add">+      // are dropped from the conference so we never end up with the same</span>
+<span class="diff-add">+      // human in the call twice.</span>
+<span class="diff-add">+      const switchJoinFlag = (req.query?.switchJoin as string) === &#x27;true&#x27;;</span>
+<span class="diff-add">+      const switchJoinDeviceId = (req.query?.deviceId as string) ?? &#x27;&#x27;;</span>
+<span class="diff-add">+      const switchJoinConferenceName = (req.query?.conferenceName as string) ?? &#x27;&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (statusCallbackEvent === &#x27;participant-join&#x27; &amp;&amp; switchJoinFlag &amp;&amp; switchJoinConferenceName) {</span>
+<span class="diff-add">+        try {</span>
+<span class="diff-add">+          const parentCallSidFromName = switchJoinConferenceName.startsWith(&#x27;call_&#x27;)</span>
+<span class="diff-add">+            ? switchJoinConferenceName.replace(/^call_/, &#x27;&#x27;)</span>
+<span class="diff-add">+            : &#x27;&#x27;;</span>
+<span class="diff-add">+          const switchConfObj: cachedCall | null = parentCallSidFromName</span>
+<span class="diff-add">+            ? await this.callService.getConfCache(parentCallSidFromName, &#x27;parent_id&#x27;, req.id)</span>
+<span class="diff-add">+            : null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          if (!switchConfObj?.switchInProgress) {</span>
+<span class="diff-add">+            appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switch-join ~ no switchInProgress on call ${parentCallSidFromName}; ignoring`);</span>
+<span class="diff-add">+            return res.status(200).send(&#x27;OK&#x27;);</span>
+<span class="diff-add">+          }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          const sw = switchConfObj.switchInProgress;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          if (sw.claimedBy) {</span>
+<span class="diff-add">+            // Race lost — another device already joined. Drop this latecomer.</span>
+<span class="diff-add">+            appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switch-join ~ already claimed by ${sw.claimedBy}; dropping latecomer ${switchJoinDeviceId} (${callSid})`);</span>
+<span class="diff-add">+            try {</span>
+<span class="diff-add">+              await this.client.conferences(conferenceSidBody).participants(callSid).remove();</span>
+<span class="diff-add">+            } catch (dropErr: any) {</span>
+<span class="diff-add">+              appLogger.error(&#x27;switch-join ~ failed to drop latecomer:&#x27;, dropErr?.message);</span>
+<span class="diff-add">+            }</span>
+<span class="diff-add">+            return res.status(200).send(&#x27;OK&#x27;);</span>
+<span class="diff-add">+          }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          // First in: claim, drop the source leg, and broadcast.</span>
+<span class="diff-add">+          sw.claimedBy = switchJoinDeviceId;</span>
+<span class="diff-add">+          sw.claimedAt = new Date().toISOString();</span>
+<span class="diff-add">+          await this.callService.updateCallCache(parentCallSidFromName, switchConfObj, req.id);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          try {</span>
+<span class="diff-add">+            await this.client.conferences(conferenceSidBody).participants(sw.sourceCallSid).remove();</span>
+<span class="diff-add">+            appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switch-join ~ source leg ${sw.sourceCallSid} dropped`);</span>
+<span class="diff-add">+          } catch (dropErr: any) {</span>
+<span class="diff-add">+            appLogger.error(&#x27;switch-join ~ failed to drop source leg:&#x27;, dropErr?.message);</span>
+<span class="diff-add">+          }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          this.emitSocketMessage(req.id, &#x27;call-switch-claimed&#x27;, {</span>
+<span class="diff-add">+            callSid: parentCallSidFromName,</span>
+<span class="diff-add">+            claimedBy: switchJoinDeviceId,</span>
+<span class="diff-add">+            sourceDeviceId: sw.sourceDeviceId,</span>
+<span class="diff-add">+          }, sw.userEmail);</span>
+<span class="diff-add">+          this.emitSocketMessage(req.id, &#x27;call-update&#x27;, switchConfObj, sw.userEmail);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          // Clear switch state — done.</span>
+<span class="diff-add">+          delete switchConfObj.switchInProgress;</span>
+<span class="diff-add">+          await this.callService.updateCallCache(parentCallSidFromName, switchConfObj, req.id);</span>
+<span class="diff-add">+        } catch (e: any) {</span>
+<span class="diff-add">+          appLogger.error(&#x27;switch-join handler error:&#x27;, e?.message);</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+        return res.status(200).send(&#x27;OK&#x27;);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+       // Conference statusCallback: Twilio sends this when a participant joins (set by Comforce on patient&#x27;s conference TwiML).
+       // Fire recruiter-joined callback when we have recruiterJoinedCallbackUrl and this is the 3rd+ participant (patient + VAPI + recruiter).
+       if (statusCallbackEvent === &#x27;participant-join&#x27; &amp;&amp; conferenceSidBody) {
+<span class="diff-hunk">@@ -3890,6 +3955,37 @@ export class CallController {</span>
+     try {
+     appLogger.info(&quot;--------------------------outgoingCall--------------------------&quot;);
+     appLogger.info(`${new Date().toISOString()} Req: ${req.id}  ~ file: call.ts:549 ~ CallController ~ outgoingCall= ~ req:`, req.body);
+<span class="diff-add">+</span>
+<span class="diff-add">+    // Device-switch join: when an agent&#x27;s other device accepts the</span>
+<span class="diff-add">+    // switch invitation, the Voice SDK calls device.connect with</span>
+<span class="diff-add">+    // params.switchJoin=&#x27;true&#x27; + params.conferenceName. Bypass the</span>
+<span class="diff-add">+    // regular outgoing-call routing and just join the existing</span>
+<span class="diff-add">+    // conference. The statusCallback echoes deviceId so</span>
+<span class="diff-add">+    // handleParticipantStatus can claim the switch and drop the</span>
+<span class="diff-add">+    // source leg via SwitchInProgress.sourceCallSid.</span>
+<span class="diff-add">+    if (req.body?.switchJoin === &#x27;true&#x27; &amp;&amp; req.body?.conferenceName) {</span>
+<span class="diff-add">+      const switchConferenceName = String(req.body.conferenceName);</span>
+<span class="diff-add">+      const switchDeviceId = String(req.body.deviceId ?? &#x27;&#x27;);</span>
+<span class="diff-add">+      const switchCallSid = req.body?.CallSid ?? &#x27;&#x27;;</span>
+<span class="diff-add">+      const cbUrl = `${this.apiEP}/notifications/calling/handle-participant-status`</span>
+<span class="diff-add">+        + `?switchJoin=true`</span>
+<span class="diff-add">+        + `&amp;deviceId=${encodeURIComponent(switchDeviceId)}`</span>
+<span class="diff-add">+        + `&amp;conferenceName=${encodeURIComponent(switchConferenceName)}`;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const switchTwiml = new VoiceResponse();</span>
+<span class="diff-add">+      const switchDial = switchTwiml.dial({});</span>
+<span class="diff-add">+      switchDial.conference({</span>
+<span class="diff-add">+        statusCallback: cbUrl,</span>
+<span class="diff-add">+        statusCallbackEvent: [&#x27;join&#x27;, &#x27;leave&#x27;],</span>
+<span class="diff-add">+        endConferenceOnExit: false,</span>
+<span class="diff-add">+        startConferenceOnEnter: true,</span>
+<span class="diff-add">+      }, switchConferenceName);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ outgoingCall ~ switch-join twiml callSid=${switchCallSid} deviceId=${switchDeviceId} conf=${switchConferenceName}: ${switchTwiml.toString()}`);</span>
+<span class="diff-add">+      res.writeHead(200, { &#x27;Content-Type&#x27;: &#x27;text/xml&#x27; });</span>
+<span class="diff-add">+      return res.end(switchTwiml.toString());</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+     const callerId = req?.body?.callerId;
+     const fromNumber = req.body?.From;
+ 
+<span class="diff-hunk">@@ -4324,6 +4420,126 @@ export class CallController {</span>
+     }
+   };
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Move an in-progress call from the agent&#x27;s current device to one of</span>
+<span class="diff-add">+   * their other logged-in devices.</span>
+<span class="diff-add">+   *</span>
+<span class="diff-add">+   * - Marks `switchInProgress` on the call cache.</span>
+<span class="diff-add">+   * - Fans out a &quot;switch-incoming&quot; signal to all of the user&#x27;s devices</span>
+<span class="diff-add">+   *   except the source: socket emit to web (FE filters by sourceDeviceId</span>
+<span class="diff-add">+   *   in payload), FCM push to mobile (server filters by sourceDeviceId).</span>
+<span class="diff-add">+   * - Optional `targetDeviceId` narrows the fanout to one specific device.</span>
+<span class="diff-add">+   * - First device to join the conference (handled in handleParticipantStatus)</span>
+<span class="diff-add">+   *   wins; the source leg is dropped at that point.</span>
+<span class="diff-add">+   * - 30s watchdog clears state and emits `call-switch-failed` if no claim.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  switchDevice = async (req: CustomRequest, res: Response): Promise&lt;Response&gt; =&gt; {</span>
+<span class="diff-add">+    appLogger.info(&quot;--------------------------switchDevice--------------------------&quot;);</span>
+<span class="diff-add">+    appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switchDevice ~ body:`, req.body);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const callSid = req.body?.callSid;</span>
+<span class="diff-add">+      const sourceDeviceId = req.body?.sourceDeviceId;</span>
+<span class="diff-add">+      const sourceCallSid = req.body?.sourceCallSid;</span>
+<span class="diff-add">+      const targetDeviceId = req.body?.targetDeviceId;</span>
+<span class="diff-add">+      const userEmail = req.body?.userEmail;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const callObj: cachedCall = await this.callService.getCallConf(callSid, req.id);</span>
+<span class="diff-add">+      if (!callObj) {</span>
+<span class="diff-add">+        return res.status(404).json({ status: false, message: &quot;Call not found&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (callObj.switchInProgress &amp;&amp; !callObj.switchInProgress.claimedBy) {</span>
+<span class="diff-add">+        return res.status(409).json({</span>
+<span class="diff-add">+          status: false,</span>
+<span class="diff-add">+          message: &quot;A switch is already in progress for this call&quot;,</span>
+<span class="diff-add">+          data: callObj.switchInProgress,</span>
+<span class="diff-add">+        });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const parentId = callObj.parentCallSid || callSid;</span>
+<span class="diff-add">+      const conferenceName = `call_${parentId}`;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      callObj.switchInProgress = {</span>
+<span class="diff-add">+        sourceDeviceId,</span>
+<span class="diff-add">+        sourceCallSid,</span>
+<span class="diff-add">+        targetDeviceId: targetDeviceId || undefined,</span>
+<span class="diff-add">+        userEmail,</span>
+<span class="diff-add">+        requestedAt: new Date().toISOString(),</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+      await this.callService.updateCallCache(parentId, callObj, req.id);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const patientName = callObj?.patientData</span>
+<span class="diff-add">+        ? `${callObj.patientData.firstName ?? &#x27;&#x27;} ${callObj.patientData.lastName ?? &#x27;&#x27;}`.trim()</span>
+<span class="diff-add">+        : &#x27;&#x27;;</span>
+<span class="diff-add">+      const switchPayload = {</span>
+<span class="diff-add">+        callSid: parentId,</span>
+<span class="diff-add">+        parentCallSid: parentId,</span>
+<span class="diff-add">+        conferenceName,</span>
+<span class="diff-add">+        sourceDeviceId,</span>
+<span class="diff-add">+        targetDeviceId: targetDeviceId || null,</span>
+<span class="diff-add">+        callerName: patientName || null,</span>
+<span class="diff-add">+        callerPhone: callObj?.from ?? null,</span>
+<span class="diff-add">+        direction: callObj?.direction ?? null,</span>
+<span class="diff-add">+        callObj,</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Web fanout — emit to user&#x27;s email room. FE filters out the</span>
+<span class="diff-add">+      // source tab via payload.sourceDeviceId. If targetDeviceId is set,</span>
+<span class="diff-add">+      // only that tab opens the modal.</span>
+<span class="diff-add">+      this.emitSocketMessage(req.id, &#x27;call-switch-incoming&#x27;, { data: switchPayload }, userEmail);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Mobile fanout — server filters out the source device and (if</span>
+<span class="diff-add">+      // targetDeviceId is set) narrows to that single device. Mirrors</span>
+<span class="diff-add">+      // the incoming-call modal payload so mobile reuses its accept UI.</span>
+<span class="diff-add">+      const deviceRegistrationService = DeviceRegistrationService.getInstance();</span>
+<span class="diff-add">+      deviceRegistrationService</span>
+<span class="diff-add">+        .sendSwitchPushToMobile({</span>
+<span class="diff-add">+          userEmail,</span>
+<span class="diff-add">+          sourceDeviceId,</span>
+<span class="diff-add">+          targetDeviceId,</span>
+<span class="diff-add">+          payload: {</span>
+<span class="diff-add">+            title: patientName ? `Continue call with ${patientName}` : &#x27;Continue call here&#x27;,</span>
+<span class="diff-add">+            body: &#x27;Tap to take this call on this device.&#x27;,</span>
+<span class="diff-add">+            data: {</span>
+<span class="diff-add">+              event: &#x27;call-switch-incoming&#x27;,</span>
+<span class="diff-add">+              payload: JSON.stringify(switchPayload),</span>
+<span class="diff-add">+            },</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        })</span>
+<span class="diff-add">+        .catch((err) =&gt; appLogger.error(&#x27;switchDevice ~ FCM fanout error:&#x27;, err));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // 30s watchdog — if no device joins by then, clear state and notify.</span>
+<span class="diff-add">+      const switchTimeoutMs = 30000;</span>
+<span class="diff-add">+      setTimeout(async () =&gt; {</span>
+<span class="diff-add">+        try {</span>
+<span class="diff-add">+          const latest: cachedCall = await this.callService.getCallConf(parentId, req.id);</span>
+<span class="diff-add">+          if (latest?.switchInProgress &amp;&amp; !latest.switchInProgress.claimedBy) {</span>
+<span class="diff-add">+            const owner = latest.switchInProgress.userEmail;</span>
+<span class="diff-add">+            delete latest.switchInProgress;</span>
+<span class="diff-add">+            await this.callService.updateCallCache(parentId, latest, req.id);</span>
+<span class="diff-add">+            this.emitSocketMessage(req.id, &#x27;call-switch-failed&#x27;, {</span>
+<span class="diff-add">+              callSid: parentId,</span>
+<span class="diff-add">+              reason: &#x27;timeout&#x27;,</span>
+<span class="diff-add">+            }, owner);</span>
+<span class="diff-add">+            appLogger.info(`${new Date().toISOString()} Req: ${req.id} ~ switchDevice ~ no device claimed within ${switchTimeoutMs}ms; cleared`);</span>
+<span class="diff-add">+          }</span>
+<span class="diff-add">+        } catch (timeoutErr: any) {</span>
+<span class="diff-add">+          appLogger.error(&#x27;switchDevice ~ watchdog error:&#x27;, timeoutErr?.message);</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+      }, switchTimeoutMs);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        message: &#x27;Switch initiated&#x27;,</span>
+<span class="diff-add">+        data: { switchInProgress: callObj.switchInProgress, conferenceName },</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (err: any) {</span>
+<span class="diff-add">+      appLogger.error(&#x27;switchDevice error:&#x27;, err);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: err?.message ?? &#x27;Internal server error&#x27; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+   updateCallStatus = async (callSid, reqId) =&gt; {
+     try {
+     appLogger.info(&quot;--------------------------updateCallStatus--------------------------&quot;);
+<span class="diff-hunk">diff --git a/controllers/device-registration.ts b/controllers/device-registration.ts</span>
+<span class="diff-hunk">index 5e71482..108f95d 100644</span>
+<span class="diff-hunk">--- a/controllers/device-registration.ts</span>
+<span class="diff-hunk">+++ b/controllers/device-registration.ts</span>
+<span class="diff-hunk">@@ -137,38 +137,6 @@ export class DeviceRegistrationController {</span>
+     }
+   };
+ 
+<span class="diff-del">-  /**</span>
+<span class="diff-del">-   * Send a static test FCM push to all active mobile devices of the supplied email.</span>
+<span class="diff-del">-   * POST /device/test-push  Body: { userEmail }</span>
+<span class="diff-del">-   * Testing-only endpoint — no auth, no real notification persistence.</span>
+<span class="diff-del">-   */</span>
+<span class="diff-del">-  testPush = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-del">-    try {</span>
+<span class="diff-del">-      const userEmail = req.body?.userEmail as string;</span>
+<span class="diff-del">-      if (!userEmail) {</span>
+<span class="diff-del">-        return res.status(400).json({ status: false, message: &quot;userEmail is required&quot; });</span>
+<span class="diff-del">-      }</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      const result = await this.deviceRegistrationService.sendPushToUsers(userEmail, {</span>
+<span class="diff-del">-        title: &quot;Test Notification&quot;,</span>
+<span class="diff-del">-        body: &quot;This is a test FCM push from the Comm Module.&quot;,</span>
+<span class="diff-del">-        data: {</span>
+<span class="diff-del">-          event: &quot;test-push&quot;,</span>
+<span class="diff-del">-          sentAt: new Date().toISOString(),</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-      });</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      return res.status(200).json({</span>
+<span class="diff-del">-        status: true,</span>
+<span class="diff-del">-        message: &quot;Test push dispatched&quot;,</span>
+<span class="diff-del">-        data: result,</span>
+<span class="diff-del">-      });</span>
+<span class="diff-del">-    } catch (error: any) {</span>
+<span class="diff-del">-      appLogger.error(&quot;DeviceRegistrationController/testPush error:&quot;, error);</span>
+<span class="diff-del">-      return res.status(500).json({ status: false, message: error.message || &quot;Failed to send test push&quot; });</span>
+<span class="diff-del">-    }</span>
+<span class="diff-del">-  };</span>
+<span class="diff-del">-</span>
+   /**
+    * Initiate a test call to verify device SIP registration and push token pipeline.
+    * GET /device/test-call
+<span class="diff-hunk">diff --git a/middlewares/validations/call.ts b/middlewares/validations/call.ts</span>
+<span class="diff-hunk">index e55b92c..43a33cb 100644</span>
+<span class="diff-hunk">--- a/middlewares/validations/call.ts</span>
+<span class="diff-hunk">+++ b/middlewares/validations/call.ts</span>
+<span class="diff-hunk">@@ -57,6 +57,18 @@ export const warmTransferNotifyValidation: ValidationChain[] = [</span>
+   check(&quot;patientData&quot;, &quot;patientData is required&quot;).notEmpty().isObject(),
+ ];
+ 
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Validation for moving an in-progress call from the agent&#x27;s current</span>
+<span class="diff-add">+ * device to one of their other logged-in devices.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export const switchDeviceValidation: ValidationChain[] = [</span>
+<span class="diff-add">+  check(&quot;callSid&quot;, &quot;callSid is required&quot;).notEmpty().isString().trim(),</span>
+<span class="diff-add">+  check(&quot;sourceDeviceId&quot;, &quot;sourceDeviceId is required&quot;).notEmpty().isString().trim(),</span>
+<span class="diff-add">+  check(&quot;sourceCallSid&quot;, &quot;sourceCallSid is required&quot;).notEmpty().isString().trim(),</span>
+<span class="diff-add">+  check(&quot;userEmail&quot;, &quot;userEmail is required and must be a valid email&quot;).notEmpty().isEmail().trim(),</span>
+<span class="diff-add">+  check(&quot;targetDeviceId&quot;, &quot;targetDeviceId must be a string when provided&quot;).optional().isString().trim(),</span>
+<span class="diff-add">+];</span>
+<span class="diff-add">+</span>
+ 
+ /**
+  * Validates the request parameters using express-validator and sends an error response if validation fails.
+<span class="diff-hunk">diff --git a/repository/device_registration.ts b/repository/device_registration.ts</span>
+<span class="diff-hunk">index 997648a..d7dde6a 100644</span>
+<span class="diff-hunk">--- a/repository/device_registration.ts</span>
+<span class="diff-hunk">+++ b/repository/device_registration.ts</span>
+<span class="diff-hunk">@@ -158,6 +158,41 @@ export class DeviceRegistrationRepository {</span>
+     }
+   }
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Find active mobile (ios/android) tokens for a user-initiated device</span>
+<span class="diff-add">+   * switch. Always excludes the source device (the one that asked for</span>
+<span class="diff-add">+   * the switch). If `targetDeviceId` is supplied, narrows the result to</span>
+<span class="diff-add">+   * just that device — used when the FE picks a specific device.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async findActiveTokensForSwitch(</span>
+<span class="diff-add">+    userEmail: string,</span>
+<span class="diff-add">+    sourceDeviceId: string,</span>
+<span class="diff-add">+    targetDeviceId?: string</span>
+<span class="diff-add">+  ): Promise&lt;ActiveTokenRecord[]&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      if (!userEmail) return [];</span>
+<span class="diff-add">+      const query: any = {</span>
+<span class="diff-add">+        userEmail: { $regex: new RegExp(`^${userEmail}$`, &quot;i&quot;) },</span>
+<span class="diff-add">+        isActive: true,</span>
+<span class="diff-add">+        platform: { $in: [DevicePlatform.IOS, DevicePlatform.ANDROID] },</span>
+<span class="diff-add">+        fcmToken: { $nin: [null, &quot;&quot;] },</span>
+<span class="diff-add">+        pushTokenStatus: { $ne: PushTokenStatus.EXPIRED },</span>
+<span class="diff-add">+        deviceId: { $ne: sourceDeviceId },</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+      if (targetDeviceId) {</span>
+<span class="diff-add">+        query.deviceId = targetDeviceId;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      const docs = await DeviceRegistration.find(</span>
+<span class="diff-add">+        query,</span>
+<span class="diff-add">+        { _id: 1, userEmail: 1, fcmToken: 1, platform: 1, deviceId: 1 }</span>
+<span class="diff-add">+      ).lean();</span>
+<span class="diff-add">+      return docs as unknown as ActiveTokenRecord[];</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationRepository/findActiveTokensForSwitch error --&gt;&quot;, error);</span>
+<span class="diff-add">+      return [];</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Mark device records as having an expired push token. Does not change
+    * isActive — caller policy is to keep the device row but stop pushing.
+<span class="diff-hunk">diff --git a/routes/call.ts b/routes/call.ts</span>
+<span class="diff-hunk">index 6cbde0f..cbc8cf5 100644</span>
+<span class="diff-hunk">--- a/routes/call.ts</span>
+<span class="diff-hunk">+++ b/routes/call.ts</span>
+<span class="diff-hunk">@@ -1,6 +1,6 @@</span>
+ import { Router } from &quot;express&quot;;
+ import { CallController } from &quot;../controllers&quot;;
+<span class="diff-del">-import { availableUsersValidation, generateTokenValidation, validation, warmTransferNotifyValidation } from &quot;../middlewares/validations/call&quot;;</span>
+<span class="diff-add">+import { availableUsersValidation, generateTokenValidation, switchDeviceValidation, validation, warmTransferNotifyValidation } from &quot;../middlewares/validations/call&quot;;</span>
+ 
+ const callController = CallController.getInstance();
+ 
+<span class="diff-hunk">@@ -68,6 +68,7 @@ export default (router: Router) =&gt; {</span>
+   router.post(&quot;/calling/make-call&quot;, validation, callController.outgoingCall);
+   router.post(&quot;/calling/hold-call&quot;, validation, callController.holdCall);
+   router.post(&quot;/calling/transfer-call&quot;, validation, callController.transferCall);
+<span class="diff-add">+  router.post(&quot;/calling/switch-device&quot;, switchDeviceValidation, validation, callController.switchDevice);</span>
+   router.post(&quot;/calling/resume-call&quot;, validation, callController.resumeCall);
+   router.post(&quot;/calling/end-call&quot;, validation, callController.endCall);
+   router.post(&quot;/calling/add-agent&quot;, validation, callController.addAgentToCall);
+<span class="diff-hunk">diff --git a/routes/device-registration.ts b/routes/device-registration.ts</span>
+<span class="diff-hunk">index 6f636bd..adfee43 100644</span>
+<span class="diff-hunk">--- a/routes/device-registration.ts</span>
+<span class="diff-hunk">+++ b/routes/device-registration.ts</span>
+<span class="diff-hunk">@@ -266,51 +266,5 @@ const deviceRegistration = (router: Router) =&gt; {</span>
+    *         description: User not authenticated
+    */
+   router.get(&quot;/device/test-call&quot;, verifyToken, deviceRegistrationController.testCall);
+<span class="diff-del">-</span>
+<span class="diff-del">-  /**</span>
+<span class="diff-del">-   * @swagger</span>
+<span class="diff-del">-   * /device/test-push:</span>
+<span class="diff-del">-   *   post:</span>
+<span class="diff-del">-   *     summary: (Testing only) Send a static FCM push to all active mobile devices for a user</span>
+<span class="diff-del">-   *     tags: [DeviceRegistration]</span>
+<span class="diff-del">-   *     requestBody:</span>
+<span class="diff-del">-   *       required: true</span>
+<span class="diff-del">-   *       content:</span>
+<span class="diff-del">-   *         application/json:</span>
+<span class="diff-del">-   *           schema:</span>
+<span class="diff-del">-   *             type: object</span>
+<span class="diff-del">-   *             required:</span>
+<span class="diff-del">-   *               - userEmail</span>
+<span class="diff-del">-   *             properties:</span>
+<span class="diff-del">-   *               userEmail:</span>
+<span class="diff-del">-   *                 type: string</span>
+<span class="diff-del">-   *                 description: Email of the user whose devices should receive the test push</span>
+<span class="diff-del">-   *     responses:</span>
+<span class="diff-del">-   *       200:</span>
+<span class="diff-del">-   *         description: Test push dispatched</span>
+<span class="diff-del">-   *         content:</span>
+<span class="diff-del">-   *           application/json:</span>
+<span class="diff-del">-   *             schema:</span>
+<span class="diff-del">-   *               type: object</span>
+<span class="diff-del">-   *               properties:</span>
+<span class="diff-del">-   *                 status:</span>
+<span class="diff-del">-   *                   type: boolean</span>
+<span class="diff-del">-   *                 message:</span>
+<span class="diff-del">-   *                   type: string</span>
+<span class="diff-del">-   *                 data:</span>
+<span class="diff-del">-   *                   type: object</span>
+<span class="diff-del">-   *                   properties:</span>
+<span class="diff-del">-   *                     successCount:</span>
+<span class="diff-del">-   *                       type: integer</span>
+<span class="diff-del">-   *                     failureCount:</span>
+<span class="diff-del">-   *                       type: integer</span>
+<span class="diff-del">-   *                     invalidTokens:</span>
+<span class="diff-del">-   *                       type: array</span>
+<span class="diff-del">-   *                       items:</span>
+<span class="diff-del">-   *                         type: string</span>
+<span class="diff-del">-   *       400:</span>
+<span class="diff-del">-   *         description: userEmail missing</span>
+<span class="diff-del">-   */</span>
+<span class="diff-del">-  router.post(&quot;/device/test-push&quot;, deviceRegistrationController.testPush);</span>
+ };
+ export default deviceRegistration;
+<span class="diff-hunk">diff --git a/service/device_registration.ts b/service/device_registration.ts</span>
+<span class="diff-hunk">index 68929ee..33031f5 100644</span>
+<span class="diff-hunk">--- a/service/device_registration.ts</span>
+<span class="diff-hunk">+++ b/service/device_registration.ts</span>
+<span class="diff-hunk">@@ -145,6 +145,49 @@ export class DeviceRegistrationService {</span>
+     }
+   }
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Send a &quot;switch this call here&quot; FCM push to the user&#x27;s mobile devices,</span>
+<span class="diff-add">+   * excluding the device that initiated the switch. If `targetDeviceId`</span>
+<span class="diff-add">+   * is supplied, only that single device receives the push.</span>
+<span class="diff-add">+   * The payload mirrors an incoming-call modal so mobile can reuse its</span>
+<span class="diff-add">+   * existing accept/decline UI.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async sendSwitchPushToMobile(args: {</span>
+<span class="diff-add">+    userEmail: string;</span>
+<span class="diff-add">+    sourceDeviceId: string;</span>
+<span class="diff-add">+    targetDeviceId?: string;</span>
+<span class="diff-add">+    payload: FcmPayload;</span>
+<span class="diff-add">+  }) {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const { userEmail, sourceDeviceId, targetDeviceId, payload } = args;</span>
+<span class="diff-add">+      const devices = await this.deviceRegistrationRepository.findActiveTokensForSwitch(</span>
+<span class="diff-add">+        userEmail,</span>
+<span class="diff-add">+        sourceDeviceId,</span>
+<span class="diff-add">+        targetDeviceId</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+      if (!devices.length) {</span>
+<span class="diff-add">+        appLogger.info(</span>
+<span class="diff-add">+          `DeviceRegistrationService/sendSwitchPushToMobile ~ no eligible mobile devices (user=${userEmail}, source=${sourceDeviceId}, target=${targetDeviceId ?? &quot;any&quot;})`</span>
+<span class="diff-add">+        );</span>
+<span class="diff-add">+        return { successCount: 0, failureCount: 0, invalidTokens: [] };</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const tokens = devices.map((d) =&gt; d.fcmToken);</span>
+<span class="diff-add">+      const result = await this.fcmUtils.sendToTokens(tokens, payload);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (result.invalidTokens.length) {</span>
+<span class="diff-add">+        const invalidIds = devices</span>
+<span class="diff-add">+          .filter((d) =&gt; result.invalidTokens.includes(d.fcmToken))</span>
+<span class="diff-add">+          .map((d) =&gt; d._id);</span>
+<span class="diff-add">+        await this.deviceRegistrationRepository.markTokensExpired(invalidIds);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      return result;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationService/sendSwitchPushToMobile error:&quot;, error);</span>
+<span class="diff-add">+      return { successCount: 0, failureCount: 0, invalidTokens: [] };</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Initiate a test call to the user&#x27;s Twilio client identity.
+    * This verifies the full pipeline: SIP registration + push token delivery + audio path.
+<span class="diff-hunk">diff --git a/types/call.ts b/types/call.ts</span>
+<span class="diff-hunk">index 18c3cef..50b30a4 100644</span>
+<span class="diff-hunk">--- a/types/call.ts</span>
+<span class="diff-hunk">+++ b/types/call.ts</span>
+<span class="diff-hunk">@@ -85,6 +85,25 @@ export interface CachedCall {</span>
+   recruiterJoinedCallbackUrl?: string | null, // Warm transfer: Comforce URL to POST when a recruiter joins (parentCallSid in body)
+   recruiterJoinedCallbackFired?: boolean, // Set to true after recruiter-joined callback was fired (avoid double-firing)
+   isWarmTransfer?: boolean, // Explicitly marks this cache entry as a Comforce warm-transfer call (set in warmTransferNotify). Used to gate drop-off guards. Never set for regular/cold calls.
+<span class="diff-add">+  switchInProgress?: SwitchInProgress, // Set when an agent has requested a device switch on this call; cleared on claim, failure, or timeout.</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Tracks an in-flight device-switch request on a live call.</span>
+<span class="diff-add">+ * The agent&#x27;s source device asks the backend to move the call to</span>
+<span class="diff-add">+ * another of their devices; backend fans out a &quot;switch-incoming&quot;</span>
+<span class="diff-add">+ * signal (FCM for mobile, socket for web) excluding the source.</span>
+<span class="diff-add">+ * The first device to join the conference wins (`claimedBy`),</span>
+<span class="diff-add">+ * after which the source leg is dropped.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface SwitchInProgress {</span>
+<span class="diff-add">+  sourceDeviceId: string,</span>
+<span class="diff-add">+  sourceCallSid: string,    // Twilio CallSid of the source device&#x27;s Voice SDK leg — dropped on claim.</span>
+<span class="diff-add">+  targetDeviceId?: string,  // Optional: only this device should accept; otherwise fanout to all non-source devices.</span>
+<span class="diff-add">+  userEmail: string,        // Owner of the devices — used to scope FCM/socket fanout.</span>
+<span class="diff-add">+  requestedAt: string,</span>
+<span class="diff-add">+  claimedBy?: string,       // deviceId of the winning device, set when first switch-join lands.</span>
+<span class="diff-add">+  claimedAt?: string,</span>
+ }
+ 
+ export enum recordingStartedType {
+<span class="diff-hunk">diff --git a/types/device_registration.ts b/types/device_registration.ts</span>
+<span class="diff-hunk">index 50f94fa..2a518e3 100644</span>
+<span class="diff-hunk">--- a/types/device_registration.ts</span>
+<span class="diff-hunk">+++ b/types/device_registration.ts</span>
+<span class="diff-hunk">@@ -1,6 +1,11 @@</span>
+ export enum DevicePlatform {
+   IOS = &quot;ios&quot;,
+   ANDROID = &quot;android&quot;,
+<span class="diff-add">+  // Web tab — registers so the device-switch flow can target/exclude</span>
+<span class="diff-add">+  // a specific browser session by deviceId. The backend never pushes</span>
+<span class="diff-add">+  // FCM to a &#x27;web&#x27; device; web sessions receive switch signals via</span>
+<span class="diff-add">+  // socket.io instead.</span>
+<span class="diff-add">+  WEB = &quot;web&quot;,</span>
+ }
+ 
+ export enum SipStatus {</pre></section>
+</body></html>

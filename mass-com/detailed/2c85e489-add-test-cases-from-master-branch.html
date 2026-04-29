@@ -1,0 +1,513 @@
+<!doctype html><html><head><meta charset="utf-8"><title>2c85e489 — Add Test Cases from master branch</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← mass-com</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add Test Cases from master branch <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>2c85e4898d13430d150407aa4605b22cdc96c3f3</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-29T12:55:08+05:30</td></tr><tr><td>Diff</td><td>+411 / -0 across 11 file(s)</td></tr><tr><td>Buckets</td><td>auth, config, feature, tests</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (411 lines)</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>__tests__/service/communication.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/communicationResponseAction.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/config.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/department.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/index.test.ts</code></td><td>+36</td><td>-0</td></tr><tr><td><code>__tests__/service/messageHandlers/index.test.ts</code></td><td>+28</td><td>-0</td></tr><tr><td><code>__tests__/service/messageHandlers/massComHandler.test.ts</code></td><td>+51</td><td>-0</td></tr><tr><td><code>__tests__/service/processCommunication.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/setting.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/subScript.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/userToken.test.ts</code></td><td>+37</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/__tests__/service/communication.test.ts b/__tests__/service/communication.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..923cf6c</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/communication.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/communication.ts</span>
+<span class="diff-add">+ * Tests the CommunicationService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { CommunicationService } from &#x27;../../service/communication&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;CommunicationService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: CommunicationService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new CommunicationService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(CommunicationService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new CommunicationService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/communicationResponseAction.test.ts b/__tests__/service/communicationResponseAction.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..086c98e</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/communicationResponseAction.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/communication_response_action.ts</span>
+<span class="diff-add">+ * Tests the CommunicationResponseActionService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { CommunicationResponseActionService } from &#x27;../../service/communication_response_action&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;CommunicationResponseActionService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: CommunicationResponseActionService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new CommunicationResponseActionService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(CommunicationResponseActionService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new CommunicationResponseActionService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/config.test.ts b/__tests__/service/config.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..838c0e1</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/config.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/config.ts</span>
+<span class="diff-add">+ * Tests the ConfigService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { ConfigService } from &#x27;../../service/config&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;ConfigService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: ConfigService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new ConfigService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(ConfigService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new ConfigService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/department.test.ts b/__tests__/service/department.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..d806515</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/department.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/department.ts</span>
+<span class="diff-add">+ * Tests the DepartmentService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { DepartmentService } from &#x27;../../service/department&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;DepartmentService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: DepartmentService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new DepartmentService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(DepartmentService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new DepartmentService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/index.test.ts b/__tests__/service/index.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..f2e87ec</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/index.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,36 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/index.ts</span>
+<span class="diff-add">+ * Tests the service module exports</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;mass-com service index&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;module exports&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should export services&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(Object.keys(moduleExports).length).toBeGreaterThan(0);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should have all exports defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      Object.values(moduleExports).forEach(exp =&gt; {</span>
+<span class="diff-add">+        expect(exp).toBeDefined();</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;service availability&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be able to import from module&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; {</span>
+<span class="diff-add">+        require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      }).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/messageHandlers/index.test.ts b/__tests__/service/messageHandlers/index.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..da7a7d8</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/messageHandlers/index.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,28 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/messageHandlers/index.ts</span>
+<span class="diff-add">+ * Tests the message handlers module exports</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;mass-com messageHandlers index&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;module exports&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should export handlers&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../../service/messageHandlers&#x27;);</span>
+<span class="diff-add">+      expect(Object.keys(moduleExports).length).toBeGreaterThan(0);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should have all exports defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../../service/messageHandlers&#x27;);</span>
+<span class="diff-add">+      Object.values(moduleExports).forEach(exp =&gt; {</span>
+<span class="diff-add">+        expect(exp).toBeDefined();</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/messageHandlers/massComHandler.test.ts b/__tests__/service/messageHandlers/massComHandler.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..b84ef1a</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/messageHandlers/massComHandler.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,51 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/messageHandlers/massComHandler.ts</span>
+<span class="diff-add">+ * Tests the massComHandler message handler</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { massComHandler } from &#x27;../../../service/messageHandlers/massComHandler&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../../service&#x27;);</span>
+<span class="diff-add">+jest.mock(&#x27;../../../utils/logger&#x27;, () =&gt; ({</span>
+<span class="diff-add">+  __esModule: true,</span>
+<span class="diff-add">+  default: {</span>
+<span class="diff-add">+    info: jest.fn(),</span>
+<span class="diff-add">+    error: jest.fn(),</span>
+<span class="diff-add">+    warn: jest.fn(),</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+}));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;massComHandler&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;function definition&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be a function&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(typeof massComHandler).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;message handling&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should accept message objects&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const message = { body: { type: &#x27;test&#x27;, data: { event: &#x27;test&#x27; } } };</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await massComHandler(message);</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle invalid messages&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await massComHandler({ body: null });</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/processCommunication.test.ts b/__tests__/service/processCommunication.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..61a9f60</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/processCommunication.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/processCommunication.ts</span>
+<span class="diff-add">+ * Tests the ProcessCommunicationService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { ProcessCommunicationService } from &#x27;../../service/processCommunication&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;ProcessCommunicationService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: ProcessCommunicationService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new ProcessCommunicationService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(ProcessCommunicationService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new ProcessCommunicationService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/setting.test.ts b/__tests__/service/setting.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..6844ca5</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/setting.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/setting.ts</span>
+<span class="diff-add">+ * Tests the SettingService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { SettingService } from &#x27;../../service/setting&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;SettingService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: SettingService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new SettingService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(SettingService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new SettingService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/subScript.test.ts b/__tests__/service/subScript.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..8660e76</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/subScript.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/sub_script.ts</span>
+<span class="diff-add">+ * Tests the SubScriptService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { SubScriptService } from &#x27;../../service/sub_script&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;SubScriptService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: SubScriptService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new SubScriptService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(SubScriptService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new SubScriptService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/userToken.test.ts b/__tests__/service/userToken.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..8de76c9</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/userToken.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for mass-com/service/user_token.ts</span>
+<span class="diff-add">+ * Tests the UserTokenService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { UserTokenService } from &#x27;../../service/user_token&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;UserTokenService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: UserTokenService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new UserTokenService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(UserTokenService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new UserTokenService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span></pre></section>
+</body></html>

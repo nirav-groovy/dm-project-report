@@ -1,0 +1,103 @@
+<!doctype html><html><head><meta charset="utf-8"><title>4689c30b — Change test call api method</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>Change test call api method <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>4689c30b8f1697af496a5d13e5b8c5d88b286928</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-16T10:59:50+05:30</td></tr><tr><td>Diff</td><td>+6 / -18 across 2 file(s)</td></tr><tr><td>Buckets</td><td>misc</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>routes/device-registration.ts</code></td><td>+2</td><td>-16</td></tr><tr><td><code>service/device_registration.ts</code></td><td>+4</td><td>-2</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/routes/device-registration.ts b/routes/device-registration.ts</span>
+<span class="diff-hunk">index 0a89513..5a5bff5 100644</span>
+<span class="diff-hunk">--- a/routes/device-registration.ts</span>
+<span class="diff-hunk">+++ b/routes/device-registration.ts</span>
+<span class="diff-hunk">@@ -189,23 +189,11 @@ export default (router: Router) =&gt; {</span>
+   /**
+    * @swagger
+    * /device/test-call:
+<span class="diff-del">-   *   post:</span>
+<span class="diff-add">+   *   get:</span>
+    *     summary: Initiate a test call to verify device SIP registration and push token
+    *     tags: [DeviceRegistration]
+    *     security:
+    *       - bearerAuth: []
+<span class="diff-del">-   *     requestBody:</span>
+<span class="diff-del">-   *       required: true</span>
+<span class="diff-del">-   *       content:</span>
+<span class="diff-del">-   *         application/json:</span>
+<span class="diff-del">-   *           schema:</span>
+<span class="diff-del">-   *             type: object</span>
+<span class="diff-del">-   *             required:</span>
+<span class="diff-del">-   *               - callerId</span>
+<span class="diff-del">-   *             properties:</span>
+<span class="diff-del">-   *               callerId:</span>
+<span class="diff-del">-   *                 type: string</span>
+<span class="diff-del">-   *                 description: A valid Twilio phone number to call from</span>
+    *     responses:
+    *       200:
+    *         description: Test call initiated successfully
+<span class="diff-hunk">@@ -223,10 +211,8 @@ export default (router: Router) =&gt; {</span>
+    *                       type: string
+    *                 message:
+    *                   type: string
+<span class="diff-del">-   *       400:</span>
+<span class="diff-del">-   *         description: Missing callerId</span>
+    *       401:
+    *         description: User not authenticated
+    */
+<span class="diff-del">-  router.post(&quot;/device/test-call&quot;, verifyToken, deviceRegistrationController.testCall);</span>
+<span class="diff-add">+  router.get(&quot;/device/test-call&quot;, verifyToken, deviceRegistrationController.testCall);</span>
+ };
+<span class="diff-hunk">diff --git a/service/device_registration.ts b/service/device_registration.ts</span>
+<span class="diff-hunk">index 7b3ba62..3458306 100644</span>
+<span class="diff-hunk">--- a/service/device_registration.ts</span>
+<span class="diff-hunk">+++ b/service/device_registration.ts</span>
+<span class="diff-hunk">@@ -1,3 +1,4 @@</span>
+<span class="diff-add">+import params from &quot;../config/params&quot;;</span>
+ import { DeviceRegistrationRepository } from &quot;../repository&quot;;
+ import { DevicePlatform, SipStatus, PushTokenStatus } from &quot;../types/device_registration&quot;;
+ import { CommonUtils } from &quot;../utils&quot;;
+<span class="diff-hunk">@@ -77,13 +78,14 @@ export class DeviceRegistrationService {</span>
+    * Initiate a test call to the user&#x27;s Twilio client identity.
+    * This verifies the full pipeline: SIP registration + push token delivery + audio path.
+    */
+<span class="diff-del">-  async initiateTestCall(userEmail: string, callerId: string): Promise&lt;{ callSid: string }&gt; {</span>
+<span class="diff-add">+  async initiateTestCall(userEmail: string): Promise&lt;{ callSid: string }&gt; {</span>
+     try {
+       const client = await this.getTwilioClient();
+ 
+       const call = await client.calls.create({
+         to: `client:${userEmail}`,
+<span class="diff-del">-        from: callerId,</span>
+<span class="diff-add">+        from: params.test_numbers[0],</span>
+<span class="diff-add">+        label: &quot;This is a test call from Comtrak Lite&quot;,</span>
+         twiml: `&lt;Response&gt;&lt;Say voice=&quot;alice&quot;&gt;This is a test call from Comtrak Lite. Your device is configured correctly.&lt;/Say&gt;&lt;Hangup/&gt;&lt;/Response&gt;`,
+         timeout: 30,
+       });</pre></section>
+</body></html>

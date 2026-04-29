@@ -1,0 +1,142 @@
+<!doctype html><html><head><meta charset="utf-8"><title>179273d5 — feat: trim DeviceInfo to 450 char</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← DM-Clinical-Research</a> · <a href="../../index.html">project-report</a></div>
+<h1>feat: trim DeviceInfo to 450 char <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>179273d5d318a5b1307012de66ec8994d2199fc4</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-27T12:37:04+05:30</td></tr><tr><td>Diff</td><td>+6 / -45 across 2 file(s)</td></tr><tr><td>Buckets</td><td>api-routes, auth, db-schema, feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Controllers/Security/AuthController.cs</code></td><td>+3</td><td>-45</td></tr><tr><td><code>DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Models/Auth/ComtrakRefreshToken.cs</code></td><td>+3</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Controllers/Security/AuthController.cs b/DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Controllers/Security/AuthController.cs</span>
+<span class="diff-hunk">index c522ffd32..05abbbfb0 100644</span>
+<span class="diff-hunk">--- a/DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Controllers/Security/AuthController.cs</span>
+<span class="diff-hunk">+++ b/DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Controllers/Security/AuthController.cs</span>
+<span class="diff-hunk">@@ -118,14 +118,9 @@ namespace DMClinic.Web.Controllers</span>
+                 try
+                 {
+                     recruiter = await _context.Recruiters.Where(x =&gt; x.Email.ToLower() == externalAuth.email.ToLower()).FirstOrDefaultAsync();
+<span class="diff-del">-                    if (recruiter != null)</span>
+<span class="diff-del">-                    {</span>
+<span class="diff-del">-                        Logger.Information($&quot;Recruiter found: Id={recruiter.Id}, Email={recruiter.Email}, IsActive={recruiter.IsActive}&quot;);</span>
+<span class="diff-del">-                    }</span>
+                 }
+                 catch (Exception x)
+                 {
+<span class="diff-del">-                    Logger.Error($&quot;Recruiter lookup failed: {x.Message}&quot;);</span>
+                     recruiter = null;
+                 }
+ 
+<span class="diff-hunk">@@ -149,7 +144,6 @@ namespace DMClinic.Web.Controllers</span>
+                 string refreshToken = null;
+                 if (isContractLite)
+                 {
+<span class="diff-del">-                    Logger.Information($&quot;Contract-Lite flow: Creating refresh token for RecruiterId={recruiter.Id}, DeviceId={externalAuth.deviceId}&quot;);</span>
+                     refreshToken = GenerateSecureRefreshToken();
+                     var tokenRecord = new ComtrakRefreshToken
+                     {
+<span class="diff-hunk">@@ -159,12 +153,10 @@ namespace DMClinic.Web.Controllers</span>
+                         IssuedAt     = DateTime.UtcNow,
+                         ExpiresAt    = null,
+                         IsRevoked    = false,
+<span class="diff-del">-                        DeviceInfo   = externalAuth.idToken,</span>
+<span class="diff-add">+                        DeviceInfo   = externalAuth.idToken?.Substring(0, Math.Min(450, externalAuth.idToken.Length)),</span>
+                         CreatedOn    = DateTime.UtcNow
+                     };
+<span class="diff-del">-                    Logger.Information($&quot;Adding ComtrakRefreshToken to context&quot;);</span>
+                     await _context.ComtrakRefreshTokens.AddAsync(tokenRecord);
+<span class="diff-del">-                    Logger.Information($&quot;ComtrakRefreshToken added successfully&quot;);</span>
+                 }
+ 
+                 var jwt = await Tokens.GenerateJwt(roles, identity, _jwtFactory, _jwtOptions,
+<span class="diff-hunk">@@ -180,48 +172,14 @@ namespace DMClinic.Web.Controllers</span>
+                 };
+                 await _context.SignInOutHistory.AddAsync(signinDetails);
+ 
+<span class="diff-del">-                try</span>
+<span class="diff-del">-                {</span>
+<span class="diff-del">-                    Logger.Information($&quot;SaveChangesAsync: About to save {_context.ChangeTracker.Entries().Count()} changes&quot;);</span>
+<span class="diff-del">-                    await _context.SaveChangesAsync();</span>
+<span class="diff-del">-                    Logger.Information(&quot;SaveChangesAsync: Success&quot;);</span>
+<span class="diff-del">-                }</span>
+<span class="diff-del">-                catch (Exception saveEx)</span>
+<span class="diff-del">-                {</span>
+<span class="diff-del">-                    Logger.Error($&quot;SaveChangesAsync FAILED: {saveEx.GetType().Name}&quot;);</span>
+<span class="diff-del">-                    Logger.Error($&quot;Message: {saveEx.Message}&quot;);</span>
+<span class="diff-del">-                    if (saveEx.InnerException != null)</span>
+<span class="diff-del">-                    {</span>
+<span class="diff-del">-                        Logger.Error($&quot;InnerException: {saveEx.InnerException.GetType().Name} - {saveEx.InnerException.Message}&quot;);</span>
+<span class="diff-del">-                    }</span>
+<span class="diff-del">-                    if (saveEx is Microsoft.EntityFrameworkCore.DbUpdateException dbEx)</span>
+<span class="diff-del">-                    {</span>
+<span class="diff-del">-                        foreach (var entry in dbEx.Entries)</span>
+<span class="diff-del">-                        {</span>
+<span class="diff-del">-                            Logger.Error($&quot;Failed entity: {entry.Entity.GetType().Name}, State: {entry.State}&quot;);</span>
+<span class="diff-del">-                        }</span>
+<span class="diff-del">-                    }</span>
+<span class="diff-del">-                    throw;</span>
+<span class="diff-del">-                }</span>
+<span class="diff-add">+                await _context.SaveChangesAsync();</span>
+ 
+                 return new OkObjectResult(jwt);
+             }
+             catch (Exception ex)
+             {
+                 Logger.Error(ex);
+<span class="diff-del">-</span>
+<span class="diff-del">-                // TEMPORARY: Return detailed error to diagnose issue (remove after fix)</span>
+<span class="diff-del">-                string errorDetail = ex.Message;</span>
+<span class="diff-del">-                if (ex.InnerException != null)</span>
+<span class="diff-del">-                {</span>
+<span class="diff-del">-                    errorDetail += &quot; | Inner: &quot; + ex.InnerException.Message;</span>
+<span class="diff-del">-                    if (ex.InnerException.InnerException != null)</span>
+<span class="diff-del">-                    {</span>
+<span class="diff-del">-                        errorDetail += &quot; | Inner-Inner: &quot; + ex.InnerException.InnerException.Message;</span>
+<span class="diff-del">-                    }</span>
+<span class="diff-del">-                }</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-                return StatusCode(500, new { status = errorDetail, type = ex.GetType().Name });</span>
+<span class="diff-add">+                return StatusCode(500, Json(new { status = ex.Message.ToString() }));</span>
+             }
+         }
+ 
+<span class="diff-hunk">diff --git a/DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Models/Auth/ComtrakRefreshToken.cs b/DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Models/Auth/ComtrakRefreshToken.cs</span>
+<span class="diff-hunk">index a3792f382..4e581ce88 100644</span>
+<span class="diff-hunk">--- a/DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Models/Auth/ComtrakRefreshToken.cs</span>
+<span class="diff-hunk">+++ b/DM-Clinical-Research/DMClinic.Web/DMClinic.Web/Models/Auth/ComtrakRefreshToken.cs</span>
+<span class="diff-hunk">@@ -40,6 +40,9 @@ namespace DMClinic.Web.Models.Auth</span>
+         /// &lt;/summary&gt;
+         public string SuccessorToken { get; set; }
+ 
+<span class="diff-add">+        /// &lt;summary&gt;</span>
+<span class="diff-add">+        /// Trimmed to 450 chars. Currently unused for business logic but retained for future audit/debugging purposes.</span>
+<span class="diff-add">+        /// &lt;/summary&gt;</span>
+         public string DeviceInfo { get; set; }
+ 
+         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;</pre></section>
+</body></html>

@@ -1,0 +1,663 @@
+<!doctype html><html><head><meta charset="utf-8"><title>dc4a9e28 — feat: implement FCM push notifications for incoming inbox messages and add test-push endpoint</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>feat: implement FCM push notifications for incoming inbox messages and add test-push endpoint <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>dc4a9e28451d628833a7a1a11a6c7f8b58f6fb1e</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-20T15:04:57+05:30</td></tr><tr><td>Diff</td><td>+386 / -14 across 10 file(s)</td></tr><tr><td>Buckets</td><td>auth, feature, messaging</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>3 HIPAA finding(s)</li><li>large diff (400 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/device-registration.ts</code></td><td>+32</td><td>-0</td></tr><tr><td><code>middlewares/validations/device-registration.ts</code></td><td>+4</td><td>-2</td></tr><tr><td><code>models/device_registration.ts</code></td><td>+9</td><td>-1</td></tr><tr><td><code>repository/device_registration.ts</code></td><td>+55</td><td>-2</td></tr><tr><td><code>routes/device-registration.ts</code></td><td>+62</td><td>-6</td></tr><tr><td><code>service/device_registration.ts</code></td><td>+38</td><td>-2</td></tr><tr><td><code>service/notification.ts</code></td><td>+29</td><td>-0</td></tr><tr><td><code>types/device_registration.ts</code></td><td>+18</td><td>-1</td></tr><tr><td><code>utils/fcm.ts</code></td><td>+138</td><td>-0</td></tr><tr><td><code>utils/index.ts</code></td><td>+1</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (3)</h2><table><thead><tr><th>Control</th><th>Location</th><th>Snippet</th><th>Suggested fix</th></tr></thead><tbody><tr><td><strong>PHI in logs</strong></td><td><code>repository/device_registration.ts:156</code></td><td><pre>appLogger.error(&quot;DeviceRegistrationRepository/findActiveTokensByEmails error --&gt;&quot;, error);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr><tr><td><strong>Access Control</strong></td><td><code>routes/device-registration.ts:314</code></td><td><pre>router.post(&quot;/device/test-push&quot;, deviceRegistrationController.testPush);</pre></td><td><div class='fix'>New route registered without an auth middleware as the first handler. Add verifyToken (or the project&#x27;s equivalent) before the controller.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>service/device_registration.ts:128</code></td><td><pre>appLogger.info(`DeviceRegistrationService/sendPushToUsers ~ no mobile devices for ${recipients.join(&quot;,&quot;)}`);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr></tbody></table></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (1)</summary><ul><li><code>utils/index.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/notifications/node_modules/typescript/lib/typescript.js:146427
+   &quot;      const functionDeclaratio</code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/device-registration.ts b/controllers/device-registration.ts</span>
+<span class="diff-hunk">index 108f95d..5e71482 100644</span>
+<span class="diff-hunk">--- a/controllers/device-registration.ts</span>
+<span class="diff-hunk">+++ b/controllers/device-registration.ts</span>
+<span class="diff-hunk">@@ -137,6 +137,38 @@ export class DeviceRegistrationController {</span>
+     }
+   };
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Send a static test FCM push to all active mobile devices of the supplied email.</span>
+<span class="diff-add">+   * POST /device/test-push  Body: { userEmail }</span>
+<span class="diff-add">+   * Testing-only endpoint — no auth, no real notification persistence.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  testPush = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userEmail = req.body?.userEmail as string;</span>
+<span class="diff-add">+      if (!userEmail) {</span>
+<span class="diff-add">+        return res.status(400).json({ status: false, message: &quot;userEmail is required&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await this.deviceRegistrationService.sendPushToUsers(userEmail, {</span>
+<span class="diff-add">+        title: &quot;Test Notification&quot;,</span>
+<span class="diff-add">+        body: &quot;This is a test FCM push from the Comm Module.&quot;,</span>
+<span class="diff-add">+        data: {</span>
+<span class="diff-add">+          event: &quot;test-push&quot;,</span>
+<span class="diff-add">+          sentAt: new Date().toISOString(),</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        message: &quot;Test push dispatched&quot;,</span>
+<span class="diff-add">+        data: result,</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationController/testPush error:&quot;, error);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: error.message || &quot;Failed to send test push&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+   /**
+    * Initiate a test call to verify device SIP registration and push token pipeline.
+    * GET /device/test-call
+<span class="diff-hunk">diff --git a/middlewares/validations/device-registration.ts b/middlewares/validations/device-registration.ts</span>
+<span class="diff-hunk">index 621786f..af6d08a 100644</span>
+<span class="diff-hunk">--- a/middlewares/validations/device-registration.ts</span>
+<span class="diff-hunk">+++ b/middlewares/validations/device-registration.ts</span>
+<span class="diff-hunk">@@ -15,7 +15,10 @@ interface ValidationResultItem {</span>
+  * @type {ValidationChain[]}
+  */
+ export const deviceRegistrationValidation: ValidationChain[] = [
+<span class="diff-del">-  check(&quot;deviceToken&quot;).trim().notEmpty().withMessage(&quot;Device token is required&quot;),</span>
+<span class="diff-add">+  // Token fields are optional — user may deny notification / VoIP</span>
+<span class="diff-add">+  // permission, in which case the mobile SDK has no token to send.</span>
+<span class="diff-add">+  check(&quot;deviceToken&quot;).optional({ nullable: true }).isString().withMessage(&quot;Device token must be a string&quot;),</span>
+<span class="diff-add">+  check(&quot;fcmToken&quot;).optional({ nullable: true }).isString().withMessage(&quot;FCM token must be a string&quot;),</span>
+   check(&quot;platform&quot;)
+     .trim()
+     .notEmpty()
+<span class="diff-hunk">@@ -25,7 +28,6 @@ export const deviceRegistrationValidation: ValidationChain[] = [</span>
+   check(&quot;deviceId&quot;).trim().notEmpty().withMessage(&quot;Device ID is required&quot;),
+   check(&quot;deviceName&quot;).trim().notEmpty().withMessage(&quot;Device name is required&quot;),
+   check(&quot;appVersion&quot;).trim().notEmpty().withMessage(&quot;App version is required&quot;),
+<span class="diff-del">-  check(&quot;fcmToken&quot;).optional().trim().isString().withMessage(&quot;FCM token must be a string&quot;),</span>
+   check(&quot;sipStatus&quot;)
+     .optional()
+     .trim()
+<span class="diff-hunk">diff --git a/models/device_registration.ts b/models/device_registration.ts</span>
+<span class="diff-hunk">index 9217b45..c7d2cb8 100644</span>
+<span class="diff-hunk">--- a/models/device_registration.ts</span>
+<span class="diff-hunk">+++ b/models/device_registration.ts</span>
+<span class="diff-hunk">@@ -13,9 +13,14 @@ const DeviceRegistrationSchema: Schema&lt;IDeviceRegistration&gt; = new Schema&lt;IDevice</span>
+       type: String,
+       index: true,
+     },
+<span class="diff-add">+    // Twilio Voice SDK VoIP push token (iOS PushKit / Android FCM).</span>
+<span class="diff-add">+    // Optional — user may deny VoIP permission, and VoIP itself is</span>
+<span class="diff-add">+    // future scope. Backend does not push to this directly; Twilio</span>
+<span class="diff-add">+    // delivers VoIP notifications once the SDK registers the token.</span>
+     deviceToken: {
+<span class="diff-del">-      required: true,</span>
+<span class="diff-add">+      required: false,</span>
+       type: String,
+<span class="diff-add">+      default: null,</span>
+     },
+     platform: {
+       required: true,
+<span class="diff-hunk">@@ -39,6 +44,9 @@ const DeviceRegistrationSchema: Schema&lt;IDeviceRegistration&gt; = new Schema&lt;IDevice</span>
+       type: Boolean,
+       default: true,
+     },
+<span class="diff-add">+    // FCM push notification token (Android FCM / iOS APNS-via-FCM).</span>
+<span class="diff-add">+    // Optional — user may deny notification permission. This is the</span>
+<span class="diff-add">+    // token FcmUtils.sendToTokens() pushes to for chat/inbox alerts.</span>
+     fcmToken: {
+       required: false,
+       type: String,
+<span class="diff-hunk">diff --git a/repository/device_registration.ts b/repository/device_registration.ts</span>
+<span class="diff-hunk">index adf56ed..997648a 100644</span>
+<span class="diff-hunk">--- a/repository/device_registration.ts</span>
+<span class="diff-hunk">+++ b/repository/device_registration.ts</span>
+<span class="diff-hunk">@@ -2,6 +2,14 @@ import { DeviceRegistration } from &quot;../models&quot;;</span>
+ import { DevicePlatform, DeviceRegistrationResponse, SipStatus, PushTokenStatus } from &quot;../types/device_registration&quot;;
+ import appLogger from &quot;../utils/logger&quot;;
+ 
+<span class="diff-add">+export interface ActiveTokenRecord {</span>
+<span class="diff-add">+  _id: any;</span>
+<span class="diff-add">+  userEmail: string;</span>
+<span class="diff-add">+  fcmToken: string;</span>
+<span class="diff-add">+  platform: DevicePlatform;</span>
+<span class="diff-add">+  deviceId: string;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+ /**
+  * Repository class for managing device registrations.
+  */
+<span class="diff-hunk">@@ -21,7 +29,7 @@ export class DeviceRegistrationRepository {</span>
+    */
+   async upsert(data: {
+     userEmail: string;
+<span class="diff-del">-    deviceToken: string;</span>
+<span class="diff-add">+    deviceToken?: string;</span>
+     platform: DevicePlatform;
+     deviceId: string;
+     deviceName: string;
+<span class="diff-hunk">@@ -32,13 +40,15 @@ export class DeviceRegistrationRepository {</span>
+   }): Promise&lt;DeviceRegistrationResponse | null&gt; {
+     try {
+       const updateFields: any = {
+<span class="diff-del">-        deviceToken: data.deviceToken,</span>
+         platform: data.platform,
+         deviceName: data.deviceName,
+         appVersion: data.appVersion,
+         isActive: true,
+       };
+ 
+<span class="diff-add">+      if (data.deviceToken !== undefined) {</span>
+<span class="diff-add">+        updateFields.deviceToken = data.deviceToken;</span>
+<span class="diff-add">+      }</span>
+       if (data.fcmToken !== undefined) {
+         updateFields.fcmToken = data.fcmToken;
+       }
+<span class="diff-hunk">@@ -122,4 +132,47 @@ export class DeviceRegistrationRepository {</span>
+       return null;
+     }
+   }
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Find active mobile devices (ios/android) with a non-empty fcmToken</span>
+<span class="diff-add">+   * for any of the supplied user emails. Used to fan out push notifications.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async findActiveTokensByEmails(userEmails: string[]): Promise&lt;ActiveTokenRecord[]&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      if (!userEmails?.length) return [];</span>
+<span class="diff-add">+      const emailRegexes = userEmails.map((e) =&gt; new RegExp(`^${e}$`, &quot;i&quot;));</span>
+<span class="diff-add">+      const docs = await DeviceRegistration.find(</span>
+<span class="diff-add">+        {</span>
+<span class="diff-add">+          userEmail: { $in: emailRegexes },</span>
+<span class="diff-add">+          isActive: true,</span>
+<span class="diff-add">+          platform: { $in: [DevicePlatform.IOS, DevicePlatform.ANDROID] },</span>
+<span class="diff-add">+          fcmToken: { $nin: [null, &quot;&quot;] },</span>
+<span class="diff-add">+          pushTokenStatus: { $ne: PushTokenStatus.EXPIRED },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+        { _id: 1, userEmail: 1, fcmToken: 1, platform: 1, deviceId: 1 }</span>
+<span class="diff-add">+      ).lean();</span>
+<span class="diff-add">+      return docs as unknown as ActiveTokenRecord[];</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationRepository/findActiveTokensByEmails error --&gt;&quot;, error);</span>
+<span class="diff-add">+      return [];</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Mark device records as having an expired push token. Does not change</span>
+<span class="diff-add">+   * isActive — caller policy is to keep the device row but stop pushing.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async markTokensExpired(deviceObjectIds: any[]): Promise&lt;number&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      if (!deviceObjectIds?.length) return 0;</span>
+<span class="diff-add">+      const result = await DeviceRegistration.updateMany(</span>
+<span class="diff-add">+        { _id: { $in: deviceObjectIds } },</span>
+<span class="diff-add">+        { $set: { pushTokenStatus: PushTokenStatus.EXPIRED, lastStatusUpdate: new Date() } }</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+      return result.modifiedCount;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationRepository/markTokensExpired error --&gt;&quot;, error);</span>
+<span class="diff-add">+      return 0;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+ }
+<span class="diff-hunk">diff --git a/routes/device-registration.ts b/routes/device-registration.ts</span>
+<span class="diff-hunk">index 798de74..6f636bd 100644</span>
+<span class="diff-hunk">--- a/routes/device-registration.ts</span>
+<span class="diff-hunk">+++ b/routes/device-registration.ts</span>
+<span class="diff-hunk">@@ -9,7 +9,7 @@ import {</span>
+ 
+ const deviceRegistrationController = DeviceRegistrationController.getInstance();
+ 
+<span class="diff-del">-export default (router: Router) =&gt; {</span>
+<span class="diff-add">+const deviceRegistration = (router: Router) =&gt; {</span>
+   /**
+    * @swagger
+    * tags:
+<span class="diff-hunk">@@ -32,15 +32,11 @@ export default (router: Router) =&gt; {</span>
+    *           schema:
+    *             type: object
+    *             required:
+<span class="diff-del">-   *               - deviceToken</span>
+    *               - platform
+    *               - deviceId
+    *               - deviceName
+    *               - appVersion
+    *             properties:
+<span class="diff-del">-   *               deviceToken:</span>
+<span class="diff-del">-   *                 type: string</span>
+<span class="diff-del">-   *                 description: The push notification token from the device</span>
+    *               platform:
+    *                 type: string
+    *                 enum: [ios, android]
+<span class="diff-hunk">@@ -56,7 +52,20 @@ export default (router: Router) =&gt; {</span>
+    *                 description: Version of the app
+    *               fcmToken:
+    *                 type: string
+<span class="diff-del">-   *                 description: FCM (Android) or APNS (iOS) push notification token</span>
+<span class="diff-add">+   *                 nullable: true</span>
+<span class="diff-add">+   *                 description: &gt;-</span>
+<span class="diff-add">+   *                   FCM push notification token (Android FCM / iOS APNS-via-FCM).</span>
+<span class="diff-add">+   *                   Used by the backend to deliver chat / inbox alerts.</span>
+<span class="diff-add">+   *                   Optional — omit if the user denied notification permission.</span>
+<span class="diff-add">+   *               deviceToken:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 nullable: true</span>
+<span class="diff-add">+   *                 description: &gt;-</span>
+<span class="diff-add">+   *                   Twilio Voice SDK VoIP push token (iOS PushKit token; Android</span>
+<span class="diff-add">+   *                   reuses the FCM token). Reserved for future VoIP / CallKit</span>
+<span class="diff-add">+   *                   support. The backend does NOT push to this directly — Twilio</span>
+<span class="diff-add">+   *                   delivers VoIP pushes once the SDK registers the token.</span>
+<span class="diff-add">+   *                   Optional — omit if the user denied VoIP permission.</span>
+    *               sipStatus:
+    *                 type: string
+    *                 enum: [connected, disconnected]
+<span class="diff-hunk">@@ -257,4 +266,51 @@ export default (router: Router) =&gt; {</span>
+    *         description: User not authenticated
+    */
+   router.get(&quot;/device/test-call&quot;, verifyToken, deviceRegistrationController.testCall);
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /device/test-push:</span>
+<span class="diff-add">+   *   post:</span>
+<span class="diff-add">+   *     summary: (Testing only) Send a static FCM push to all active mobile devices for a user</span>
+<span class="diff-add">+   *     tags: [DeviceRegistration]</span>
+<span class="diff-add">+   *     requestBody:</span>
+<span class="diff-add">+   *       required: true</span>
+<span class="diff-add">+   *       content:</span>
+<span class="diff-add">+   *         application/json:</span>
+<span class="diff-add">+   *           schema:</span>
+<span class="diff-add">+   *             type: object</span>
+<span class="diff-add">+   *             required:</span>
+<span class="diff-add">+   *               - userEmail</span>
+<span class="diff-add">+   *             properties:</span>
+<span class="diff-add">+   *               userEmail:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 description: Email of the user whose devices should receive the test push</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: Test push dispatched</span>
+<span class="diff-add">+   *         content:</span>
+<span class="diff-add">+   *           application/json:</span>
+<span class="diff-add">+   *             schema:</span>
+<span class="diff-add">+   *               type: object</span>
+<span class="diff-add">+   *               properties:</span>
+<span class="diff-add">+   *                 status:</span>
+<span class="diff-add">+   *                   type: boolean</span>
+<span class="diff-add">+   *                 message:</span>
+<span class="diff-add">+   *                   type: string</span>
+<span class="diff-add">+   *                 data:</span>
+<span class="diff-add">+   *                   type: object</span>
+<span class="diff-add">+   *                   properties:</span>
+<span class="diff-add">+   *                     successCount:</span>
+<span class="diff-add">+   *                       type: integer</span>
+<span class="diff-add">+   *                     failureCount:</span>
+<span class="diff-add">+   *                       type: integer</span>
+<span class="diff-add">+   *                     invalidTokens:</span>
+<span class="diff-add">+   *                       type: array</span>
+<span class="diff-add">+   *                       items:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *       400:</span>
+<span class="diff-add">+   *         description: userEmail missing</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.post(&quot;/device/test-push&quot;, deviceRegistrationController.testPush);</span>
+ };
+<span class="diff-add">+export default deviceRegistration;</span>
+<span class="diff-hunk">diff --git a/service/device_registration.ts b/service/device_registration.ts</span>
+<span class="diff-hunk">index 1e28539..68929ee 100644</span>
+<span class="diff-hunk">--- a/service/device_registration.ts</span>
+<span class="diff-hunk">+++ b/service/device_registration.ts</span>
+<span class="diff-hunk">@@ -1,7 +1,8 @@</span>
+ import params from &quot;../config/params&quot;;
+ import { DeviceRegistrationRepository } from &quot;../repository&quot;;
+ import { DevicePlatform, SipStatus, PushTokenStatus } from &quot;../types/device_registration&quot;;
+<span class="diff-del">-import { CommonUtils } from &quot;../utils&quot;;</span>
+<span class="diff-add">+import { CommonUtils, FcmUtils } from &quot;../utils&quot;;</span>
+<span class="diff-add">+import { FcmPayload } from &quot;../utils/fcm&quot;;</span>
+ import appLogger from &quot;../utils/logger&quot;;
+ import { NotificationService } from &quot;./notification&quot;;
+ 
+<span class="diff-hunk">@@ -12,6 +13,7 @@ export class DeviceRegistrationService {</span>
+   private readonly commonUtils: CommonUtils;
+   private readonly notificationService: NotificationService;
+   private readonly deviceRegistrationRepository: DeviceRegistrationRepository;
+<span class="diff-add">+  private readonly fcmUtils: FcmUtils;</span>
+ 
+   private static instance: DeviceRegistrationService | null = null;
+   private twilioClient: any = null;
+<span class="diff-hunk">@@ -27,6 +29,7 @@ export class DeviceRegistrationService {</span>
+     this.commonUtils = CommonUtils.getInstance();
+     this.deviceRegistrationRepository = DeviceRegistrationRepository.getInstance();
+     this.notificationService = NotificationService.getInstance();
+<span class="diff-add">+    this.fcmUtils = FcmUtils.getInstance();</span>
+   }
+ 
+   /**
+<span class="diff-hunk">@@ -60,7 +63,7 @@ export class DeviceRegistrationService {</span>
+    */
+   async upsertDevice(data: {
+     userEmail: string;
+<span class="diff-del">-    deviceToken: string;</span>
+<span class="diff-add">+    deviceToken?: string;</span>
+     platform: DevicePlatform;
+     deviceId: string;
+     deviceName: string;
+<span class="diff-hunk">@@ -109,6 +112,39 @@ export class DeviceRegistrationService {</span>
+     return { isRegistered: !!device, deviceId, device };
+   }
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Send a push notification to every active mobile device (ios/android) of</span>
+<span class="diff-add">+   * the given user(s). Tokens that FCM rejects as invalid are flipped to</span>
+<span class="diff-add">+   * pushTokenStatus=expired so we stop targeting them.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async sendPushToUsers(userEmails: string | string[], payload: FcmPayload) {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const emails = Array.isArray(userEmails) ? userEmails : [userEmails];</span>
+<span class="diff-add">+      const recipients = emails.filter((e) =&gt; typeof e === &quot;string&quot; &amp;&amp; e.length &gt; 0);</span>
+<span class="diff-add">+      if (!recipients.length) return { successCount: 0, failureCount: 0, invalidTokens: [] };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const devices = await this.deviceRegistrationRepository.findActiveTokensByEmails(recipients);</span>
+<span class="diff-add">+      if (!devices.length) {</span>
+<span class="diff-add">+        appLogger.info(`DeviceRegistrationService/sendPushToUsers ~ no mobile devices for ${recipients.join(&quot;,&quot;)}`);</span>
+<span class="diff-add">+        return { successCount: 0, failureCount: 0, invalidTokens: [] };</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const tokens = devices.map((d) =&gt; d.fcmToken);</span>
+<span class="diff-add">+      const result = await this.fcmUtils.sendToTokens(tokens, payload);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (result.invalidTokens.length) {</span>
+<span class="diff-add">+        const invalidIds = devices</span>
+<span class="diff-add">+          .filter((d) =&gt; result.invalidTokens.includes(d.fcmToken))</span>
+<span class="diff-add">+          .map((d) =&gt; d._id);</span>
+<span class="diff-add">+        await this.deviceRegistrationRepository.markTokensExpired(invalidIds);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      return result;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationService/sendPushToUsers error:&quot;, error);</span>
+<span class="diff-add">+      return { successCount: 0, failureCount: 0, invalidTokens: [] };</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Initiate a test call to the user&#x27;s Twilio client identity.
+    * This verifies the full pipeline: SIP registration + push token delivery + audio path.
+<span class="diff-hunk">diff --git a/service/notification.ts b/service/notification.ts</span>
+<span class="diff-hunk">index b2d0a16..d1f9ea4 100644</span>
+<span class="diff-hunk">--- a/service/notification.ts</span>
+<span class="diff-hunk">+++ b/service/notification.ts</span>
+<span class="diff-hunk">@@ -23,6 +23,7 @@ import { ChatResponse } from &quot;../types/chat&quot;;</span>
+ import { callStatusTypeCap, callDirection } from &quot;../types/call&quot;;
+ import { ChatService } from &quot;../service/chat&quot;;
+ import { SettingService } from &quot;./setting&quot;;
+<span class="diff-add">+import { DeviceRegistrationService } from &quot;./device_registration&quot;;</span>
+ import appInsightsUtils from &quot;../utils/appInsightsUtils&quot;;
+ import { Filter } from &quot;../types/user_distro_group&quot;;
+ import appLogger from &quot;../utils/logger&quot;;
+<span class="diff-hunk">@@ -599,6 +600,32 @@ export class NotificationService {</span>
+     }
+   }
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Fan out an `incoming-inboxes` notification to mobile devices via FCM.</span>
+<span class="diff-add">+   * Lazily resolves DeviceRegistrationService at call-time to avoid a</span>
+<span class="diff-add">+   * circular constructor-time dependency between the two services.</span>
+<span class="diff-add">+   * Errors are swallowed so push failures never break the inbound pipeline.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private sendIncomingInboxPush(userEmail: string | string[], notification: NotificationResponse): void {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const deviceRegistrationService = DeviceRegistrationService.getInstance();</span>
+<span class="diff-add">+      const body = (notification.content ?? &quot;&quot;).toString().slice(0, 240);</span>
+<span class="diff-add">+      deviceRegistrationService</span>
+<span class="diff-add">+        .sendPushToUsers(userEmail, {</span>
+<span class="diff-add">+          title: notification.title,</span>
+<span class="diff-add">+          body,</span>
+<span class="diff-add">+          data: {</span>
+<span class="diff-add">+            event: &quot;incoming-inboxes&quot;,</span>
+<span class="diff-add">+            type: notification.communication_type ?? &quot;&quot;,</span>
+<span class="diff-add">+            notificationId: notification._id?.toString() ?? &quot;&quot;,</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        })</span>
+<span class="diff-add">+        .catch((err) =&gt; appLogger.error(&quot;NotificationService/sendIncomingInboxPush ~ async error:&quot;, err));</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationService/sendIncomingInboxPush error:&quot;, error?.message ?? error);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   async saveInboundNotification(data: NotificationData) {
+     appLogger.info(&quot;NotificationService --&gt; saveInboundNotification --&gt; data -&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;, data);
+     try {
+<span class="diff-hunk">@@ -663,6 +690,7 @@ export class NotificationService {</span>
+           type: notification.communication_type,
+         },
+       });
+<span class="diff-add">+      this.sendIncomingInboxPush(userEmail, notification);</span>
+       this.sendBadgeCountNotification(userEmail);
+     } catch (error: any) {
+       appLogger.info(&quot;NotificationService/saveInboundNotification --&gt;&quot;, error?.message);
+<span class="diff-hunk">@@ -713,6 +741,7 @@ export class NotificationService {</span>
+           type: notification.communication_type,
+         },
+       });
+<span class="diff-add">+      this.sendIncomingInboxPush(userEmail, notification);</span>
+       this.sendBadgeCountNotification(userEmail);
+     } catch (error: any) {
+       appLogger.info(`🚀 ~ file: notification.ts:627 ~ NotificationService ~ saveResponseBotNotification ~ error:`, error);
+<span class="diff-hunk">diff --git a/types/device_registration.ts b/types/device_registration.ts</span>
+<span class="diff-hunk">index b9879b7..50f94fa 100644</span>
+<span class="diff-hunk">--- a/types/device_registration.ts</span>
+<span class="diff-hunk">+++ b/types/device_registration.ts</span>
+<span class="diff-hunk">@@ -16,11 +16,28 @@ export enum PushTokenStatus {</span>
+ 
+ /**
+  * Represents the body of a device registration record.
+<span class="diff-add">+ *</span>
+<span class="diff-add">+ * Token fields — both are optional because the user may deny</span>
+<span class="diff-add">+ * notification / VoIP permission, in which case the mobile SDK</span>
+<span class="diff-add">+ * does not return a token.</span>
+<span class="diff-add">+ *</span>
+<span class="diff-add">+ *  - fcmToken    Standard push notification token used by the backend</span>
+<span class="diff-add">+ *                via firebase-admin to deliver chat / inbox alerts to</span>
+<span class="diff-add">+ *                Android (FCM) and iOS (APNS-via-FCM). This is what</span>
+<span class="diff-add">+ *                FcmUtils.sendToTokens() targets.</span>
+<span class="diff-add">+ *</span>
+<span class="diff-add">+ *  - deviceToken Reserved for the Twilio Voice SDK VoIP push token</span>
+<span class="diff-add">+ *                (iOS PushKit token; Android reuses the FCM token).</span>
+<span class="diff-add">+ *                The backend does NOT push to this directly — Twilio</span>
+<span class="diff-add">+ *                delivers VoIP pushes itself once the SDK registers</span>
+<span class="diff-add">+ *                the token with Twilio. We persist it here for audit</span>
+<span class="diff-add">+ *                and future server-side debugging only.</span>
+<span class="diff-add">+ *</span>
+  * @interface
+  */
+ export interface DeviceRegistrationBody {
+   userEmail: string;
+<span class="diff-del">-  deviceToken: string;</span>
+<span class="diff-add">+  deviceToken?: string;</span>
+   platform: DevicePlatform;
+   deviceId: string;
+   deviceName: string;
+<span class="diff-hunk">diff --git a/utils/fcm.ts b/utils/fcm.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..ecbdc87</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/utils/fcm.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,138 @@</span>
+<span class="diff-add">+import * as admin from &quot;firebase-admin&quot;;</span>
+<span class="diff-add">+import { CommonUtils } from &quot;./common&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;./logger&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export interface FcmPayload {</span>
+<span class="diff-add">+  title: string;</span>
+<span class="diff-add">+  body: string;</span>
+<span class="diff-add">+  data?: Record&lt;string, string&gt;;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export interface FcmSendResult {</span>
+<span class="diff-add">+  successCount: number;</span>
+<span class="diff-add">+  failureCount: number;</span>
+<span class="diff-add">+  invalidTokens: string[];</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Token errors that mean the device token is no longer usable and should</span>
+<span class="diff-add">+ * be marked as expired so we stop trying to deliver to it.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+const INVALID_TOKEN_ERRORS = new Set([</span>
+<span class="diff-add">+  &quot;messaging/registration-token-not-registered&quot;,</span>
+<span class="diff-add">+  &quot;messaging/invalid-registration-token&quot;,</span>
+<span class="diff-add">+  &quot;messaging/invalid-argument&quot;,</span>
+<span class="diff-add">+  &quot;messaging/mismatched-credential&quot;,</span>
+<span class="diff-add">+]);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export class FcmUtils {</span>
+<span class="diff-add">+  private static instance: FcmUtils | null = null;</span>
+<span class="diff-add">+  private app: admin.app.App | null = null;</span>
+<span class="diff-add">+  private initPromise: Promise&lt;admin.app.App | null&gt; | null = null;</span>
+<span class="diff-add">+  private readonly commonUtils: CommonUtils;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  public static getInstance() {</span>
+<span class="diff-add">+    FcmUtils.instance ??= new FcmUtils();</span>
+<span class="diff-add">+    return FcmUtils.instance;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  private constructor() {</span>
+<span class="diff-add">+    this.commonUtils = CommonUtils.getInstance();</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Lazily initialise the Firebase Admin app from the service-account JSON</span>
+<span class="diff-add">+   * stored in Azure Key Vault under `${env}-FIREBASE-SERVICE-ACCOUNT`.</span>
+<span class="diff-add">+   * The secret value is cached by CommonUtils.getSecret (24h TTL).</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private async getApp(): Promise&lt;admin.app.App | null&gt; {</span>
+<span class="diff-add">+    if (this.app) return this.app;</span>
+<span class="diff-add">+    this.initPromise ??= this.initApp();</span>
+<span class="diff-add">+    this.app = await this.initPromise;</span>
+<span class="diff-add">+    return this.app;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  private async initApp(): Promise&lt;admin.app.App | null&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const env = process.env.NODE_ENV ?? &quot;local&quot;;</span>
+<span class="diff-add">+      const secret = await this.commonUtils.getSecret(`${env}-FIREBASE-SERVICE-ACCOUNT`);</span>
+<span class="diff-add">+      if (!secret) {</span>
+<span class="diff-add">+        appLogger.error(&quot;FcmUtils/initApp ~ Firebase service account secret is empty&quot;);</span>
+<span class="diff-add">+        return null;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const serviceAccount = typeof secret === &quot;string&quot; ? JSON.parse(secret) : secret;</span>
+<span class="diff-add">+      const existing = admin.apps.find((a) =&gt; a?.name === &quot;comm-module-fcm&quot;);</span>
+<span class="diff-add">+      if (existing) return existing;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return admin.initializeApp(</span>
+<span class="diff-add">+        {</span>
+<span class="diff-add">+          credential: admin.credential.cert(serviceAccount),</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+        &quot;comm-module-fcm&quot;</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;FcmUtils/initApp error:&quot;, error?.message ?? error);</span>
+<span class="diff-add">+      return null;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Send a push notification to one or more device tokens.</span>
+<span class="diff-add">+   * Returns per-call counts and the list of tokens FCM rejected as invalid</span>
+<span class="diff-add">+   * so the caller can mark those device records as expired.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async sendToTokens(tokens: string[], payload: FcmPayload): Promise&lt;FcmSendResult&gt; {</span>
+<span class="diff-add">+    const empty: FcmSendResult = { successCount: 0, failureCount: 0, invalidTokens: [] };</span>
+<span class="diff-add">+    if (!tokens?.length) return empty;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const app = await this.getApp();</span>
+<span class="diff-add">+    if (!app) return empty;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const message: admin.messaging.MulticastMessage = {</span>
+<span class="diff-add">+      tokens,</span>
+<span class="diff-add">+      notification: {</span>
+<span class="diff-add">+        title: payload.title,</span>
+<span class="diff-add">+        body: payload.body,</span>
+<span class="diff-add">+      },</span>
+<span class="diff-add">+      data: payload.data,</span>
+<span class="diff-add">+      android: {</span>
+<span class="diff-add">+        priority: &quot;high&quot;,</span>
+<span class="diff-add">+        notification: {</span>
+<span class="diff-add">+          sound: &quot;default&quot;,</span>
+<span class="diff-add">+          channelId: &quot;default&quot;,</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      },</span>
+<span class="diff-add">+      apns: {</span>
+<span class="diff-add">+        payload: {</span>
+<span class="diff-add">+          aps: {</span>
+<span class="diff-add">+            sound: &quot;default&quot;,</span>
+<span class="diff-add">+            badge: 1,</span>
+<span class="diff-add">+            contentAvailable: true,</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      },</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const response = await app.messaging().sendEachForMulticast(message);</span>
+<span class="diff-add">+      const invalidTokens: string[] = [];</span>
+<span class="diff-add">+      response.responses.forEach((r, idx) =&gt; {</span>
+<span class="diff-add">+        if (!r.success &amp;&amp; r.error &amp;&amp; INVALID_TOKEN_ERRORS.has(r.error.code)) {</span>
+<span class="diff-add">+          invalidTokens.push(tokens[idx]);</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+      appLogger.info(</span>
+<span class="diff-add">+        `FcmUtils/sendToTokens ~ success: ${response.successCount}, failure: ${response.failureCount}, invalid: ${invalidTokens.length}`</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+      return {</span>
+<span class="diff-add">+        successCount: response.successCount,</span>
+<span class="diff-add">+        failureCount: response.failureCount,</span>
+<span class="diff-add">+        invalidTokens,</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;FcmUtils/sendToTokens error:&quot;, error?.message ?? error);</span>
+<span class="diff-add">+      return empty;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/utils/index.ts b/utils/index.ts</span>
+<span class="diff-hunk">index 45d136d..ea1a86e 100644</span>
+<span class="diff-hunk">--- a/utils/index.ts</span>
+<span class="diff-hunk">+++ b/utils/index.ts</span>
+<span class="diff-hunk">@@ -5,4 +5,5 @@ export { GlobalServiceBusUtils } from &quot;./globalServiceBus&quot;;</span>
+ export { EmailUtils } from &quot;./email&quot;;
+ export { SocketManager } from &quot;./socketManager&quot;;
+ export { CronJob } from &quot;./cronJob&quot;;
+<span class="diff-add">+export { FcmUtils } from &quot;./fcm&quot;;</span>
+ export { validateUSPhoneNumber, formatUSPhoneNumber, cleanPhoneNumber, validateIVRPhoneNumber } from &quot;./phoneValidation&quot;;</pre></section>
+</body></html>

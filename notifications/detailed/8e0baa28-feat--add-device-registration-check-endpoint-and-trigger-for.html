@@ -1,0 +1,244 @@
+<!doctype html><html><head><meta charset="utf-8"><title>8e0baa28 — feat: add device registration check endpoint and trigger force-logout events on deactivation</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>feat: add device registration check endpoint and trigger force-logout events on deactivation <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>8e0baa28d6060dc3ac621e963fd3036d62d89a49</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-17T14:01:06+05:30</td></tr><tr><td>Diff</td><td>+122 / -5 across 4 file(s)</td></tr><tr><td>Buckets</td><td>feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (127 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/device-registration.ts</code></td><td>+25</td><td>-1</td></tr><tr><td><code>repository/device_registration.ts</code></td><td>+16</td><td>-0</td></tr><tr><td><code>routes/device-registration.ts</code></td><td>+42</td><td>-0</td></tr><tr><td><code>service/device_registration.ts</code></td><td>+39</td><td>-4</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (1)</summary><ul><li><code>service/device_registration.ts</code><br><code>double free or corruption (out)
+</code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/device-registration.ts b/controllers/device-registration.ts</span>
+<span class="diff-hunk">index fa182f5..108f95d 100644</span>
+<span class="diff-hunk">--- a/controllers/device-registration.ts</span>
+<span class="diff-hunk">+++ b/controllers/device-registration.ts</span>
+<span class="diff-hunk">@@ -113,9 +113,33 @@ export class DeviceRegistrationController {</span>
+     }
+   };
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Check if a specific device is registered (active) for the current user.</span>
+<span class="diff-add">+   * GET /device/check-registration?deviceId=xxx</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  checkDeviceRegistration = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userEmail = req.user?.Email;</span>
+<span class="diff-add">+      if (!userEmail) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const deviceId = (req.query.deviceId as string) || req.body?.deviceId;</span>
+<span class="diff-add">+      if (!deviceId) {</span>
+<span class="diff-add">+        return res.status(400).json({ status: false, message: &quot;Device ID is required&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await this.deviceRegistrationService.isDeviceRegistered(userEmail, deviceId);</span>
+<span class="diff-add">+      return res.status(200).json({ status: true, data: result });</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationController/checkDeviceRegistration error:&quot;, error);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+   /**
+    * Initiate a test call to verify device SIP registration and push token pipeline.
+<span class="diff-del">-   * POST /device/test-call</span>
+<span class="diff-add">+   * GET /device/test-call</span>
+    */
+   testCall = async (req: UserRequest, res: Response) =&gt; {
+     try {
+<span class="diff-hunk">diff --git a/repository/device_registration.ts b/repository/device_registration.ts</span>
+<span class="diff-hunk">index 5dc83ad..adf56ed 100644</span>
+<span class="diff-hunk">--- a/repository/device_registration.ts</span>
+<span class="diff-hunk">+++ b/repository/device_registration.ts</span>
+<span class="diff-hunk">@@ -95,6 +95,22 @@ export class DeviceRegistrationRepository {</span>
+     }
+   }
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Check if a specific device is active for a user.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async findActiveDevice(userEmail: string, deviceId: string): Promise&lt;DeviceRegistrationResponse | null&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      return await DeviceRegistration.findOne({</span>
+<span class="diff-add">+        userEmail: { $regex: new RegExp(`^${userEmail}$`, &quot;i&quot;) },</span>
+<span class="diff-add">+        deviceId,</span>
+<span class="diff-add">+        isActive: true,</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationRepository/findActiveDevice error --&gt;&quot;, error);</span>
+<span class="diff-add">+      return null;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * List all active devices for a user.
+    */
+<span class="diff-hunk">diff --git a/routes/device-registration.ts b/routes/device-registration.ts</span>
+<span class="diff-hunk">index 5a5bff5..798de74 100644</span>
+<span class="diff-hunk">--- a/routes/device-registration.ts</span>
+<span class="diff-hunk">+++ b/routes/device-registration.ts</span>
+<span class="diff-hunk">@@ -186,6 +186,48 @@ export default (router: Router) =&gt; {</span>
+    */
+   router.get(&quot;/device/list&quot;, verifyToken, deviceRegistrationController.listDevices);
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /device/check-registration:</span>
+<span class="diff-add">+   *   get:</span>
+<span class="diff-add">+   *     summary: Check if a device is registered (active) for the current user</span>
+<span class="diff-add">+   *     tags: [DeviceRegistration]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     parameters:</span>
+<span class="diff-add">+   *       - in: query</span>
+<span class="diff-add">+   *         name: deviceId</span>
+<span class="diff-add">+   *         required: true</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: string</span>
+<span class="diff-add">+   *         description: The unique device identifier to check</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: Device registration status</span>
+<span class="diff-add">+   *         content:</span>
+<span class="diff-add">+   *           application/json:</span>
+<span class="diff-add">+   *             schema:</span>
+<span class="diff-add">+   *               type: object</span>
+<span class="diff-add">+   *               properties:</span>
+<span class="diff-add">+   *                 status:</span>
+<span class="diff-add">+   *                   type: boolean</span>
+<span class="diff-add">+   *                 data:</span>
+<span class="diff-add">+   *                   type: object</span>
+<span class="diff-add">+   *                   properties:</span>
+<span class="diff-add">+   *                     isRegistered:</span>
+<span class="diff-add">+   *                       type: boolean</span>
+<span class="diff-add">+   *                     deviceId:</span>
+<span class="diff-add">+   *                       type: string</span>
+<span class="diff-add">+   *                     device:</span>
+<span class="diff-add">+   *                       type: object</span>
+<span class="diff-add">+   *                       nullable: true</span>
+<span class="diff-add">+   *       400:</span>
+<span class="diff-add">+   *         description: Missing deviceId</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.get(&quot;/device/check-registration&quot;, verifyToken, deviceRegistrationController.checkDeviceRegistration);</span>
+<span class="diff-add">+</span>
+   /**
+    * @swagger
+    * /device/test-call:
+<span class="diff-hunk">diff --git a/service/device_registration.ts b/service/device_registration.ts</span>
+<span class="diff-hunk">index 3458306..1e28539 100644</span>
+<span class="diff-hunk">--- a/service/device_registration.ts</span>
+<span class="diff-hunk">+++ b/service/device_registration.ts</span>
+<span class="diff-hunk">@@ -3,12 +3,14 @@ import { DeviceRegistrationRepository } from &quot;../repository&quot;;</span>
+ import { DevicePlatform, SipStatus, PushTokenStatus } from &quot;../types/device_registration&quot;;
+ import { CommonUtils } from &quot;../utils&quot;;
+ import appLogger from &quot;../utils/logger&quot;;
+<span class="diff-add">+import { NotificationService } from &quot;./notification&quot;;</span>
+ 
+ /**
+  * Service class for managing device registrations.
+  */
+ export class DeviceRegistrationService {
+   private readonly commonUtils: CommonUtils;
+<span class="diff-add">+  private readonly notificationService: NotificationService;</span>
+   private readonly deviceRegistrationRepository: DeviceRegistrationRepository;
+ 
+   private static instance: DeviceRegistrationService | null = null;
+<span class="diff-hunk">@@ -24,6 +26,23 @@ export class DeviceRegistrationService {</span>
+   constructor() {
+     this.commonUtils = CommonUtils.getInstance();
+     this.deviceRegistrationRepository = DeviceRegistrationRepository.getInstance();
+<span class="diff-add">+    this.notificationService = NotificationService.getInstance();</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Emit a force-logout socket event to the user so the client can log out.</span>
+<span class="diff-add">+   * Fires when a device is unregistered/deactivated.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private async emitForceLogout(userEmail: string, deviceId?: string) {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      await this.notificationService.saveSocketData({</span>
+<span class="diff-add">+        userEmail,</span>
+<span class="diff-add">+        socketEvent: &quot;force-logout&quot;,</span>
+<span class="diff-add">+        socketValue: { reason: &quot;device_unregistered&quot;, deviceId: deviceId ?? null },</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;DeviceRegistrationService/emitForceLogout error:&quot;, error);</span>
+<span class="diff-add">+    }</span>
+   }
+ 
+   private async getTwilioClient() {
+<span class="diff-hunk">@@ -54,17 +73,25 @@ export class DeviceRegistrationService {</span>
+   }
+ 
+   /**
+<span class="diff-del">-   * Deactivate a specific device on logout.</span>
+<span class="diff-add">+   * Deactivate a specific device on logout. Emits force-logout to the user.</span>
+    */
+   async deactivateDevice(userEmail: string, deviceId: string) {
+<span class="diff-del">-    return await this.deviceRegistrationRepository.deactivateDevice(userEmail, deviceId);</span>
+<span class="diff-add">+    const result = await this.deviceRegistrationRepository.deactivateDevice(userEmail, deviceId);</span>
+<span class="diff-add">+    if (result) {</span>
+<span class="diff-add">+      await this.emitForceLogout(userEmail, deviceId);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+    return result;</span>
+   }
+ 
+   /**
+<span class="diff-del">-   * Deactivate all devices for a user.</span>
+<span class="diff-add">+   * Deactivate all devices for a user. Emits force-logout to the user.</span>
+    */
+   async deactivateAllUserDevices(userEmail: string) {
+<span class="diff-del">-    return await this.deviceRegistrationRepository.deactivateAllByUserId(userEmail);</span>
+<span class="diff-add">+    const count = await this.deviceRegistrationRepository.deactivateAllByUserId(userEmail);</span>
+<span class="diff-add">+    if (count &gt; 0) {</span>
+<span class="diff-add">+      await this.emitForceLogout(userEmail);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+    return count;</span>
+   }
+ 
+   /**
+<span class="diff-hunk">@@ -74,6 +101,14 @@ export class DeviceRegistrationService {</span>
+     return await this.deviceRegistrationRepository.findActiveByUserId(userEmail);
+   }
+ 
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Check whether a given device is registered (active) for the user.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  async isDeviceRegistered(userEmail: string, deviceId: string) {</span>
+<span class="diff-add">+    const device = await this.deviceRegistrationRepository.findActiveDevice(userEmail, deviceId);</span>
+<span class="diff-add">+    return { isRegistered: !!device, deviceId, device };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Initiate a test call to the user&#x27;s Twilio client identity.
+    * This verifies the full pipeline: SIP registration + push token delivery + audio path.</pre></section>
+</body></html>

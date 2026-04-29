@@ -1,0 +1,139 @@
+<!doctype html><html><head><meta charset="utf-8"><title>44c85e27 — Fix issue in switch feature</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>Fix issue in switch feature <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>44c85e27fdcdb30029bdc08a22573d20966c65bc</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-21T17:44:31+05:30</td></tr><tr><td>Diff</td><td>+53 / -3 across 2 file(s)</td></tr><tr><td>Buckets</td><td>auth, bugfix</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/call.ts</code></td><td>+52</td><td>-3</td></tr><tr><td><code>middlewares/validations/call.ts</code></td><td>+1</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/call.ts b/controllers/call.ts</span>
+<span class="diff-hunk">index b2339ae..3d2d8ef 100644</span>
+<span class="diff-hunk">--- a/controllers/call.ts</span>
+<span class="diff-hunk">+++ b/controllers/call.ts</span>
+<span class="diff-hunk">@@ -3226,7 +3226,12 @@ export class CallController {</span>
+ 
+           // Idempotent with confirmSwitchJoin: FE typically claims first;
+           // this path is the belt-and-suspenders signal from Twilio.
+<span class="diff-del">-          await this.claimSwitchJoin(parentCallSidFromName, switchJoinDeviceId, req.id, { conferenceSid: conferenceSidBody });</span>
+<span class="diff-add">+          // `callSid` here is the target&#x27;s Voice SDK leg (Twilio</span>
+<span class="diff-add">+          // forwards the participant&#x27;s CallSid in the body).</span>
+<span class="diff-add">+          await this.claimSwitchJoin(parentCallSidFromName, switchJoinDeviceId, req.id, {</span>
+<span class="diff-add">+            conferenceSid: conferenceSidBody,</span>
+<span class="diff-add">+            targetCallSid: callSid,</span>
+<span class="diff-add">+          });</span>
+         } catch (e: any) {
+           appLogger.error(&#x27;switch-join handler error:&#x27;, e?.message);
+         }
+<span class="diff-hunk">@@ -4427,7 +4432,7 @@ export class CallController {</span>
+     parentCallSid: string,
+     claimingDeviceId: string,
+     reqId: string,
+<span class="diff-del">-    opts?: { conferenceSid?: string },</span>
+<span class="diff-add">+    opts?: { conferenceSid?: string; targetCallSid?: string },</span>
+   ): Promise&lt;&#x27;claimed&#x27; | &#x27;already&#x27; | &#x27;not-pending&#x27; | &#x27;not-found&#x27;&gt; =&gt; {
+     const callObj: cachedCall = await this.callService.getConfCache(parentCallSid, &#x27;parent_id&#x27;, reqId);
+     if (!callObj) return &#x27;not-found&#x27;;
+<span class="diff-hunk">@@ -4442,6 +4447,47 @@ export class CallController {</span>
+ 
+     sw.claimedBy = claimingDeviceId;
+     sw.claimedAt = new Date().toISOString();
+<span class="diff-add">+</span>
+<span class="diff-add">+    // Swap the source agent&#x27;s participant entry for the target&#x27;s BEFORE</span>
+<span class="diff-add">+    // dropping the source leg. Both devices belong to the same agent</span>
+<span class="diff-add">+    // (same email), so we mutate in place: new callSid, preserve rest.</span>
+<span class="diff-add">+    //</span>
+<span class="diff-add">+    // Without this swap, handleCallStatus runs as the source leg</span>
+<span class="diff-add">+    // disconnects, sees zero accepted agents (target&#x27;s callSid isn&#x27;t</span>
+<span class="diff-add">+    // registered) and assumes the call is over — it then terminates the</span>
+<span class="diff-add">+    // patient + target legs via `calls(childSid).update({ completed })`.</span>
+<span class="diff-add">+    // Registering the target here keeps the agent-participant count at</span>
+<span class="diff-add">+    // 1 across the transition so the call stays live.</span>
+<span class="diff-add">+    if (opts?.targetCallSid) {</span>
+<span class="diff-add">+      const srcIdx = (callObj.participants || []).findIndex((p) =&gt;</span>
+<span class="diff-add">+        p.type === participantType.agent</span>
+<span class="diff-add">+        &amp;&amp; p.callSid === sw.sourceCallSid</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+      if (srcIdx &gt;= 0) {</span>
+<span class="diff-add">+        callObj.participants[srcIdx] = {</span>
+<span class="diff-add">+          ...callObj.participants[srcIdx],</span>
+<span class="diff-add">+          callSid: opts.targetCallSid,</span>
+<span class="diff-add">+          status: callReplyOptions.accepted,</span>
+<span class="diff-add">+          mute: false,</span>
+<span class="diff-add">+          startTime: moment().utc().toDate(),</span>
+<span class="diff-add">+          code_from: &#x27;claimSwitchJoin&#x27;,</span>
+<span class="diff-add">+        };</span>
+<span class="diff-add">+      } else {</span>
+<span class="diff-add">+        // Fallback: no source entry to swap (edge case). Push a fresh</span>
+<span class="diff-add">+        // agent entry so the active-agent count is non-zero.</span>
+<span class="diff-add">+        callObj.participants = callObj.participants || [];</span>
+<span class="diff-add">+        callObj.participants.push({</span>
+<span class="diff-add">+          type: participantType.agent,</span>
+<span class="diff-add">+          address: sw.userEmail,</span>
+<span class="diff-add">+          callSid: opts.targetCallSid,</span>
+<span class="diff-add">+          status: callReplyOptions.accepted,</span>
+<span class="diff-add">+          mute: false,</span>
+<span class="diff-add">+          startTime: moment().utc().toDate(),</span>
+<span class="diff-add">+          code_from: &#x27;claimSwitchJoin_fallback&#x27;,</span>
+<span class="diff-add">+        });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+     await this.callService.updateCallCache(parentCallSid, callObj, reqId);
+ 
+     // Drop source device&#x27;s leg. Prefer the ConferenceSid when available
+<span class="diff-hunk">@@ -4483,11 +4529,14 @@ export class CallController {</span>
+     try {
+       const callSid = req.body?.callSid;
+       const deviceId = req.body?.deviceId;
+<span class="diff-add">+      const targetCallSid = req.body?.targetCallSid;</span>
+       if (!callSid || !deviceId) {
+         return res.status(400).json({ status: false, message: &#x27;callSid and deviceId are required&#x27; });
+       }
+ 
+<span class="diff-del">-      const result = await this.claimSwitchJoin(String(callSid), String(deviceId), req.id);</span>
+<span class="diff-add">+      const result = await this.claimSwitchJoin(String(callSid), String(deviceId), req.id, {</span>
+<span class="diff-add">+        targetCallSid: targetCallSid ? String(targetCallSid) : undefined,</span>
+<span class="diff-add">+      });</span>
+ 
+       if (result === &#x27;not-found&#x27;) {
+         return res.status(404).json({ status: false, message: &#x27;Call not found&#x27; });
+<span class="diff-hunk">diff --git a/middlewares/validations/call.ts b/middlewares/validations/call.ts</span>
+<span class="diff-hunk">index 940fd35..2335015 100644</span>
+<span class="diff-hunk">--- a/middlewares/validations/call.ts</span>
+<span class="diff-hunk">+++ b/middlewares/validations/call.ts</span>
+<span class="diff-hunk">@@ -77,6 +77,7 @@ export const switchDeviceValidation: ValidationChain[] = [</span>
+ export const confirmSwitchJoinValidation: ValidationChain[] = [
+   check(&quot;callSid&quot;, &quot;callSid is required&quot;).notEmpty().isString().trim(),
+   check(&quot;deviceId&quot;, &quot;deviceId is required&quot;).notEmpty().isString().trim(),
+<span class="diff-add">+  check(&quot;targetCallSid&quot;, &quot;targetCallSid must be a string when provided&quot;).optional().isString().trim(),</span>
+ ];
+ 
+ </pre></section>
+</body></html>

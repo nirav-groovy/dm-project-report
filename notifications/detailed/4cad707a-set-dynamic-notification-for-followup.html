@@ -1,0 +1,784 @@
+<!doctype html><html><head><meta charset="utf-8"><title>4cad707a — Set dynamic notification for followup</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>Set dynamic notification for followup <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>4cad707a7a63e4083e6ebbe0e31c92b5d6bb4686</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-24T12:36:36+05:30</td></tr><tr><td>Diff</td><td>+488 / -28 across 9 file(s)</td></tr><tr><td>Buckets</td><td>messaging</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (516 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>models/index.ts</code></td><td>+1</td><td>-0</td></tr><tr><td><code>models/notification-template.ts</code></td><td>+83</td><td>-0</td></tr><tr><td><code>repository/notification-template.ts</code></td><td>+91</td><td>-0</td></tr><tr><td><code>service/index.ts</code></td><td>+1</td><td>-0</td></tr><tr><td><code>service/notification-template.ts</code></td><td>+218</td><td>-0</td></tr><tr><td><code>service/notification.ts</code></td><td>+46</td><td>-27</td></tr><tr><td><code>types/notification-template.ts</code></td><td>+15</td><td>-0</td></tr><tr><td><code>types/notification.ts</code></td><td>+3</td><td>-1</td></tr><tr><td><code>utils/common.ts</code></td><td>+30</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (1)</h2><table><thead><tr><th>Location</th><th>Severity</th><th>Rule</th><th>Message</th></tr></thead><tbody><tr><td><code>repository/notification-template.ts:1</code></td><td><span class='badge b-sev-warn'>warn</span></td><td><code>@typescript-eslint/no-unused-vars</code></td><td>&#x27;INotificationTemplate&#x27; is defined but never used.</td></tr></tbody></table></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/models/index.ts b/models/index.ts</span>
+<span class="diff-hunk">index 444ed1d..e0b2924 100644</span>
+<span class="diff-hunk">--- a/models/index.ts</span>
+<span class="diff-hunk">+++ b/models/index.ts</span>
+<span class="diff-hunk">@@ -3,6 +3,7 @@ export { UserToken } from &quot;./user_token&quot;;</span>
+ export { Memo } from &quot;./memo&quot;;
+ export { Chat } from &quot;./chat&quot;;
+ export { Notification } from &quot;./notifications&quot;;
+<span class="diff-add">+export { NotificationTemplate } from &quot;./notification-template&quot;;</span>
+ export { AutomatedNotification } from &quot;./automated-notifications&quot;;
+ export { Setting } from &quot;./setting&quot;;
+ export { BlockedNumber } from &quot;./blocked-number&quot;;
+<span class="diff-hunk">diff --git a/models/notification-template.ts b/models/notification-template.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..ce5c7a9</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/models/notification-template.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,83 @@</span>
+<span class="diff-add">+import { Schema, Document, Model, model } from &quot;mongoose&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export interface INotificationTemplate extends Document {</span>
+<span class="diff-add">+  slug: string;</span>
+<span class="diff-add">+  title: string;</span>
+<span class="diff-add">+  content: string;</span>
+<span class="diff-add">+  description?: string;</span>
+<span class="diff-add">+  category?: string;</span>
+<span class="diff-add">+  variables?: string[];</span>
+<span class="diff-add">+  is_active: boolean;</span>
+<span class="diff-add">+  created_at: Date;</span>
+<span class="diff-add">+  updated_at: Date;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const NotificationTemplateSchema: Schema&lt;INotificationTemplate&gt; = new Schema&lt;INotificationTemplate&gt;(</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+      unique: true,</span>
+<span class="diff-add">+      index: true,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    title: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    content: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    description: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+      default: null,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    category: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+      default: null,</span>
+<span class="diff-add">+      index: true,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    variables: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: [String],</span>
+<span class="diff-add">+      default: [],</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    is_active: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: Boolean,</span>
+<span class="diff-add">+      default: true,</span>
+<span class="diff-add">+      index: true,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    created_at: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: Date,</span>
+<span class="diff-add">+      default: () =&gt; new Date(),</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    updated_at: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: Date,</span>
+<span class="diff-add">+      default: () =&gt; new Date(),</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    versionKey: false,</span>
+<span class="diff-add">+    collection: &quot;notification_templates&quot;,</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+NotificationTemplateSchema.pre(&#x27;findOneAndUpdate&#x27;, function (next) {</span>
+<span class="diff-add">+  this.set({ updated_at: new Date() });</span>
+<span class="diff-add">+  next();</span>
+<span class="diff-add">+});</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+NotificationTemplateSchema.pre(&#x27;updateOne&#x27;, function (next) {</span>
+<span class="diff-add">+  this.set({ updated_at: new Date() });</span>
+<span class="diff-add">+  next();</span>
+<span class="diff-add">+});</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export const NotificationTemplate: Model&lt;INotificationTemplate&gt; = model&lt;INotificationTemplate&gt;(</span>
+<span class="diff-add">+  &quot;NotificationTemplate&quot;,</span>
+<span class="diff-add">+  NotificationTemplateSchema</span>
+<span class="diff-add">+);</span>
+<span class="diff-hunk">diff --git a/repository/notification-template.ts b/repository/notification-template.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..a22237b</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/repository/notification-template.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,91 @@</span>
+<span class="diff-add">+import { NotificationTemplate, INotificationTemplate } from &quot;../models/notification-template&quot;;</span>
+<span class="diff-add">+import { NotificationTemplateData, NotificationTemplateResponse } from &quot;../types/notification-template&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;../utils/logger&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export class NotificationTemplateRepository {</span>
+<span class="diff-add">+  private static instance: NotificationTemplateRepository;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  private constructor() { }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  static getInstance(): NotificationTemplateRepository {</span>
+<span class="diff-add">+    if (!NotificationTemplateRepository.instance) {</span>
+<span class="diff-add">+      NotificationTemplateRepository.instance = new NotificationTemplateRepository();</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+    return NotificationTemplateRepository.instance;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async findBySlug(slug: string): Promise&lt;NotificationTemplateResponse | null&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const template = await NotificationTemplate.findOne({ slug, is_active: true }).lean();</span>
+<span class="diff-add">+      return template as NotificationTemplateResponse | null;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateRepository --&gt; findBySlug --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async findAll(isActive: boolean = true): Promise&lt;NotificationTemplateResponse[]&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const templates = await NotificationTemplate.find({ is_active: isActive }).lean();</span>
+<span class="diff-add">+      return templates as NotificationTemplateResponse[];</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateRepository --&gt; findAll --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async findByCategory(category: string): Promise&lt;NotificationTemplateResponse[]&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const templates = await NotificationTemplate.find({ category, is_active: true }).lean();</span>
+<span class="diff-add">+      return templates as NotificationTemplateResponse[];</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateRepository --&gt; findByCategory --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async create(data: NotificationTemplateData): Promise&lt;NotificationTemplateResponse&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const template = new NotificationTemplate(data);</span>
+<span class="diff-add">+      const saved = await template.save();</span>
+<span class="diff-add">+      return saved.toObject() as NotificationTemplateResponse;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateRepository --&gt; create --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async createMany(data: NotificationTemplateData[]): Promise&lt;NotificationTemplateResponse[]&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const templates = await NotificationTemplate.insertMany(data);</span>
+<span class="diff-add">+      return templates.map(t =&gt; t.toObject() as NotificationTemplateResponse);</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateRepository --&gt; createMany --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async updateBySlug(slug: string, data: Partial&lt;NotificationTemplateData&gt;): Promise&lt;NotificationTemplateResponse | null&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const updated = await NotificationTemplate.findOneAndUpdate(</span>
+<span class="diff-add">+        { slug },</span>
+<span class="diff-add">+        { ...data, updated_at: new Date() },</span>
+<span class="diff-add">+        { new: true }</span>
+<span class="diff-add">+      ).lean();</span>
+<span class="diff-add">+      return updated as NotificationTemplateResponse | null;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateRepository --&gt; updateBySlug --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async deleteBySlug(slug: string): Promise&lt;boolean&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const result = await NotificationTemplate.deleteOne({ slug });</span>
+<span class="diff-add">+      return result.deletedCount &gt; 0;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateRepository --&gt; deleteBySlug --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/service/index.ts b/service/index.ts</span>
+<span class="diff-hunk">index e014511..7596af5 100644</span>
+<span class="diff-hunk">--- a/service/index.ts</span>
+<span class="diff-hunk">+++ b/service/index.ts</span>
+<span class="diff-hunk">@@ -7,3 +7,4 @@ export { SettingService } from &quot;./setting&quot;;</span>
+ export { RecruiterService } from &quot;./recruiter&quot;;
+ export { BlockedNumberService } from &quot;./blocked-number&quot;;
+ export { DeviceRegistrationService } from &quot;./device_registration&quot;;
+<span class="diff-add">+export { NotificationTemplateService } from &quot;./notification-template&quot;;</span>
+<span class="diff-hunk">diff --git a/service/notification-template.ts b/service/notification-template.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..f06be52</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/service/notification-template.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,218 @@</span>
+<span class="diff-add">+import { NotificationTemplateRepository } from &quot;../repository/notification-template&quot;;</span>
+<span class="diff-add">+import { NotificationTemplateData, NotificationTemplateResponse } from &quot;../types/notification-template&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;../utils/logger&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const NOTIFICATION_TEMPLATES: NotificationTemplateData[] = [</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-email&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new email to review&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;inbox&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-sms&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new sms to review&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;inbox&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-incoming-call&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new incoming call&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;inbox&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-message&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new message to review&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;inbox&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-voicemail&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new voicemail to review&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;inbox&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-chat&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new chat to review&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;chat&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-sms-unknown-patient&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new sms to review from unknown patient&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;inbox&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;callback-requested&quot;,</span>
+<span class="diff-add">+    title: &quot;Requested call back from {{patientName}} ({{phoneNumber}}){{callbackLabel}}&quot;,</span>
+<span class="diff-add">+    content: &quot;Requested call back for {{callbackTime}}.&quot;,</span>
+<span class="diff-add">+    category: &quot;phone&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [&quot;patientName&quot;, &quot;phoneNumber&quot;, &quot;callbackLabel&quot;, &quot;callbackTime&quot;],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;missed-voice-call&quot;,</span>
+<span class="diff-add">+    title: &quot;Missed voice call from {{patientName}} {{phoneNumber}}&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;phone&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [&quot;patientName&quot;, &quot;phoneNumber&quot;],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;voicemail-from-patient&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new voicemail to review from {{patientName}} {{phoneNumber}}&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;phone&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [&quot;patientName&quot;, &quot;phoneNumber&quot;],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;followup-reminder-15min&quot;,</span>
+<span class="diff-add">+    title: &quot;Follow-up Reminder&quot;,</span>
+<span class="diff-add">+    content: &quot;Reminder: You have a follow-up call with {{patientName}} scheduled in {{reminderTime}} minutes&quot;,</span>
+<span class="diff-add">+    category: &quot;followup&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [&quot;patientName&quot;],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;followup-overdue&quot;,</span>
+<span class="diff-add">+    title: &quot;Follow-up Overdue&quot;,</span>
+<span class="diff-add">+    content: &quot;Overdue: Follow-up call with {{patientName}} is overdue&quot;,</span>
+<span class="diff-add">+    category: &quot;followup&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [&quot;patientName&quot;],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-message-from-sender&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new message from {{senderEmail}}&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;chat&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [&quot;senderEmail&quot;],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    slug: &quot;new-chat-reply&quot;,</span>
+<span class="diff-add">+    title: &quot;You have a new chat reply from {{senderId}}&quot;,</span>
+<span class="diff-add">+    content: &quot;&quot;,</span>
+<span class="diff-add">+    category: &quot;chat&quot;,</span>
+<span class="diff-add">+    is_active: true,</span>
+<span class="diff-add">+    variables: [&quot;senderId&quot;],</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export class NotificationTemplateService {</span>
+<span class="diff-add">+  private static instance: NotificationTemplateService;</span>
+<span class="diff-add">+  private repository: NotificationTemplateRepository;</span>
+<span class="diff-add">+  private templateCache: Map&lt;string, NotificationTemplateResponse&gt; = new Map();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  private constructor() {</span>
+<span class="diff-add">+    this.repository = NotificationTemplateRepository.getInstance();</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  static getInstance(): NotificationTemplateService {</span>
+<span class="diff-add">+    if (!NotificationTemplateService.instance) {</span>
+<span class="diff-add">+      NotificationTemplateService.instance = new NotificationTemplateService();</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+    return NotificationTemplateService.instance;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async initializeTemplates(): Promise&lt;void&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      appLogger.info(&quot;NotificationTemplateService --&gt; initializeTemplates --&gt; Checking if templates exist&quot;);</span>
+<span class="diff-add">+      const existing = await this.repository.findAll();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (existing.length === 0) {</span>
+<span class="diff-add">+        appLogger.info(&quot;NotificationTemplateService --&gt; initializeTemplates --&gt; Creating default templates&quot;);</span>
+<span class="diff-add">+        await this.repository.createMany(NOTIFICATION_TEMPLATES);</span>
+<span class="diff-add">+        appLogger.info(&quot;NotificationTemplateService --&gt; initializeTemplates --&gt; Default templates created&quot;);</span>
+<span class="diff-add">+      } else {</span>
+<span class="diff-add">+        appLogger.info(`NotificationTemplateService --&gt; initializeTemplates --&gt; Found ${existing.length} existing templates`);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateService --&gt; initializeTemplates --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async getBySlug(slug: string): Promise&lt;NotificationTemplateResponse | null&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      if (this.templateCache.has(slug)) {</span>
+<span class="diff-add">+        return this.templateCache.get(slug)!;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const template = await this.repository.findBySlug(slug);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (template) {</span>
+<span class="diff-add">+        this.templateCache.set(slug, template);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return template;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateService --&gt; getBySlug --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async getAllTemplates(): Promise&lt;NotificationTemplateResponse[]&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      return await this.repository.findAll();</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateService --&gt; getAllTemplates --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async getByCategory(category: string): Promise&lt;NotificationTemplateResponse[]&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      return await this.repository.findByCategory(category);</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateService --&gt; getByCategory --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async createTemplate(data: NotificationTemplateData): Promise&lt;NotificationTemplateResponse&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const template = await this.repository.create(data);</span>
+<span class="diff-add">+      this.templateCache.set(template.slug, template);</span>
+<span class="diff-add">+      return template;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateService --&gt; createTemplate --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async updateTemplate(slug: string, data: Partial&lt;NotificationTemplateData&gt;): Promise&lt;NotificationTemplateResponse | null&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const updated = await this.repository.updateBySlug(slug, data);</span>
+<span class="diff-add">+      if (updated) {</span>
+<span class="diff-add">+        this.templateCache.set(slug, updated);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      return updated;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationTemplateService --&gt; updateTemplate --&gt; Error:&quot;, error.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  clearCache(): void {</span>
+<span class="diff-add">+    this.templateCache.clear();</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/service/notification.ts b/service/notification.ts</span>
+<span class="diff-hunk">index 101d7d1..de3118e 100644</span>
+<span class="diff-hunk">--- a/service/notification.ts</span>
+<span class="diff-hunk">+++ b/service/notification.ts</span>
+<span class="diff-hunk">@@ -5,6 +5,7 @@ import { google } from &quot;googleapis&quot;;</span>
+ import { Notification, EmailUtils, ServiceBusUtils, CommonUtils, SocketManager, CronJob } from &quot;../utils&quot;;
+ import { UserTokenService } from &quot;./user_token&quot;;
+ import { BlockedNumberService } from &quot;./blocked-number&quot;;
+<span class="diff-add">+import { NotificationTemplateService } from &quot;./notification-template&quot;;</span>
+ import _ from &quot;lodash&quot;;
+ import { UserTokenResponse } from &quot;../types/user_token&quot;;
+ import { SocketData, SocketTo } from &quot;../types/socket_data&quot;;
+<span class="diff-hunk">@@ -41,6 +42,7 @@ export class NotificationService {</span>
+   private readonly commonUtils: CommonUtils;
+   private readonly userTokenService: UserTokenService;
+   private readonly blockedNumberService: BlockedNumberService;
+<span class="diff-add">+  private readonly notificationTemplateService: NotificationTemplateService;</span>
+   private env: string;
+   private twilioAccountSID: string;
+   private twilioAuthToken: string;
+<span class="diff-hunk">@@ -51,11 +53,20 @@ export class NotificationService {</span>
+     if (!NotificationService.instance) {
+       let instance = new NotificationService();
+       instance.loadSecrets();
+<span class="diff-add">+      instance.initializeTemplates();</span>
+       NotificationService.instance = instance;
+     }
+     return NotificationService.instance;
+   }
+ 
+<span class="diff-add">+  private async initializeTemplates() {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      await this.notificationTemplateService.initializeTemplates();</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationService --&gt; initializeTemplates --&gt; Error:&quot;, error);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Service responsible for handling chat  operations.
+    * @type {ChatService}
+<span class="diff-hunk">@@ -76,6 +87,7 @@ export class NotificationService {</span>
+     this.commonUtils = CommonUtils.getInstance();
+     this.userTokenService = UserTokenService.getInstance();
+     this.blockedNumberService = BlockedNumberService.getInstance();
+<span class="diff-add">+    this.notificationTemplateService = NotificationTemplateService.getInstance();</span>
+     this.ChatService = ChatService.getInstance();
+   }
+ 
+<span class="diff-hunk">@@ -249,16 +261,16 @@ export class NotificationService {</span>
+     }
+   }
+ 
+<span class="diff-del">-  async removeOldData(){</span>
+<span class="diff-add">+  async removeOldData() {</span>
+     let batchSize = 10
+     let subBatchSize = 10
+<span class="diff-del">-    await this.notificationRepository.deleteOldNotificationsInSafeBatches(batchSize,subBatchSize)</span>
+<span class="diff-add">+    await this.notificationRepository.deleteOldNotificationsInSafeBatches(batchSize, subBatchSize)</span>
+   }
+ 
+<span class="diff-del">-  async updateOldData(){</span>
+<span class="diff-add">+  async updateOldData() {</span>
+     let batchSize = 10
+     let subBatchSize = 10
+<span class="diff-del">-    await this.notificationRepository.updateOldNotificationsInSafeBatches(batchSize,subBatchSize)</span>
+<span class="diff-add">+    await this.notificationRepository.updateOldNotificationsInSafeBatches(batchSize, subBatchSize)</span>
+   }
+ 
+   /**
+<span class="diff-hunk">@@ -355,7 +367,7 @@ export class NotificationService {</span>
+ 
+                 const xmsgLock = await this.commonUtils.setCacheIfNotExists(headerXMessageId.value, true, 86400);
+                 if (!xmsgLock) {
+<span class="diff-del">-                  appLogger.info(&quot;NotificationService --&gt; headerXMessageId Duplicate.&quot;,headerXMessageId.value);</span>
+<span class="diff-add">+                  appLogger.info(&quot;NotificationService --&gt; headerXMessageId Duplicate.&quot;, headerXMessageId.value);</span>
+                   continue;
+                 }
+ 
+<span class="diff-hunk">@@ -652,7 +664,8 @@ export class NotificationService {</span>
+         }
+       }
+ 
+<span class="diff-del">-      let title: string;</span>
+<span class="diff-add">+      let title: string = &quot;&quot;;</span>
+<span class="diff-add">+      let content: string = data.content;</span>
+       switch (data.communication_type) {
+         case &quot;email&quot;:
+           title = &quot;You have a new email to review&quot;;
+<span class="diff-hunk">@@ -664,19 +677,25 @@ export class NotificationService {</span>
+           title = &quot;You have a new incoming call&quot;;
+           break;
+         case &quot;followup-reminder&quot;:
+<span class="diff-del">-          title = &quot;Follow-up Reminder&quot;;</span>
+<span class="diff-del">-          break;</span>
+<span class="diff-del">-        case &quot;followup-overdue&quot;:</span>
+<span class="diff-del">-          title = &quot;Follow-up Overdue&quot;;</span>
+<span class="diff-add">+        case &quot;followup-overdue&quot;: {</span>
+<span class="diff-add">+          const template = await this.notificationTemplateService.getBySlug(data?.slug ?? &quot;&quot;);</span>
+<span class="diff-add">+          if (template) {</span>
+<span class="diff-add">+            title = this.commonUtils.replaceTemplateVariables(template.title, data?.template_variables);</span>
+<span class="diff-add">+            content = this.commonUtils.replaceTemplateVariables(template.content, data?.template_variables) || content;</span>
+<span class="diff-add">+          }</span>
+           break;
+<span class="diff-add">+        }</span>
+         default:
+           title = &quot;You have a new message to review&quot;;
+           break;
+       }
+<span class="diff-add">+</span>
+       if (data.communication_type === &quot;phone&quot; &amp;&amp; data?.call_type?.toLowerCase() === &quot;missed&quot;) {
+         title = &quot;You have a new voicemail to review&quot;;
+       }
+<span class="diff-add">+</span>
+       data.title = data.title ? data.title : title;
+<span class="diff-add">+      data.content = content;</span>
+       data.received_at = moment().toDate();
+       data.type = &quot;inboxes&quot;;
+       data.distro_members = distro_members;
+<span class="diff-hunk">@@ -888,7 +907,7 @@ export class NotificationService {</span>
+         individualCondition,
+         { $set: { is_read: true } }
+       );
+<span class="diff-del">-      </span>
+<span class="diff-add">+</span>
+       if (individualResult) {
+         individualUpdatedCount = Array.isArray(individualResult) ? individualResult.length : 1;
+         appLogger.info(`NotificationService --&gt; markSimilarNotificationsAsRead --&gt; Updated ${individualUpdatedCount} individual notifications`);
+<span class="diff-hunk">@@ -1048,12 +1067,12 @@ export class NotificationService {</span>
+   async assignNotificationToRecruiter(data: AssignNotificationData) {
+     try {
+       appLogger.info(&quot;NotificationService --&gt; assignNotificationToRecruiter --&gt; data -&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;, data);
+<span class="diff-del">-      </span>
+<span class="diff-add">+</span>
+       // OPTIMIZATION: Use partition-aware querying to avoid cross-partition fan-out
+       const additionalCondition = {
+         $or: [{ is_read: false }, { &quot;distro_members.is_read&quot;: false }]
+       };
+<span class="diff-del">-      </span>
+<span class="diff-add">+</span>
+       let notifications: any = await this.notificationRepository.listByPatientIdPartitionAware(
+         data.patientId,
+         additionalCondition
+<span class="diff-hunk">@@ -1115,7 +1134,7 @@ export class NotificationService {</span>
+         if (uid) {
+           const distroGroup = await this.commonUtils.getCache(&quot;distroGroup&quot;);
+           appLogger.info(&quot;NotificationService -- &gt; sendBadgeCountNotification --&gt; distroGroup&quot;, distroGroup?.length);
+<span class="diff-del">-          </span>
+<span class="diff-add">+</span>
+           // Find all group_email addresses where user is a member
+           let groupEmails: string[] = [];
+           if (distroGroup &amp;&amp; !_.isEmpty(distroGroup) &amp;&amp; distroGroup.length) {
+<span class="diff-hunk">@@ -1135,7 +1154,7 @@ export class NotificationService {</span>
+             recruiter_email: uid,
+             is_read: false
+           };
+<span class="diff-del">-          </span>
+<span class="diff-add">+</span>
+           const groupFilter = {
+             $group: {
+               _id: {
+<span class="diff-hunk">@@ -1217,7 +1236,7 @@ export class NotificationService {</span>
+ 
+     for (const item of allCounts) {
+       const key = `${item._id?.type || &#x27;null&#x27;}_${item._id?.communication_type || &#x27;null&#x27;}`;
+<span class="diff-del">-      </span>
+<span class="diff-add">+</span>
+       if (countMap.has(key)) {
+         // Add to existing count
+         countMap.get(key).count += item.count;
+<span class="diff-hunk">@@ -1661,24 +1680,24 @@ async onlineDistrosArray(user: string, type: string, reqId: string | null = null</span>
+ 
+       // FIXED: Check if the requested group_email exists in the distro cache
+       let cachedOnlineUsers = await this.commonUtils.getCache(`distro_${group_email}`) || [];
+<span class="diff-del">-      </span>
+<span class="diff-add">+</span>
+       // If cache is empty for this distro, try to populate it
+       if (cachedOnlineUsers.length === 0 &amp;&amp; group_email) {
+         appLogger.info(`🚀 ~ NotificationService ~ onlineDistrosUsers ~ Cache empty for ${group_email}, attempting to populate`);
+<span class="diff-del">-        </span>
+<span class="diff-add">+</span>
+         // Check if this distro exists in the main distro list
+         const distroExists = distroCacheData.find(distro =&gt; distro.group_email === group_email);
+<span class="diff-del">-        </span>
+<span class="diff-add">+</span>
+         if (distroExists) {
+           // Get all online users
+           const socketManager = SocketManager.getInstance();
+           const allOnlineUsers = await socketManager.getAllOnlineUsers(call_SID);
+<span class="diff-del">-          </span>
+<span class="diff-add">+</span>
+           // Filter online users who are members of this specific distro
+<span class="diff-del">-          const distroOnlineMembers = allOnlineUsers.filter(user =&gt; </span>
+<span class="diff-add">+          const distroOnlineMembers = allOnlineUsers.filter(user =&gt;</span>
+             distroExists.members &amp;&amp; distroExists.members.includes(user)
+           );
+<span class="diff-del">-          </span>
+<span class="diff-add">+</span>
+           // Update the cache for this distro
+           if (distroOnlineMembers.length &gt; 0) {
+             await this.commonUtils.setCache(`distro_${group_email}`, distroOnlineMembers, 28800);
+<span class="diff-hunk">@@ -1976,11 +1995,11 @@ async onlineDistrosArray(user: string, type: string, reqId: string | null = null</span>
+   async mergePatientNotificationData(originalPatientId: number, duplicatePatientId: number, authToken = &#x27;&#x27;, isReverse = false) {
+     try {
+       const cacheKey = `notification_merge_${originalPatientId}_${duplicatePatientId}`;
+<span class="diff-del">-      </span>
+<span class="diff-add">+</span>
+       if (isReverse) {
+         // Handle reverse operation
+         appLogger.info(`Reversing notification data merge: ${duplicatePatientId} -&gt; ${originalPatientId}`);
+<span class="diff-del">-        </span>
+<span class="diff-add">+</span>
+         const cachedData = await this.commonUtils.getCache(cacheKey);
+         if (!cachedData) {
+           return {
+<span class="diff-hunk">@@ -2032,7 +2051,7 @@ async onlineDistrosArray(user: string, type: string, reqId: string | null = null</span>
+ 
+         // Get data that will be moved (for caching before merge)
+         const notificationDataToMove = await this.getNotificationDataForPatient(duplicatePatientId);
+<span class="diff-del">-        </span>
+<span class="diff-add">+</span>
+         // Cache the data before merge for potential rollback
+         const cacheData = {
+           duplicateNotificationData: notificationDataToMove,
+<span class="diff-hunk">@@ -2040,7 +2059,7 @@ async onlineDistrosArray(user: string, type: string, reqId: string | null = null</span>
+           timestamp: new Date().toISOString(),
+           operation: &#x27;notification_merge&#x27;
+         };
+<span class="diff-del">-        </span>
+<span class="diff-add">+</span>
+         // Cache for 1 day (86400 seconds)
+         await this.commonUtils.setCache(cacheKey, cacheData, 86400);
+ 
+<span class="diff-hunk">@@ -2078,7 +2097,7 @@ async onlineDistrosArray(user: string, type: string, reqId: string | null = null</span>
+    * Gets patient data from the patient data service.
+    * @private
+    */
+<span class="diff-del">-  private async getPatientData (patientId: number, authToken = &#x27;&#x27;) {</span>
+<span class="diff-add">+  private async getPatientData(patientId: number, authToken = &#x27;&#x27;) {</span>
+     appLogger.info(&quot;--------------------------getPatientData--------------------------&quot;);
+     appLogger.info(`${new Date().toISOString()} Req: ${patientId}  ~ file: call.ts:1057 ~ getPatientData=async`, `${this.commonUtils.serviceMap[&#x27;/patient-manage&#x27;]}/patient-manage/fetch-patient-basics-by-number`);
+ 
+<span class="diff-hunk">diff --git a/types/notification-template.ts b/types/notification-template.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..07b2cef</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/types/notification-template.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,15 @@</span>
+<span class="diff-add">+export interface NotificationTemplateData {</span>
+<span class="diff-add">+  slug: string;</span>
+<span class="diff-add">+  title: string;</span>
+<span class="diff-add">+  content: string;</span>
+<span class="diff-add">+  description?: string;</span>
+<span class="diff-add">+  category?: string;</span>
+<span class="diff-add">+  variables?: string[];</span>
+<span class="diff-add">+  is_active: boolean;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export interface NotificationTemplateResponse extends NotificationTemplateData {</span>
+<span class="diff-add">+  _id: string;</span>
+<span class="diff-add">+  created_at: Date;</span>
+<span class="diff-add">+  updated_at: Date;</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/types/notification.ts b/types/notification.ts</span>
+<span class="diff-hunk">index 4e6ce65..323d161 100644</span>
+<span class="diff-hunk">--- a/types/notification.ts</span>
+<span class="diff-hunk">+++ b/types/notification.ts</span>
+<span class="diff-hunk">@@ -40,7 +40,9 @@ export interface NotificationData extends NotificationSchemaTypes {</span>
+   id?: string;
+   pKey?: any;
+   updated_at?: any;
+<span class="diff-del">-  socketEvent?: string; //Used by only for Followup </span>
+<span class="diff-add">+  socketEvent?: string;</span>
+<span class="diff-add">+  slug?: string;</span>
+<span class="diff-add">+  template_variables?: { [key: string]: any };</span>
+ }
+ 
+ export interface NotificationResponse extends NotificationSchemaTypes {
+<span class="diff-hunk">diff --git a/utils/common.ts b/utils/common.ts</span>
+<span class="diff-hunk">index d1fa775..43fdd19 100644</span>
+<span class="diff-hunk">--- a/utils/common.ts</span>
+<span class="diff-hunk">+++ b/utils/common.ts</span>
+<span class="diff-hunk">@@ -873,4 +873,34 @@ export class CommonUtils {</span>
+       pagination,
+     };
+   }
+<span class="diff-add">+</span>
+<span class="diff-add">+  public getNotificationSlugForCommunicationType(communicationType: string, callType?: string): string {</span>
+<span class="diff-add">+    const slugMap: { [key: string]: string } = {</span>
+<span class="diff-add">+      &quot;email&quot;: &quot;new-email&quot;,</span>
+<span class="diff-add">+      &quot;sms&quot;: &quot;new-sms&quot;,</span>
+<span class="diff-add">+      &quot;phone&quot;: &quot;new-incoming-call&quot;,</span>
+<span class="diff-add">+      &quot;followup-reminder&quot;: &quot;followup-reminder-15min&quot;,</span>
+<span class="diff-add">+      &quot;followup-overdue&quot;: &quot;followup-overdue&quot;,</span>
+<span class="diff-add">+      &quot;chat&quot;: &quot;new-chat&quot;,</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (communicationType === &quot;phone&quot; &amp;&amp; callType?.toLowerCase() === &quot;missed&quot;) {</span>
+<span class="diff-add">+      return &quot;new-voicemail&quot;;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return slugMap[communicationType] || &quot;new-message&quot;;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  public replaceTemplateVariables(text: string, variables?: { [key: string]: any }): string {</span>
+<span class="diff-add">+    if (!text || !variables) {</span>
+<span class="diff-add">+      return text || &quot;&quot;;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    let result = text;</span>
+<span class="diff-add">+    for (const [key, value] of Object.entries(variables)) {</span>
+<span class="diff-add">+      const placeholder = `{{${key}}}`;</span>
+<span class="diff-add">+      result = result.replace(new RegExp(placeholder, &quot;g&quot;), String(value || &quot;&quot;));</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+    return result;</span>
+<span class="diff-add">+  }</span>
+ }</pre></section>
+</body></html>

@@ -1,0 +1,119 @@
+<!doctype html><html><head><meta charset="utf-8"><title>b49ca33a — Change followup notification sending flow</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← notifications</a> · <a href="../../index.html">project-report</a></div>
+<h1>Change followup notification sending flow <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>b49ca33a16d887f464fce34336b5dc77e39695c1</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-24T10:45:55+05:30</td></tr><tr><td>Diff</td><td>+8 / -37 across 2 file(s)</td></tr><tr><td>Buckets</td><td>messaging</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>service/notification.ts</code></td><td>+7</td><td>-37</td></tr><tr><td><code>types/notification.ts</code></td><td>+1</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/service/notification.ts b/service/notification.ts</span>
+<span class="diff-hunk">index a422080..101d7d1 100644</span>
+<span class="diff-hunk">--- a/service/notification.ts</span>
+<span class="diff-hunk">+++ b/service/notification.ts</span>
+<span class="diff-hunk">@@ -574,44 +574,8 @@ export class NotificationService {</span>
+       return;
+     }
+ 
+<span class="diff-del">-    if (data?.type === &quot;followup&quot;) {</span>
+<span class="diff-del">-      console.log(&quot;[FOLLOWUP] Inside of push notification&quot;);</span>
+<span class="diff-del">-      let ndata: NotificationData = {</span>
+<span class="diff-del">-        title: data.socketValue.title,</span>
+<span class="diff-del">-        content: data.socketValue.content,</span>
+<span class="diff-del">-        received_at: moment().toDate(),</span>
+<span class="diff-del">-        patient_obj: null,</span>
+<span class="diff-del">-        distro_email: null,</span>
+<span class="diff-del">-        distro_name: null,</span>
+<span class="diff-del">-        recruiter_email: data.userEmail,</span>
+<span class="diff-del">-        is_read: false,</span>
+<span class="diff-del">-        type: &quot;inboxes&quot;,</span>
+<span class="diff-del">-        communication_type: &quot;followup&quot;,</span>
+<span class="diff-del">-        data: data.socketValue,</span>
+<span class="diff-del">-        sender_id: null,</span>
+<span class="diff-del">-        distro_members: null,</span>
+<span class="diff-del">-        call_type: null,</span>
+<span class="diff-del">-        pKey: data.userEmail,</span>
+<span class="diff-del">-        from: null,</span>
+<span class="diff-del">-        updated_at: moment().toDate(),</span>
+<span class="diff-del">-      };</span>
+<span class="diff-del">-      console.log(&quot;[FOLLOWUP] Before notification create&quot;, ndata);</span>
+<span class="diff-del">-      const notification = await this.notificationRepository.create(ndata);</span>
+<span class="diff-del">-      console.log(&quot;[FOLLOWUP] After notification create&quot;, notification);</span>
+<span class="diff-del">-      if (_.isEmpty(notification)) {</span>
+<span class="diff-del">-        appLogger.info(&quot;NotificationService --&gt; saveSocketData --&gt; Notification is empty&quot;, notification);</span>
+<span class="diff-del">-        return null;</span>
+<span class="diff-del">-      }</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      console.log(&quot;[FOLLOWUP] Before notification sent&quot;);</span>
+<span class="diff-del">-      this.sendIncomingInboxPush(data.userEmail, notification);</span>
+<span class="diff-del">-      console.log(&quot;[FOLLOWUP] After notification sent&quot;);</span>
+<span class="diff-del">-    }</span>
+<span class="diff-del">-</span>
+     if (typeof data.userEmail === &quot;string&quot;) {
+<span class="diff-del">-      console.log(&quot;[FOLLOWUP] Before socket notification sent&quot;);</span>
+       io.to(data.userEmail).emit(data.socketEvent, data.socketValue);
+<span class="diff-del">-      console.log(&quot;[FOLLOWUP] After socket notification sent&quot;);</span>
+       return;
+     }
+ 
+<span class="diff-hunk">@@ -699,6 +663,12 @@ export class NotificationService {</span>
+         case &quot;phone&quot;:
+           title = &quot;You have a new incoming call&quot;;
+           break;
+<span class="diff-add">+        case &quot;followup-reminder&quot;:</span>
+<span class="diff-add">+          title = &quot;Follow-up Reminder&quot;;</span>
+<span class="diff-add">+          break;</span>
+<span class="diff-add">+        case &quot;followup-overdue&quot;:</span>
+<span class="diff-add">+          title = &quot;Follow-up Overdue&quot;;</span>
+<span class="diff-add">+          break;</span>
+         default:
+           title = &quot;You have a new message to review&quot;;
+           break;
+<span class="diff-hunk">@@ -719,7 +689,7 @@ export class NotificationService {</span>
+       appLogger.info(&quot;NotificationService --&gt;saveInboundNotification --&gt; userEmail&quot;, userEmail);
+       this.saveSocketData({
+         userEmail: userEmail,
+<span class="diff-del">-        socketEvent: &quot;incoming-inboxes&quot;,</span>
+<span class="diff-add">+        socketEvent: data?.socketEvent || &quot;incoming-inboxes&quot;,</span>
+         socketValue: {
+           title: notification.title,
+           content: notification.content,
+<span class="diff-hunk">diff --git a/types/notification.ts b/types/notification.ts</span>
+<span class="diff-hunk">index 5ef01b9..4e6ce65 100644</span>
+<span class="diff-hunk">--- a/types/notification.ts</span>
+<span class="diff-hunk">+++ b/types/notification.ts</span>
+<span class="diff-hunk">@@ -40,6 +40,7 @@ export interface NotificationData extends NotificationSchemaTypes {</span>
+   id?: string;
+   pKey?: any;
+   updated_at?: any;
+<span class="diff-add">+  socketEvent?: string; //Used by only for Followup </span>
+ }
+ 
+ export interface NotificationResponse extends NotificationSchemaTypes {</pre></section>
+</body></html>
