@@ -1,0 +1,163 @@
+<!doctype html><html><head><meta charset="utf-8"><title>119bb4d5 — Fix filter issue</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>Fix filter issue <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>119bb4d59ffe20543f4c6d03ccaa84780252a28d</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-13T15:16:58+05:30</td></tr><tr><td>Diff</td><td>+41 / -12 across 4 file(s)</td></tr><tr><td>Buckets</td><td>auth, bugfix, messaging</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/follow_up.ts</code></td><td>+14</td><td>-11</td></tr><tr><td><code>controllers/notification_activity.ts</code></td><td>+21</td><td>-1</td></tr><tr><td><code>middlewares/validations/common.ts</code></td><td>+5</td><td>-0</td></tr><tr><td><code>types/notification_activity.ts</code></td><td>+1</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/follow_up.ts b/controllers/follow_up.ts</span>
+<span class="diff-hunk">index bc4bf74..7ec09ad 100644</span>
+<span class="diff-hunk">--- a/controllers/follow_up.ts</span>
+<span class="diff-hunk">+++ b/controllers/follow_up.ts</span>
+<span class="diff-hunk">@@ -99,18 +99,21 @@ export class FollowUpController {</span>
+         endOfDay.setUTCHours(23, 59, 59, 999);
+ 
+         query.followUpDate = { $gte: startOfDay, $lte: endOfDay };
+<span class="diff-add">+      }</span>
+ 
+<span class="diff-del">-        if (filter === &quot;upcoming&quot; || filter === &quot;overdue&quot;) {</span>
+<span class="diff-del">-          query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-del">-        }</span>
+<span class="diff-del">-      } else {</span>
+<span class="diff-del">-        if (filter === &quot;upcoming&quot;) {</span>
+<span class="diff-del">-          query.followUpDate = { $gte: now };</span>
+<span class="diff-del">-          query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-del">-        } else if (filter === &quot;overdue&quot;) {</span>
+<span class="diff-del">-          query.followUpDate = { $lt: now };</span>
+<span class="diff-del">-          query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-del">-        }</span>
+<span class="diff-add">+      // Apply status-based filter</span>
+<span class="diff-add">+      if (filter === &quot;upcoming&quot;) {</span>
+<span class="diff-add">+        query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+        if (!start_date) query.followUpDate = { $gte: now };</span>
+<span class="diff-add">+      } else if (filter === &quot;overdue&quot;) {</span>
+<span class="diff-add">+        query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+        if (!start_date) query.followUpDate = { $lt: now };</span>
+<span class="diff-add">+      } else if (filter === &quot;completed&quot;) {</span>
+<span class="diff-add">+        query.status = FollowUpStatus.COMPLETED;</span>
+<span class="diff-add">+      } else if (filter === &quot;rescheduled&quot;) {</span>
+<span class="diff-add">+        query.status = FollowUpStatus.RESCHEDULED;</span>
+<span class="diff-add">+      } else if (filter === &quot;cancelled&quot;) {</span>
+<span class="diff-add">+        query.status = FollowUpStatus.CANCELLED;</span>
+       }
+ 
+       const [data, total] = await Promise.all([
+<span class="diff-hunk">diff --git a/controllers/notification_activity.ts b/controllers/notification_activity.ts</span>
+<span class="diff-hunk">index cae844f..e2240cb 100644</span>
+<span class="diff-hunk">--- a/controllers/notification_activity.ts</span>
+<span class="diff-hunk">+++ b/controllers/notification_activity.ts</span>
+<span class="diff-hunk">@@ -36,6 +36,7 @@ export class NotificationActivityController {</span>
+         end_date,
+         status,
+         search,
+<span class="diff-add">+        follow_up_filter = &quot;all&quot;,</span>
+         page = 1,
+         limit = 20,
+       } = req.body;
+<span class="diff-hunk">@@ -68,6 +69,7 @@ export class NotificationActivityController {</span>
+           comSearchCondition,
+           followUpSearchCondition,
+           search,
+<span class="diff-add">+          follow_up_filter,</span>
+         ),
+       ]);
+ 
+<span class="diff-hunk">@@ -198,9 +200,10 @@ export class NotificationActivityController {</span>
+     comSearchCondition: any | null,
+     followUpSearchCondition: any | null,
+     search?: string,
+<span class="diff-add">+    followUpFilter?: string,</span>
+   ): Promise&lt;{ data: any[]; total: number }&gt; {
+     if (status === NotificationActivityStatus.FOLLOW_UPS) {
+<span class="diff-del">-      return this.getFollowUpData(userEmail, startOfDay, endOfDay, skip, limit, followUpSearchCondition, search);</span>
+<span class="diff-add">+      return this.getFollowUpData(userEmail, startOfDay, endOfDay, skip, limit, followUpSearchCondition, search, followUpFilter);</span>
+     }
+ 
+     return this.getComHistoryData(status, userEmail, startOfDay, endOfDay, skip, limit, comSearchCondition);
+<span class="diff-hunk">@@ -254,12 +257,29 @@ export class NotificationActivityController {</span>
+     limit: number,
+     followUpSearchCondition: any | null,
+     search?: string,
+<span class="diff-add">+    followUpFilter: string = &quot;all&quot;,</span>
+   ): Promise&lt;{ data: any[]; total: number }&gt; {
+<span class="diff-add">+    const now = new Date();</span>
+     const query: any = {
+       recruiterEmail: userEmail,
+       followUpDate: { $gte: startOfDay, $lte: endOfDay },
+     };
+ 
+<span class="diff-add">+    // Apply follow-up status filter</span>
+<span class="diff-add">+    if (followUpFilter === &quot;upcoming&quot;) {</span>
+<span class="diff-add">+      query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+      query.followUpDate = { ...query.followUpDate, $gte: now &gt; startOfDay ? now : startOfDay };</span>
+<span class="diff-add">+    } else if (followUpFilter === &quot;overdue&quot;) {</span>
+<span class="diff-add">+      query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+      query.followUpDate = { ...query.followUpDate, $lt: now &lt; endOfDay ? now : endOfDay };</span>
+<span class="diff-add">+    } else if (followUpFilter === &quot;completed&quot;) {</span>
+<span class="diff-add">+      query.status = FollowUpStatus.COMPLETED;</span>
+<span class="diff-add">+    } else if (followUpFilter === &quot;rescheduled&quot;) {</span>
+<span class="diff-add">+      query.status = FollowUpStatus.RESCHEDULED;</span>
+<span class="diff-add">+    } else if (followUpFilter === &quot;cancelled&quot;) {</span>
+<span class="diff-add">+      query.status = FollowUpStatus.CANCELLED;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+     if (followUpSearchCondition) {
+       Object.assign(query, followUpSearchCondition);
+     }
+<span class="diff-hunk">diff --git a/middlewares/validations/common.ts b/middlewares/validations/common.ts</span>
+<span class="diff-hunk">index 228b72d..24b3974 100644</span>
+<span class="diff-hunk">--- a/middlewares/validations/common.ts</span>
+<span class="diff-hunk">+++ b/middlewares/validations/common.ts</span>
+<span class="diff-hunk">@@ -152,6 +152,11 @@ export const notificationActivityValidation: ValidationChain[] = [</span>
+     ),
+ 
+   body(&quot;search&quot;).optional().trim().isString(),
+<span class="diff-add">+  body(&quot;follow_up_filter&quot;)</span>
+<span class="diff-add">+    .optional()</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .isIn([&quot;all&quot;, &quot;upcoming&quot;, &quot;overdue&quot;, &quot;completed&quot;, &quot;rescheduled&quot;, &quot;cancelled&quot;])</span>
+<span class="diff-add">+    .withMessage(&quot;follow_up_filter must be one of: all, upcoming, overdue, completed, rescheduled, cancelled&quot;),</span>
+   body(&quot;page&quot;).optional().isInt({ min: 1 }).withMessage(&quot;page must be a positive integer&quot;),
+   body(&quot;limit&quot;).optional().isInt({ min: 1, max: 100 }).withMessage(&quot;limit must be between 1 and 100&quot;),
+ 
+<span class="diff-hunk">diff --git a/types/notification_activity.ts b/types/notification_activity.ts</span>
+<span class="diff-hunk">index f4fde68..2397aa8 100644</span>
+<span class="diff-hunk">--- a/types/notification_activity.ts</span>
+<span class="diff-hunk">+++ b/types/notification_activity.ts</span>
+<span class="diff-hunk">@@ -17,6 +17,7 @@ export interface NotificationActivityRequest {</span>
+   end_date: string;
+   status: NotificationActivityStatus;
+   search?: string;
+<span class="diff-add">+  follow_up_filter?: string;</span>
+   page?: number;
+   limit?: number;
+ }</pre></section>
+</body></html>

@@ -1,0 +1,1104 @@
+<!doctype html><html><head><meta charset="utf-8"><title>c3dc009e — Add Test Cases from master branch</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add Test Cases from master branch <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>c3dc009edf0e2a4d9e4bdd9abb6ff5fa30250482</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-29T12:54:56+05:30</td></tr><tr><td>Diff</td><td>+966 / -0 across 17 file(s)</td></tr><tr><td>Buckets</td><td>config, feature, messaging, tests</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (966 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>__tests__/service/broadcastManage.test.ts</code></td><td>+38</td><td>-0</td></tr><tr><td><code>__tests__/service/communicationAnalytics.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/communicationHistory.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/communicationResponseAction.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/config.test.ts</code></td><td>+276</td><td>-0</td></tr><tr><td><code>__tests__/service/data.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/index.test.ts</code></td><td>+115</td><td>-0</td></tr><tr><td><code>__tests__/service/messageHandlers/index.test.ts</code></td><td>+28</td><td>-0</td></tr><tr><td><code>__tests__/service/messageHandlers/patientDataHandler.test.ts</code></td><td>+51</td><td>-0</td></tr><tr><td><code>__tests__/service/messageHandlers/patientDataNonPriorityHandler.test.ts</code></td><td>+51</td><td>-0</td></tr><tr><td><code>__tests__/service/notifyRecruiterSettings.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/patient.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/patientConfig.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/responseBot.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/responseBotAudit.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/subScript.test.ts</code></td><td>+37</td><td>-0</td></tr><tr><td><code>__tests__/service/users.test.ts</code></td><td>+37</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/__tests__/service/broadcastManage.test.ts b/__tests__/service/broadcastManage.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..e2808e8</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/broadcastManage.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,38 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/broadcastManage.ts</span>
+<span class="diff-add">+ * Tests the BroadcastManageService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { BroadcastManageService } from &#x27;../../service/broadcast_manage&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;BroadcastManageService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: BroadcastManageService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new BroadcastManageService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(BroadcastManageService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new BroadcastManageService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should have expected properties&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+      expect(typeof service).toBe(&#x27;object&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/communicationAnalytics.test.ts b/__tests__/service/communicationAnalytics.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..d00c92f</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/communicationAnalytics.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/communication_analytics.ts</span>
+<span class="diff-add">+ * Tests the CommunicationAnalyticsService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { CommunicationAnalyticsService } from &#x27;../../service/communication_analytics&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;CommunicationAnalyticsService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: CommunicationAnalyticsService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new CommunicationAnalyticsService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(CommunicationAnalyticsService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new CommunicationAnalyticsService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/communicationHistory.test.ts b/__tests__/service/communicationHistory.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..b5f3fb9</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/communicationHistory.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/communication_history.ts</span>
+<span class="diff-add">+ * Tests the CommunicationHistoryService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { CommunicationHistoryService } from &#x27;../../service/communication_history&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;CommunicationHistoryService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: CommunicationHistoryService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new CommunicationHistoryService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(CommunicationHistoryService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new CommunicationHistoryService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/communicationResponseAction.test.ts b/__tests__/service/communicationResponseAction.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..bac46f9</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/communicationResponseAction.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/communication_response_action.ts</span>
+<span class="diff-add">+ * Tests the CommunicationResponseActionService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { CommunicationResponseActionService } from &#x27;../../service/communication_response_action&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;CommunicationResponseActionService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: CommunicationResponseActionService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new CommunicationResponseActionService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(CommunicationResponseActionService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new CommunicationResponseActionService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/config.test.ts b/__tests__/service/config.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..750366b</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/config.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,276 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/config.ts</span>
+<span class="diff-add">+ * Tests the ConfigService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { ConfigService } from &#x27;../../service/config&#x27;;</span>
+<span class="diff-add">+import { ConfigRepository } from &#x27;../../repository&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+// Mock the ConfigRepository</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;ConfigService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let configService: ConfigService;</span>
+<span class="diff-add">+  let mockConfigRepository: jest.Mocked&lt;ConfigRepository&gt;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    // Reset the singleton instance</span>
+<span class="diff-add">+    (ConfigService as any).instance = null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    // Mock the repository getInstance</span>
+<span class="diff-add">+    mockConfigRepository = {</span>
+<span class="diff-add">+      findOneBySlug: jest.fn(),</span>
+<span class="diff-add">+      findOne: jest.fn(),</span>
+<span class="diff-add">+      updateOneBySlug: jest.fn(),</span>
+<span class="diff-add">+      create: jest.fn(),</span>
+<span class="diff-add">+    } as any;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    (ConfigRepository.getInstance as jest.Mock).mockReturnValue(mockConfigRepository);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    configService = ConfigService.getInstance();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;getInstance&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should return a ConfigService instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(configService).toBeInstanceOf(ConfigService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should return the same instance (singleton pattern)&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const instance1 = ConfigService.getInstance();</span>
+<span class="diff-add">+      const instance2 = ConfigService.getInstance();</span>
+<span class="diff-add">+      expect(instance1).toBe(instance2);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;findOneBySlug&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should call repository findOneBySlug with the correct slug&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const testSlug = &#x27;test-config&#x27;;</span>
+<span class="diff-add">+      const mockConfig = { slug: testSlug, value: &#x27;test-value&#x27; };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(mockConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.findOneBySlug(testSlug);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(mockConfigRepository.findOneBySlug).toHaveBeenCalledWith(testSlug);</span>
+<span class="diff-add">+      expect(result).toEqual(mockConfig);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should return null when config not found&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(null);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.findOneBySlug(&#x27;non-existent&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toBeNull();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle repository errors&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const error = new Error(&#x27;Database error&#x27;);</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockRejectedValueOnce(error);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      await expect(</span>
+<span class="diff-add">+        configService.findOneBySlug(&#x27;test-slug&#x27;)</span>
+<span class="diff-add">+      ).rejects.toThrow(&#x27;Database error&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;getValueBySlug&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should return the value from the config&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const mockConfig = { slug: &#x27;timeout&#x27;, value: &#x27;300&#x27; };</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(mockConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.getValueBySlug(&#x27;timeout&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toBe(&#x27;300&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should return default value &quot;120&quot; when config not found&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(null);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.getValueBySlug(&#x27;missing-config&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toBe(&#x27;120&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should return default value &quot;120&quot; when config has no value&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const mockConfig = { slug: &#x27;no-value&#x27;, value: null };</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(mockConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.getValueBySlug(&#x27;no-value&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toBe(&#x27;120&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should return default value &quot;120&quot; when value is undefined&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const mockConfig = { slug: &#x27;undefined-value&#x27;, value: undefined };</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(mockConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.getValueBySlug(&#x27;undefined-value&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toBe(&#x27;120&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should return empty string value when explicitly set&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const mockConfig = { slug: &#x27;empty&#x27;, value: &#x27;&#x27; };</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(mockConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.getValueBySlug(&#x27;empty&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toBe(&#x27;&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle repository errors&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const error = new Error(&#x27;Database error&#x27;);</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockRejectedValueOnce(error);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      await expect(</span>
+<span class="diff-add">+        configService.getValueBySlug(&#x27;test-slug&#x27;)</span>
+<span class="diff-add">+      ).rejects.toThrow(&#x27;Database error&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;save_config&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should update existing config&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const slug = &#x27;existing-config&#x27;;</span>
+<span class="diff-add">+      const existingConfig = { slug, value: &#x27;old-value&#x27; };</span>
+<span class="diff-add">+      const newData = { slug, value: &#x27;new-value&#x27; };</span>
+<span class="diff-add">+      const updatedConfig = { slug, value: &#x27;new-value&#x27; };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(existingConfig);</span>
+<span class="diff-add">+      mockConfigRepository.updateOneBySlug.mockResolvedValueOnce(updatedConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.save_config(slug, newData);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(mockConfigRepository.findOneBySlug).toHaveBeenCalledWith(slug);</span>
+<span class="diff-add">+      expect(mockConfigRepository.updateOneBySlug).toHaveBeenCalledWith(slug, newData);</span>
+<span class="diff-add">+      expect(result).toEqual(updatedConfig);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should create new config when it does not exist&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const slug = &#x27;new-config&#x27;;</span>
+<span class="diff-add">+      const newData = { slug, value: &#x27;new-value&#x27; };</span>
+<span class="diff-add">+      const createdConfig = { slug, value: &#x27;new-value&#x27;, _id: &#x27;some-id&#x27; };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(null);</span>
+<span class="diff-add">+      mockConfigRepository.create.mockResolvedValueOnce(createdConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.save_config(slug, newData);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(mockConfigRepository.findOneBySlug).toHaveBeenCalledWith(slug);</span>
+<span class="diff-add">+      expect(mockConfigRepository.create).toHaveBeenCalledWith(newData);</span>
+<span class="diff-add">+      expect(result).toEqual(createdConfig);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should not call update when config exists but find returns undefined&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const slug = &#x27;test-config&#x27;;</span>
+<span class="diff-add">+      const newData = { slug, value: &#x27;value&#x27; };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(undefined);</span>
+<span class="diff-add">+      mockConfigRepository.create.mockResolvedValueOnce({ slug, value: &#x27;value&#x27; });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      await configService.save_config(slug, newData);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(mockConfigRepository.create).toHaveBeenCalled();</span>
+<span class="diff-add">+      expect(mockConfigRepository.updateOneBySlug).not.toHaveBeenCalled();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle update errors&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const slug = &#x27;error-config&#x27;;</span>
+<span class="diff-add">+      const newData = { slug, value: &#x27;value&#x27; };</span>
+<span class="diff-add">+      const error = new Error(&#x27;Update failed&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce({ slug, value: &#x27;old&#x27; });</span>
+<span class="diff-add">+      mockConfigRepository.updateOneBySlug.mockRejectedValueOnce(error);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      await expect(</span>
+<span class="diff-add">+        configService.save_config(slug, newData)</span>
+<span class="diff-add">+      ).rejects.toThrow(&#x27;Update failed&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle create errors&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const slug = &#x27;error-config&#x27;;</span>
+<span class="diff-add">+      const newData = { slug, value: &#x27;value&#x27; };</span>
+<span class="diff-add">+      const error = new Error(&#x27;Create failed&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(null);</span>
+<span class="diff-add">+      mockConfigRepository.create.mockRejectedValueOnce(error);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      await expect(</span>
+<span class="diff-add">+        configService.save_config(slug, newData)</span>
+<span class="diff-add">+      ).rejects.toThrow(&#x27;Create failed&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle complex config values&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const slug = &#x27;complex-config&#x27;;</span>
+<span class="diff-add">+      const complexData = {</span>
+<span class="diff-add">+        slug,</span>
+<span class="diff-add">+        value: {</span>
+<span class="diff-add">+          nested: {</span>
+<span class="diff-add">+            property: &#x27;value&#x27;,</span>
+<span class="diff-add">+            array: [1, 2, 3],</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(null);</span>
+<span class="diff-add">+      mockConfigRepository.create.mockResolvedValueOnce(complexData);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.save_config(slug, complexData);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toEqual(complexData);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;edge cases&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should handle very long slugs&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const longSlug = &#x27;a&#x27;.repeat(1000);</span>
+<span class="diff-add">+      const mockConfig = { slug: longSlug, value: &#x27;value&#x27; };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(mockConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.findOneBySlug(longSlug);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toEqual(mockConfig);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle special characters in slug&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const specialSlug = &#x27;config-with-!@#$%^&amp;*()_+-=[]{}|;:&quot;,.&lt;&gt;?&#x27;;</span>
+<span class="diff-add">+      const mockConfig = { slug: specialSlug, value: &#x27;value&#x27; };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(mockConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.findOneBySlug(specialSlug);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toEqual(mockConfig);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle numeric values as strings&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce({</span>
+<span class="diff-add">+        slug: &#x27;numeric&#x27;,</span>
+<span class="diff-add">+        value: &#x27;999999&#x27;,</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.getValueBySlug(&#x27;numeric&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toBe(&#x27;999999&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle values with newlines and special chars&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const mockConfig = {</span>
+<span class="diff-add">+        slug: &#x27;special&#x27;,</span>
+<span class="diff-add">+        value: &#x27;line1\nline2\ttab&#x27;,</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      mockConfigRepository.findOneBySlug.mockResolvedValueOnce(mockConfig);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await configService.getValueBySlug(&#x27;special&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(result).toBe(&#x27;line1\nline2\ttab&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/data.test.ts b/__tests__/service/data.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..bf61ede</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/data.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/data.ts</span>
+<span class="diff-add">+ * Tests the DataService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { DataService } from &#x27;../../service/data&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;DataService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: DataService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new DataService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(DataService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new DataService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/index.test.ts b/__tests__/service/index.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..0418286</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/index.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,115 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/index.ts</span>
+<span class="diff-add">+ * Tests the service module exports</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;patients-data service index&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;module exports&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should export DataService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.DataService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export PatientService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.PatientService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export CommunicationHistoryService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.CommunicationHistoryService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export CommunicationAnalyticsService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.CommunicationAnalyticsService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export NotifyRecruiterSettingsService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.NotifyRecruiterSettingsService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export UsersService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.UsersService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export BroadcastManageService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.BroadcastManageService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export SubScriptService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.SubScriptService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export ResponseBotService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.ResponseBotService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export CommunicationResponseActionService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.CommunicationResponseActionService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export ResponseBotAuditService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.ResponseBotAuditService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export PatientConfigService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.PatientConfigService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should export ConfigService&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+      expect(moduleExports.ConfigService).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;all services are valid types&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should have all services as constructors or instances&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const {</span>
+<span class="diff-add">+        DataService,</span>
+<span class="diff-add">+        PatientService,</span>
+<span class="diff-add">+        CommunicationHistoryService,</span>
+<span class="diff-add">+        CommunicationAnalyticsService,</span>
+<span class="diff-add">+        NotifyRecruiterSettingsService,</span>
+<span class="diff-add">+        UsersService,</span>
+<span class="diff-add">+        BroadcastManageService,</span>
+<span class="diff-add">+        SubScriptService,</span>
+<span class="diff-add">+        ResponseBotService,</span>
+<span class="diff-add">+        CommunicationResponseActionService,</span>
+<span class="diff-add">+        ResponseBotAuditService,</span>
+<span class="diff-add">+        PatientConfigService,</span>
+<span class="diff-add">+        ConfigService,</span>
+<span class="diff-add">+      } = require(&#x27;../../service&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      expect(typeof DataService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof PatientService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof CommunicationHistoryService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof CommunicationAnalyticsService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof NotifyRecruiterSettingsService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof UsersService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof BroadcastManageService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof SubScriptService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof ResponseBotService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof CommunicationResponseActionService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof ResponseBotAuditService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof PatientConfigService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+      expect(typeof ConfigService).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/messageHandlers/index.test.ts b/__tests__/service/messageHandlers/index.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..1dc7dcd</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/messageHandlers/index.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,28 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/messageHandlers/index.ts</span>
+<span class="diff-add">+ * Tests the message handlers module exports</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;patients-data messageHandlers index&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;module exports&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should export handlers&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../../service/messageHandlers&#x27;);</span>
+<span class="diff-add">+      expect(Object.keys(moduleExports).length).toBeGreaterThan(0);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should have all exports defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      const moduleExports = require(&#x27;../../../service/messageHandlers&#x27;);</span>
+<span class="diff-add">+      Object.values(moduleExports).forEach(exp =&gt; {</span>
+<span class="diff-add">+        expect(exp).toBeDefined();</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/messageHandlers/patientDataHandler.test.ts b/__tests__/service/messageHandlers/patientDataHandler.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..8ab38dc</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/messageHandlers/patientDataHandler.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,51 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/messageHandlers/patientDataHandler.ts</span>
+<span class="diff-add">+ * Tests the patientDataHandler message handler</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { patientDataHandler } from &#x27;../../../service/messageHandlers/patientDataHandler&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../../service&#x27;);</span>
+<span class="diff-add">+jest.mock(&#x27;../../../utils/logger&#x27;, () =&gt; ({</span>
+<span class="diff-add">+  __esModule: true,</span>
+<span class="diff-add">+  default: {</span>
+<span class="diff-add">+    info: jest.fn(),</span>
+<span class="diff-add">+    error: jest.fn(),</span>
+<span class="diff-add">+    warn: jest.fn(),</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+}));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;patientDataHandler&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;function definition&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be a function&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(typeof patientDataHandler).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;message handling&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should accept message objects&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const message = { body: { type: &#x27;test&#x27;, data: { event: &#x27;test&#x27; } } };</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await patientDataHandler(message);</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle invalid messages&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await patientDataHandler({ body: null });</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/messageHandlers/patientDataNonPriorityHandler.test.ts b/__tests__/service/messageHandlers/patientDataNonPriorityHandler.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..9ba305a</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/messageHandlers/patientDataNonPriorityHandler.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,51 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/messageHandlers/patientDataNonPriorityHandler.ts</span>
+<span class="diff-add">+ * Tests the patientDataNonPriorityHandler message handler</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { patientDataNonPriorityHandler } from &#x27;../../../service/messageHandlers/patientDataNonPriorityHandler&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../../service&#x27;);</span>
+<span class="diff-add">+jest.mock(&#x27;../../../utils/logger&#x27;, () =&gt; ({</span>
+<span class="diff-add">+  __esModule: true,</span>
+<span class="diff-add">+  default: {</span>
+<span class="diff-add">+    info: jest.fn(),</span>
+<span class="diff-add">+    error: jest.fn(),</span>
+<span class="diff-add">+    warn: jest.fn(),</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+}));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;patientDataNonPriorityHandler&#x27;, () =&gt; {</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;function definition&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be a function&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(typeof patientDataNonPriorityHandler).toBe(&#x27;function&#x27;);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;message handling&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should accept message objects&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      const message = { body: { type: &#x27;test&#x27;, data: { event: &#x27;test&#x27; } } };</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await patientDataNonPriorityHandler(message);</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should handle invalid messages&#x27;, async () =&gt; {</span>
+<span class="diff-add">+      try {</span>
+<span class="diff-add">+        await patientDataNonPriorityHandler({ body: null });</span>
+<span class="diff-add">+      } catch (e) {</span>
+<span class="diff-add">+        // Expected behavior</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/notifyRecruiterSettings.test.ts b/__tests__/service/notifyRecruiterSettings.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..0afc15c</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/notifyRecruiterSettings.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/notify_recruiter_settings.ts</span>
+<span class="diff-add">+ * Tests the NotifyRecruiterSettingsService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { NotifyRecruiterSettingsService } from &#x27;../../service/notify_recruiter_settings&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;NotifyRecruiterSettingsService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: NotifyRecruiterSettingsService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new NotifyRecruiterSettingsService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(NotifyRecruiterSettingsService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new NotifyRecruiterSettingsService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/patient.test.ts b/__tests__/service/patient.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..67f1914</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/patient.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/patient.ts</span>
+<span class="diff-add">+ * Tests the PatientService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { PatientService } from &#x27;../../service/patient&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;PatientService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: PatientService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new PatientService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(PatientService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new PatientService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/patientConfig.test.ts b/__tests__/service/patientConfig.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..4a4e1e0</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/patientConfig.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/patient_config.ts</span>
+<span class="diff-add">+ * Tests the PatientConfigService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { PatientConfigService } from &#x27;../../service/patient_config&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;PatientConfigService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: PatientConfigService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new PatientConfigService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(PatientConfigService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new PatientConfigService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/responseBot.test.ts b/__tests__/service/responseBot.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..dd19ad7</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/responseBot.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/response_bot.ts</span>
+<span class="diff-add">+ * Tests the ResponseBotService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { ResponseBotService } from &#x27;../../service/response_bot&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;ResponseBotService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: ResponseBotService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new ResponseBotService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(ResponseBotService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new ResponseBotService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/responseBotAudit.test.ts b/__tests__/service/responseBotAudit.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..ea5ec8a</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/responseBotAudit.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/response_bot_audit.ts</span>
+<span class="diff-add">+ * Tests the ResponseBotAuditService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { ResponseBotAuditService } from &#x27;../../service/response_bot_audit&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;ResponseBotAuditService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: ResponseBotAuditService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new ResponseBotAuditService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(ResponseBotAuditService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new ResponseBotAuditService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/subScript.test.ts b/__tests__/service/subScript.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..5b104ec</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/subScript.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/sub_script.ts</span>
+<span class="diff-add">+ * Tests the SubScriptService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { SubScriptService } from &#x27;../../service/sub_script&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;SubScriptService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: SubScriptService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new SubScriptService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(SubScriptService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new SubScriptService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span>
+<span class="diff-hunk">diff --git a/__tests__/service/users.test.ts b/__tests__/service/users.test.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..087f2e9</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/__tests__/service/users.test.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,37 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Jest unit tests for patients-data/service/users.ts</span>
+<span class="diff-add">+ * Tests the UsersService class</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+import { UsersService } from &#x27;../../service/users&#x27;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+jest.mock(&#x27;../../repository&#x27;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+describe(&#x27;UsersService&#x27;, () =&gt; {</span>
+<span class="diff-add">+  let service: UsersService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  beforeEach(() =&gt; {</span>
+<span class="diff-add">+    jest.clearAllMocks();</span>
+<span class="diff-add">+    service = new UsersService();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  afterEach(() =&gt; {</span>
+<span class="diff-add">+    jest.restoreAllMocks();</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;constructor&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should create an instance&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeInstanceOf(UsersService);</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  describe(&#x27;basic functionality&#x27;, () =&gt; {</span>
+<span class="diff-add">+    it(&#x27;should be instantiable&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(() =&gt; new UsersService()).not.toThrow();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    it(&#x27;should be defined&#x27;, () =&gt; {</span>
+<span class="diff-add">+      expect(service).toBeDefined();</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  });</span>
+<span class="diff-add">+});</span></pre></section>
+</body></html>

@@ -1,0 +1,1132 @@
+<!doctype html><html><head><meta charset="utf-8"><title>c5715d70 — feat: implement notification activity tracking and add date range filtering to follow-up lists</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>feat: implement notification activity tracking and add date range filtering to follow-up lists <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>c5715d705b66284c6eeae77461e6e5c1d22df1c8</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-13T12:51:19+05:30</td></tr><tr><td>Diff</td><td>+941 / -10 across 12 file(s)</td></tr><tr><td>Buckets</td><td>auth, db-schema, feature, messaging</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (951 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/follow_up.ts</code></td><td>+25</td><td>-7</td></tr><tr><td><code>controllers/index.ts</code></td><td>+3</td><td>-1</td></tr><tr><td><code>controllers/message_conversation.ts</code></td><td>+181</td><td>-0</td></tr><tr><td><code>controllers/notification_activity.ts</code></td><td>+324</td><td>-0</td></tr><tr><td><code>middlewares/validations/common.ts</code></td><td>+98</td><td>-1</td></tr><tr><td><code>models/mongodb/communication_history.ts</code></td><td>+1</td><td>-0</td></tr><tr><td><code>routes/follow_up.ts</code></td><td>+14</td><td>-1</td></tr><tr><td><code>routes/index.ts</code></td><td>+4</td><td>-0</td></tr><tr><td><code>routes/message_conversation.ts</code></td><td>+107</td><td>-0</td></tr><tr><td><code>routes/notification_activity.ts</code></td><td>+104</td><td>-0</td></tr><tr><td><code>types/message_conversation.ts</code></td><td>+38</td><td>-0</td></tr><tr><td><code>types/notification_activity.ts</code></td><td>+42</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (1)</summary><ul><li><code>routes/index.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/patients-data/node_modules/typescript/lib/typescript.js:170277
+    function increaseIndent() {  </code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/follow_up.ts b/controllers/follow_up.ts</span>
+<span class="diff-hunk">index e395970..1f54fb1 100644</span>
+<span class="diff-hunk">--- a/controllers/follow_up.ts</span>
+<span class="diff-hunk">+++ b/controllers/follow_up.ts</span>
+<span class="diff-hunk">@@ -59,7 +59,8 @@ export class FollowUpController {</span>
+ 
+   /**
+    * Get follow-ups for the logged-in user with optional filtering.
+<span class="diff-del">-   * GET /follow-up/list?filter=upcoming|overdue|all&amp;patientId=123&amp;page=1&amp;limit=20</span>
+<span class="diff-add">+   * GET /follow-up/list?filter=upcoming|overdue|all&amp;patientId=123&amp;page=1&amp;limit=20&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD</span>
+<span class="diff-add">+   * Note: start_date/end_date are validated by followUpListDateValidation middleware</span>
+    */
+   getFollowUps = async (req: UserRequest, res: Response) =&gt; {
+     try {
+<span class="diff-hunk">@@ -73,6 +74,8 @@ export class FollowUpController {</span>
+         patientId,
+         page = &quot;1&quot;,
+         limit = &quot;20&quot;,
+<span class="diff-add">+        start_date,</span>
+<span class="diff-add">+        end_date,</span>
+       } = req.query as Record&lt;string, string&gt;;
+ 
+       const pageNum = Math.max(1, Number.parseInt(page));
+<span class="diff-hunk">@@ -86,12 +89,27 @@ export class FollowUpController {</span>
+         query.patientId = Number.parseInt(patientId);
+       }
+ 
+<span class="diff-del">-      if (filter === &quot;upcoming&quot;) {</span>
+<span class="diff-del">-        query.followUpDate = { $gte: now };</span>
+<span class="diff-del">-        query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-del">-      } else if (filter === &quot;overdue&quot;) {</span>
+<span class="diff-del">-        query.followUpDate = { $lt: now };</span>
+<span class="diff-del">-        query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+      // Date range filtering (format, pair, order, range already validated by middleware)</span>
+<span class="diff-add">+      if (start_date &amp;&amp; end_date) {</span>
+<span class="diff-add">+        const startOfDay = new Date(start_date);</span>
+<span class="diff-add">+        startOfDay.setUTCHours(0, 0, 0, 0);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        const endOfDay = new Date(end_date);</span>
+<span class="diff-add">+        endOfDay.setUTCHours(23, 59, 59, 999);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        query.followUpDate = { $gte: startOfDay, $lte: endOfDay };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        if (filter === &quot;upcoming&quot; || filter === &quot;overdue&quot;) {</span>
+<span class="diff-add">+          query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+      } else {</span>
+<span class="diff-add">+        if (filter === &quot;upcoming&quot;) {</span>
+<span class="diff-add">+          query.followUpDate = { $gte: now };</span>
+<span class="diff-add">+          query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+        } else if (filter === &quot;overdue&quot;) {</span>
+<span class="diff-add">+          query.followUpDate = { $lt: now };</span>
+<span class="diff-add">+          query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+        }</span>
+       }
+ 
+       const [data, total] = await Promise.all([
+<span class="diff-hunk">diff --git a/controllers/index.ts b/controllers/index.ts</span>
+<span class="diff-hunk">index 2a4f975..675900f 100644</span>
+<span class="diff-hunk">--- a/controllers/index.ts</span>
+<span class="diff-hunk">+++ b/controllers/index.ts</span>
+<span class="diff-hunk">@@ -2,4 +2,6 @@ export { DataController } from &quot;./data&quot;;</span>
+ export { PatientController } from &quot;./patient&quot;;
+ export { CommunicationHistoryController } from &quot;./communication_history&quot;;
+ export { UsersController } from &quot;./users&quot;;
+<span class="diff-del">-export { FollowUpController } from &quot;./follow_up&quot;;</span>
+\ No newline at end of file
+<span class="diff-add">+export { FollowUpController } from &quot;./follow_up&quot;;</span>
+<span class="diff-add">+export { NotificationActivityController } from &quot;./notification_activity&quot;;</span>
+<span class="diff-add">+export { MessageConversationController } from &quot;./message_conversation&quot;;</span>
+\ No newline at end of file
+<span class="diff-hunk">diff --git a/controllers/message_conversation.ts b/controllers/message_conversation.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..4f48923</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/controllers/message_conversation.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,181 @@</span>
+<span class="diff-add">+import { Response } from &quot;express&quot;;</span>
+<span class="diff-add">+import { UserRequest } from &quot;../types/request&quot;;</span>
+<span class="diff-add">+import { CommunicationHistory } from &quot;../models&quot;;</span>
+<span class="diff-add">+import { FollowUp } from &quot;../models/mongodb/follow_up&quot;;</span>
+<span class="diff-add">+import { CommunicationType } from &quot;../types/communication_history&quot;;</span>
+<span class="diff-add">+import { FollowUpStatus } from &quot;../types/follow_up&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;../utils/logger&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export class MessageConversationController {</span>
+<span class="diff-add">+  private static instance: MessageConversationController | null = null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  public static getInstance() {</span>
+<span class="diff-add">+    MessageConversationController.instance ??= new MessageConversationController();</span>
+<span class="diff-add">+    return MessageConversationController.instance;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * POST /message-conversations</span>
+<span class="diff-add">+   * Returns SMS conversations grouped by patient (WhatsApp-style chat list).</span>
+<span class="diff-add">+   * Each entry has patient info, last message, and upcoming follow-up if any.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  getConversations = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userEmail = req.user?.Email;</span>
+<span class="diff-add">+      if (!userEmail) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const { search, page = 1, limit = 20 } = req.body;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const pageNum = Math.max(1, Number(page));</span>
+<span class="diff-add">+      const limitNum = Math.min(100, Math.max(1, Number(limit)));</span>
+<span class="diff-add">+      const skip = (pageNum - 1) * limitNum;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Build match stage</span>
+<span class="diff-add">+      const matchStage: any = {</span>
+<span class="diff-add">+        user: userEmail,</span>
+<span class="diff-add">+        type: CommunicationType.sms,</span>
+<span class="diff-add">+        &quot;patient_obj.Id&quot;: { $exists: true, $ne: null },</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Build search conditions</span>
+<span class="diff-add">+      if (search?.trim()) {</span>
+<span class="diff-add">+        const searchStr = search.trim();</span>
+<span class="diff-add">+        const searchRegex = new RegExp(searchStr, &quot;i&quot;);</span>
+<span class="diff-add">+        const [firstname, lastname] = searchStr.split(&quot; &quot;);</span>
+<span class="diff-add">+        const firstnameRegex = firstname ? new RegExp(`^${firstname}`, &quot;i&quot;) : searchRegex;</span>
+<span class="diff-add">+        const lastnameRegex = lastname ? new RegExp(`^${lastname}`, &quot;i&quot;) : searchRegex;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        const parsedId = Number.parseInt(searchStr);</span>
+<span class="diff-add">+        const orConditions: any[] = [</span>
+<span class="diff-add">+          { &quot;patient_obj.FirstName&quot;: firstnameRegex },</span>
+<span class="diff-add">+          { &quot;patient_obj.LastName&quot;: lastnameRegex },</span>
+<span class="diff-add">+          { to: searchRegex },</span>
+<span class="diff-add">+          { from: searchRegex },</span>
+<span class="diff-add">+        ];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        if (!Number.isNaN(parsedId)) {</span>
+<span class="diff-add">+          orConditions.push({ &quot;patient_obj.Id&quot;: parsedId });</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        matchStage.$or = orConditions;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Aggregation pipeline: group SMS by patient, get latest message per patient</span>
+<span class="diff-add">+      const pipeline: any[] = [</span>
+<span class="diff-add">+        { $match: matchStage },</span>
+<span class="diff-add">+        { $sort: { sent_at: -1 } },</span>
+<span class="diff-add">+        {</span>
+<span class="diff-add">+          $group: {</span>
+<span class="diff-add">+            _id: &quot;$patient_obj.Id&quot;,</span>
+<span class="diff-add">+            patientName: {</span>
+<span class="diff-add">+              $first: {</span>
+<span class="diff-add">+                $cond: {</span>
+<span class="diff-add">+                  if: { $ifNull: [&quot;$patient_obj.FullName&quot;, false] },</span>
+<span class="diff-add">+                  then: &quot;$patient_obj.FullName&quot;,</span>
+<span class="diff-add">+                  else: {</span>
+<span class="diff-add">+                    $concat: [</span>
+<span class="diff-add">+                      { $ifNull: [&quot;$patient_obj.FirstName&quot;, &quot;&quot;] },</span>
+<span class="diff-add">+                      &quot; &quot;,</span>
+<span class="diff-add">+                      { $ifNull: [&quot;$patient_obj.LastName&quot;, &quot;&quot;] },</span>
+<span class="diff-add">+                    ],</span>
+<span class="diff-add">+                  },</span>
+<span class="diff-add">+                },</span>
+<span class="diff-add">+              },</span>
+<span class="diff-add">+            },</span>
+<span class="diff-add">+            patientPhone: { $first: { $ifNull: [&quot;$patient_obj.Phone&quot;, &quot;&quot;] } },</span>
+<span class="diff-add">+            lastMessageContent: { $first: { $ifNull: [&quot;$content&quot;, &quot;&quot;] } },</span>
+<span class="diff-add">+            lastMessageDirection: { $first: &quot;$direction&quot; },</span>
+<span class="diff-add">+            lastMessageSentAt: { $first: &quot;$sent_at&quot; },</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+        { $sort: { lastMessageSentAt: -1 } },</span>
+<span class="diff-add">+        {</span>
+<span class="diff-add">+          $facet: {</span>
+<span class="diff-add">+            data: [{ $skip: skip }, { $limit: limitNum }],</span>
+<span class="diff-add">+            count: [{ $count: &quot;total&quot; }],</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      ];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const [result] = await CommunicationHistory.aggregate(pipeline);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const conversations = result?.data ?? [];</span>
+<span class="diff-add">+      const total = result?.count?.[0]?.total ?? 0;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Enrich with upcoming follow-ups</span>
+<span class="diff-add">+      const patientIds = conversations.map((c: any) =&gt; c._id);</span>
+<span class="diff-add">+      const enrichedData = await this.enrichWithFollowUps(conversations, patientIds, userEmail);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        data: enrichedData,</span>
+<span class="diff-add">+        pagination: {</span>
+<span class="diff-add">+          page: pageNum,</span>
+<span class="diff-add">+          limit: limitNum,</span>
+<span class="diff-add">+          total,</span>
+<span class="diff-add">+          totalPages: Math.ceil(total / limitNum),</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;MessageConversationController/getConversations error:&quot;, error?.message);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Batch lookup the nearest upcoming follow-up per patient for the logged-in user.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private async enrichWithFollowUps(conversations: any[], patientIds: number[], userEmail: string) {</span>
+<span class="diff-add">+    if (!patientIds.length) return [];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const now = new Date();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    // Get the nearest upcoming follow-up per patient</span>
+<span class="diff-add">+    const followUps = await FollowUp.aggregate([</span>
+<span class="diff-add">+      {</span>
+<span class="diff-add">+        $match: {</span>
+<span class="diff-add">+          recruiterEmail: userEmail,</span>
+<span class="diff-add">+          patientId: { $in: patientIds },</span>
+<span class="diff-add">+          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-add">+          followUpDate: { $gte: now },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      },</span>
+<span class="diff-add">+      { $sort: { followUpDate: 1 } },</span>
+<span class="diff-add">+      {</span>
+<span class="diff-add">+        $group: {</span>
+<span class="diff-add">+          _id: &quot;$patientId&quot;,</span>
+<span class="diff-add">+          followUpId: { $first: &quot;$_id&quot; },</span>
+<span class="diff-add">+          followUpDate: { $first: &quot;$followUpDate&quot; },</span>
+<span class="diff-add">+          followUpStatus: { $first: &quot;$status&quot; },</span>
+<span class="diff-add">+          followUpNotes: { $first: &quot;$notes&quot; },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      },</span>
+<span class="diff-add">+    ]);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const followUpMap = new Map(followUps.map((f: any) =&gt; [f._id, f]));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return conversations.map((conv: any) =&gt; {</span>
+<span class="diff-add">+      const fu = followUpMap.get(conv._id);</span>
+<span class="diff-add">+      return {</span>
+<span class="diff-add">+        patientId: conv._id,</span>
+<span class="diff-add">+        patientName: conv.patientName?.trim() || &quot;&quot;,</span>
+<span class="diff-add">+        patientPhone: conv.patientPhone,</span>
+<span class="diff-add">+        lastMessage: {</span>
+<span class="diff-add">+          content: conv.lastMessageContent,</span>
+<span class="diff-add">+          direction: conv.lastMessageDirection,</span>
+<span class="diff-add">+          sent_at: conv.lastMessageSentAt,</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+        followUp: fu</span>
+<span class="diff-add">+          ? {</span>
+<span class="diff-add">+            _id: fu.followUpId,</span>
+<span class="diff-add">+            followUpDate: fu.followUpDate,</span>
+<span class="diff-add">+            status: fu.followUpStatus,</span>
+<span class="diff-add">+            notes: fu.followUpNotes,</span>
+<span class="diff-add">+          }</span>
+<span class="diff-add">+          : null,</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/controllers/notification_activity.ts b/controllers/notification_activity.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..feae265</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/controllers/notification_activity.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,324 @@</span>
+<span class="diff-add">+import { Response } from &quot;express&quot;;</span>
+<span class="diff-add">+import { UserRequest } from &quot;../types/request&quot;;</span>
+<span class="diff-add">+import { CommunicationHistory } from &quot;../models&quot;;</span>
+<span class="diff-add">+import { FollowUp } from &quot;../models/mongodb/follow_up&quot;;</span>
+<span class="diff-add">+import { CommunicationType, DirectionType } from &quot;../types/communication_history&quot;;</span>
+<span class="diff-add">+import {</span>
+<span class="diff-add">+  NotificationActivityStatus,</span>
+<span class="diff-add">+  NotificationActivityCounts,</span>
+<span class="diff-add">+} from &quot;../types/notification_activity&quot;;</span>
+<span class="diff-add">+import { PatientRepository } from &quot;../repository/patient&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;../utils/logger&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export class NotificationActivityController {</span>
+<span class="diff-add">+  private static instance: NotificationActivityController | null = null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  public static getInstance() {</span>
+<span class="diff-add">+    NotificationActivityController.instance ??= new NotificationActivityController();</span>
+<span class="diff-add">+    return NotificationActivityController.instance;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * POST /notification-activity</span>
+<span class="diff-add">+   * Returns paginated notification activity for the logged-in user</span>
+<span class="diff-add">+   * with counts for all categories.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  getNotificationActivity = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userEmail = req.user?.Email;</span>
+<span class="diff-add">+      if (!userEmail) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const {</span>
+<span class="diff-add">+        start_date,</span>
+<span class="diff-add">+        end_date,</span>
+<span class="diff-add">+        status,</span>
+<span class="diff-add">+        search,</span>
+<span class="diff-add">+        page = 1,</span>
+<span class="diff-add">+        limit = 20,</span>
+<span class="diff-add">+      } = req.body;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const pageNum = Math.max(1, Number(page));</span>
+<span class="diff-add">+      const limitNum = Math.min(100, Math.max(1, Number(limit)));</span>
+<span class="diff-add">+      const skip = (pageNum - 1) * limitNum;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const startOfDay = new Date(start_date);</span>
+<span class="diff-add">+      startOfDay.setUTCHours(0, 0, 0, 0);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const endOfDay = new Date(end_date);</span>
+<span class="diff-add">+      endOfDay.setUTCHours(23, 59, 59, 999);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Build search condition for communication history</span>
+<span class="diff-add">+      const comSearchCondition = this.buildComSearchCondition(search);</span>
+<span class="diff-add">+      // Build search condition for follow-ups (patient ID only; name enriched post-query)</span>
+<span class="diff-add">+      const followUpSearchCondition = this.buildFollowUpSearchCondition(search);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Counts are only filtered by date range (not by search or status)</span>
+<span class="diff-add">+      const [counts, { data, total }] = await Promise.all([</span>
+<span class="diff-add">+        this.getAllCounts(userEmail, startOfDay, endOfDay),</span>
+<span class="diff-add">+        this.getDataForStatus(</span>
+<span class="diff-add">+          status,</span>
+<span class="diff-add">+          userEmail,</span>
+<span class="diff-add">+          startOfDay,</span>
+<span class="diff-add">+          endOfDay,</span>
+<span class="diff-add">+          skip,</span>
+<span class="diff-add">+          limitNum,</span>
+<span class="diff-add">+          comSearchCondition,</span>
+<span class="diff-add">+          followUpSearchCondition,</span>
+<span class="diff-add">+          search,</span>
+<span class="diff-add">+        ),</span>
+<span class="diff-add">+      ]);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        data,</span>
+<span class="diff-add">+        counts,</span>
+<span class="diff-add">+        pagination: {</span>
+<span class="diff-add">+          page: pageNum,</span>
+<span class="diff-add">+          limit: limitNum,</span>
+<span class="diff-add">+          total,</span>
+<span class="diff-add">+          totalPages: Math.ceil(total / limitNum),</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationActivityController/getNotificationActivity error:&quot;, error?.message);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Builds a base query for CommunicationHistory scoped to user + date range.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private buildComBaseQuery(userEmail: string, startOfDay: Date, endOfDay: Date) {</span>
+<span class="diff-add">+    return {</span>
+<span class="diff-add">+      user: userEmail,</span>
+<span class="diff-add">+      sent_at: { $gte: startOfDay, $lte: endOfDay },</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Builds $or search conditions for CommunicationHistory (patient name, number, ID).</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private buildComSearchCondition(search?: string): any | null {</span>
+<span class="diff-add">+    if (!search || !search.trim()) return null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const searchStr = search.trim();</span>
+<span class="diff-add">+    const searchRegex = new RegExp(searchStr, &quot;i&quot;);</span>
+<span class="diff-add">+    const [firstname, lastname] = searchStr.split(&quot; &quot;);</span>
+<span class="diff-add">+    const firstnameRegex = firstname ? new RegExp(`^${firstname}`, &quot;i&quot;) : searchRegex;</span>
+<span class="diff-add">+    const lastnameRegex = lastname ? new RegExp(`^${lastname}`, &quot;i&quot;) : searchRegex;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const parsedId = Number.parseInt(searchStr);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const orConditions: any[] = [</span>
+<span class="diff-add">+      { &quot;patient_obj.FirstName&quot;: firstnameRegex },</span>
+<span class="diff-add">+      { &quot;patient_obj.LastName&quot;: lastnameRegex },</span>
+<span class="diff-add">+      { to: searchRegex },</span>
+<span class="diff-add">+      { from: searchRegex },</span>
+<span class="diff-add">+    ];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (!Number.isNaN(parsedId)) {</span>
+<span class="diff-add">+      orConditions.push({ &quot;patient_obj.Id&quot;: parsedId });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return { $or: orConditions };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Builds search conditions for FollowUp (patient ID only for direct match).</span>
+<span class="diff-add">+   * Patient name search is handled post-query since FollowUp doesn&#x27;t store names.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private buildFollowUpSearchCondition(search?: string): any | null {</span>
+<span class="diff-add">+    if (!search || !search.trim()) return null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const parsedId = Number.parseInt(search.trim());</span>
+<span class="diff-add">+    if (!Number.isNaN(parsedId)) {</span>
+<span class="diff-add">+      return { patientId: parsedId };</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    // For name/number search, return a marker — actual filtering done post-query</span>
+<span class="diff-add">+    return null;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Returns counts for all 4 categories in parallel.</span>
+<span class="diff-add">+   * Counts are only filtered by user + date range (not by search or status).</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private async getAllCounts(</span>
+<span class="diff-add">+    userEmail: string,</span>
+<span class="diff-add">+    startOfDay: Date,</span>
+<span class="diff-add">+    endOfDay: Date,</span>
+<span class="diff-add">+  ): Promise&lt;NotificationActivityCounts&gt; {</span>
+<span class="diff-add">+    const comBase = this.buildComBaseQuery(userEmail, startOfDay, endOfDay);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const callsMadeQuery: any = {</span>
+<span class="diff-add">+      ...comBase,</span>
+<span class="diff-add">+      type: CommunicationType.phone,</span>
+<span class="diff-add">+      direction: DirectionType.outbound,</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const callsReceivedQuery: any = {</span>
+<span class="diff-add">+      ...comBase,</span>
+<span class="diff-add">+      type: CommunicationType.phone,</span>
+<span class="diff-add">+      direction: DirectionType.inbound,</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const smsQuery: any = {</span>
+<span class="diff-add">+      ...comBase,</span>
+<span class="diff-add">+      type: CommunicationType.sms,</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const followUpQuery: any = {</span>
+<span class="diff-add">+      recruiterEmail: userEmail,</span>
+<span class="diff-add">+      followUpDate: { $gte: startOfDay, $lte: endOfDay },</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const [calls_made, calls_received, sms, follow_ups] = await Promise.all([</span>
+<span class="diff-add">+      CommunicationHistory.countDocuments(callsMadeQuery),</span>
+<span class="diff-add">+      CommunicationHistory.countDocuments(callsReceivedQuery),</span>
+<span class="diff-add">+      CommunicationHistory.countDocuments(smsQuery),</span>
+<span class="diff-add">+      FollowUp.countDocuments(followUpQuery),</span>
+<span class="diff-add">+    ]);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return { calls_made, calls_received, sms, follow_ups };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Returns paginated data + total for the selected status category.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private async getDataForStatus(</span>
+<span class="diff-add">+    status: NotificationActivityStatus,</span>
+<span class="diff-add">+    userEmail: string,</span>
+<span class="diff-add">+    startOfDay: Date,</span>
+<span class="diff-add">+    endOfDay: Date,</span>
+<span class="diff-add">+    skip: number,</span>
+<span class="diff-add">+    limit: number,</span>
+<span class="diff-add">+    comSearchCondition: any | null,</span>
+<span class="diff-add">+    followUpSearchCondition: any | null,</span>
+<span class="diff-add">+    search?: string,</span>
+<span class="diff-add">+  ): Promise&lt;{ data: any[]; total: number }&gt; {</span>
+<span class="diff-add">+    if (status === NotificationActivityStatus.FOLLOW_UPS) {</span>
+<span class="diff-add">+      return this.getFollowUpData(userEmail, startOfDay, endOfDay, skip, limit, followUpSearchCondition, search);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return this.getComHistoryData(status, userEmail, startOfDay, endOfDay, skip, limit, comSearchCondition);</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Fetches communication history (calls made, calls received, SMS) with pagination.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private async getComHistoryData(</span>
+<span class="diff-add">+    status: NotificationActivityStatus,</span>
+<span class="diff-add">+    userEmail: string,</span>
+<span class="diff-add">+    startOfDay: Date,</span>
+<span class="diff-add">+    endOfDay: Date,</span>
+<span class="diff-add">+    skip: number,</span>
+<span class="diff-add">+    limit: number,</span>
+<span class="diff-add">+    comSearchCondition: any | null,</span>
+<span class="diff-add">+  ): Promise&lt;{ data: any[]; total: number }&gt; {</span>
+<span class="diff-add">+    const query: any = this.buildComBaseQuery(userEmail, startOfDay, endOfDay);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (status === NotificationActivityStatus.CALLS_MADE) {</span>
+<span class="diff-add">+      query.type = CommunicationType.phone;</span>
+<span class="diff-add">+      query.direction = DirectionType.outbound;</span>
+<span class="diff-add">+    } else if (status === NotificationActivityStatus.CALLS_RECEIVED) {</span>
+<span class="diff-add">+      query.type = CommunicationType.phone;</span>
+<span class="diff-add">+      query.direction = DirectionType.inbound;</span>
+<span class="diff-add">+    } else if (status === NotificationActivityStatus.SMS) {</span>
+<span class="diff-add">+      query.type = CommunicationType.sms;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (comSearchCondition) {</span>
+<span class="diff-add">+      Object.assign(query, comSearchCondition);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const [data, total] = await Promise.all([</span>
+<span class="diff-add">+      CommunicationHistory.find(query).sort({ sent_at: -1 }).skip(skip).limit(limit),</span>
+<span class="diff-add">+      CommunicationHistory.countDocuments(query),</span>
+<span class="diff-add">+    ]);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return { data, total };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Fetches follow-ups with pagination and patient name enrichment.</span>
+<span class="diff-add">+   * Supports search by patient name (post-query filtering when needed).</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private async getFollowUpData(</span>
+<span class="diff-add">+    userEmail: string,</span>
+<span class="diff-add">+    startOfDay: Date,</span>
+<span class="diff-add">+    endOfDay: Date,</span>
+<span class="diff-add">+    skip: number,</span>
+<span class="diff-add">+    limit: number,</span>
+<span class="diff-add">+    followUpSearchCondition: any | null,</span>
+<span class="diff-add">+    search?: string,</span>
+<span class="diff-add">+  ): Promise&lt;{ data: any[]; total: number }&gt; {</span>
+<span class="diff-add">+    const query: any = {</span>
+<span class="diff-add">+      recruiterEmail: userEmail,</span>
+<span class="diff-add">+      followUpDate: { $gte: startOfDay, $lte: endOfDay },</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (followUpSearchCondition) {</span>
+<span class="diff-add">+      Object.assign(query, followUpSearchCondition);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    // If search is a non-numeric string (name search), we need to fetch more</span>
+<span class="diff-add">+    // and filter post-enrichment since FollowUp doesn&#x27;t store patient names</span>
+<span class="diff-add">+    const isNameSearch = search?.trim() &amp;&amp; isNaN(parseInt(search.trim()));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    let data: any[];</span>
+<span class="diff-add">+    let total: number;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (isNameSearch) {</span>
+<span class="diff-add">+      // Fetch all matching follow-ups, enrich, then filter by name</span>
+<span class="diff-add">+      const allFollowUps = await FollowUp.find(query).sort({ followUpDate: -1 });</span>
+<span class="diff-add">+      const enriched = await this.enrichFollowUpsWithPatient(allFollowUps);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const searchStr = search!.trim();</span>
+<span class="diff-add">+      const searchRegex = new RegExp(searchStr, &quot;i&quot;);</span>
+<span class="diff-add">+      const filtered = enriched.filter(</span>
+<span class="diff-add">+        (item: any) =&gt;</span>
+<span class="diff-add">+          searchRegex.test(item.patientName || &quot;&quot;) ||</span>
+<span class="diff-add">+          searchRegex.test(item.patientPhone || &quot;&quot;)</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      total = filtered.length;</span>
+<span class="diff-add">+      data = filtered.slice(skip, skip + limit);</span>
+<span class="diff-add">+    } else {</span>
+<span class="diff-add">+      [data, total] = await Promise.all([</span>
+<span class="diff-add">+        FollowUp.find(query).sort({ followUpDate: -1 }).skip(skip).limit(limit),</span>
+<span class="diff-add">+        FollowUp.countDocuments(query),</span>
+<span class="diff-add">+      ]);</span>
+<span class="diff-add">+      data = await this.enrichFollowUpsWithPatient(data);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return { data, total };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Enriches follow-up records with patient name and phone from MSSQL.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  private async enrichFollowUpsWithPatient(followUps: any[]): Promise&lt;any[]&gt; {</span>
+<span class="diff-add">+    if (!followUps.length) return [];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const uniquePatientIds = [...new Set(followUps.map((d) =&gt; d.patientId))];</span>
+<span class="diff-add">+    const patientRepo = PatientRepository.getInstance();</span>
+<span class="diff-add">+    const patients = await Promise.all(</span>
+<span class="diff-add">+      uniquePatientIds.map((id) =&gt; patientRepo.findOneById(id))</span>
+<span class="diff-add">+    );</span>
+<span class="diff-add">+    const patientMap = new Map(</span>
+<span class="diff-add">+      patients.filter(Boolean).map((p: any) =&gt; [p.Id, p])</span>
+<span class="diff-add">+    );</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return followUps.map((d) =&gt; {</span>
+<span class="diff-add">+      const patient = patientMap.get(d.patientId);</span>
+<span class="diff-add">+      const obj = d.toObject ? d.toObject() : d;</span>
+<span class="diff-add">+      return {</span>
+<span class="diff-add">+        ...obj,</span>
+<span class="diff-add">+        patientName: patient?.FullName || patient?.FirstName || &quot;&quot;,</span>
+<span class="diff-add">+        patientPhone: patient?.Phone || &quot;&quot;,</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+    });</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/middlewares/validations/common.ts b/middlewares/validations/common.ts</span>
+<span class="diff-hunk">index 35d7997..228b72d 100644</span>
+<span class="diff-hunk">--- a/middlewares/validations/common.ts</span>
+<span class="diff-hunk">+++ b/middlewares/validations/common.ts</span>
+<span class="diff-hunk">@@ -1,5 +1,6 @@</span>
+ import { Request, Response, NextFunction } from &quot;express&quot;;
+<span class="diff-del">-import { check, validationResult, ValidationChain } from &quot;express-validator&quot;;</span>
+<span class="diff-add">+import { body, check, query, validationResult, ValidationChain } from &quot;express-validator&quot;;</span>
+<span class="diff-add">+import { NotificationActivityStatus } from &quot;../../types/notification_activity&quot;;</span>
+ 
+ /**
+  * Validates the creation of a communication object.
+<span class="diff-hunk">@@ -85,6 +86,102 @@ export const timeValidation: ValidationChain[] = [</span>
+     isInt({ gt: 0 }).withMessage(&quot;Time must be a number greater than 0&quot;),
+ ];
+ 
+<span class="diff-add">+const MAX_DATE_RANGE_DAYS = 90;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export const followUpListDateValidation: ValidationChain[] = [</span>
+<span class="diff-add">+  query(&quot;start_date&quot;)</span>
+<span class="diff-add">+    .optional()</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .isISO8601()</span>
+<span class="diff-add">+    .withMessage(&quot;start_date must be a valid date format (YYYY-MM-DD)&quot;),</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  query(&quot;end_date&quot;)</span>
+<span class="diff-add">+    .optional()</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .isISO8601()</span>
+<span class="diff-add">+    .withMessage(&quot;end_date must be a valid date format (YYYY-MM-DD)&quot;),</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Cross-field validation: pair check, order, and range cap</span>
+<span class="diff-add">+  check().custom((_, { req }) =&gt; {</span>
+<span class="diff-add">+    const { start_date, end_date } = req.query || {};</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (!start_date &amp;&amp; !end_date) return true;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (!start_date || !end_date) {</span>
+<span class="diff-add">+      throw new Error(&quot;Both start_date and end_date are required when filtering by date&quot;);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const start = new Date(start_date as string);</span>
+<span class="diff-add">+    const end = new Date(end_date as string);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (start &gt; end) {</span>
+<span class="diff-add">+      throw new Error(&quot;start_date must be on or before end_date&quot;);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));</span>
+<span class="diff-add">+    if (diffDays &gt; MAX_DATE_RANGE_DAYS) {</span>
+<span class="diff-add">+      throw new Error(`Date range cannot exceed ${MAX_DATE_RANGE_DAYS} days`);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return true;</span>
+<span class="diff-add">+  }),</span>
+<span class="diff-add">+];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export const notificationActivityValidation: ValidationChain[] = [</span>
+<span class="diff-add">+  body(&quot;start_date&quot;)</span>
+<span class="diff-add">+    .notEmpty()</span>
+<span class="diff-add">+    .withMessage(&quot;start_date is required&quot;)</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .isISO8601()</span>
+<span class="diff-add">+    .withMessage(&quot;start_date must be a valid date format (YYYY-MM-DD)&quot;),</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  body(&quot;end_date&quot;)</span>
+<span class="diff-add">+    .notEmpty()</span>
+<span class="diff-add">+    .withMessage(&quot;end_date is required&quot;)</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .isISO8601()</span>
+<span class="diff-add">+    .withMessage(&quot;end_date must be a valid date format (YYYY-MM-DD)&quot;),</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  body(&quot;status&quot;)</span>
+<span class="diff-add">+    .notEmpty()</span>
+<span class="diff-add">+    .withMessage(&quot;status is required&quot;)</span>
+<span class="diff-add">+    .trim()</span>
+<span class="diff-add">+    .isIn(Object.values(NotificationActivityStatus))</span>
+<span class="diff-add">+    .withMessage(</span>
+<span class="diff-add">+      `status must be one of: ${Object.values(NotificationActivityStatus).join(&quot;, &quot;)}`</span>
+<span class="diff-add">+    ),</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  body(&quot;search&quot;).optional().trim().isString(),</span>
+<span class="diff-add">+  body(&quot;page&quot;).optional().isInt({ min: 1 }).withMessage(&quot;page must be a positive integer&quot;),</span>
+<span class="diff-add">+  body(&quot;limit&quot;).optional().isInt({ min: 1, max: 100 }).withMessage(&quot;limit must be between 1 and 100&quot;),</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  // Cross-field validation: order and range cap</span>
+<span class="diff-add">+  check().custom((_, { req }) =&gt; {</span>
+<span class="diff-add">+    const { start_date, end_date } = req.body || {};</span>
+<span class="diff-add">+    if (!start_date || !end_date) return true;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const start = new Date(start_date);</span>
+<span class="diff-add">+    const end = new Date(end_date);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (start &gt; end) {</span>
+<span class="diff-add">+      throw new Error(&quot;start_date must be on or before end_date&quot;);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));</span>
+<span class="diff-add">+    if (diffDays &gt; MAX_DATE_RANGE_DAYS) {</span>
+<span class="diff-add">+      throw new Error(`Date range cannot exceed ${MAX_DATE_RANGE_DAYS} days`);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return true;</span>
+<span class="diff-add">+  }),</span>
+<span class="diff-add">+];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export const messageConversationValidation: ValidationChain[] = [</span>
+<span class="diff-add">+  body(&quot;search&quot;).optional().trim().isString(),</span>
+<span class="diff-add">+  body(&quot;page&quot;).optional().isInt({ min: 1 }).withMessage(&quot;page must be a positive integer&quot;),</span>
+<span class="diff-add">+  body(&quot;limit&quot;).optional().isInt({ min: 1, max: 100 }).withMessage(&quot;limit must be between 1 and 100&quot;),</span>
+<span class="diff-add">+];</span>
+<span class="diff-add">+</span>
+ /**
+  * Middleware function to validate incoming request data using express-validator.
+  * Checks for validation errors and returns an appropriate response if errors are found.
+<span class="diff-hunk">diff --git a/models/mongodb/communication_history.ts b/models/mongodb/communication_history.ts</span>
+<span class="diff-hunk">index b252083..13fc8de 100644</span>
+<span class="diff-hunk">--- a/models/mongodb/communication_history.ts</span>
+<span class="diff-hunk">+++ b/models/mongodb/communication_history.ts</span>
+<span class="diff-hunk">@@ -217,5 +217,6 @@ CommunicationHistorySchema.index({ direction: -1 });</span>
+ CommunicationHistorySchema.index({ &quot;patient_obj.CommunicationBy&quot;: 1});
+ CommunicationHistorySchema.index({ &quot;patient_obj.CommunicationBy&quot;: -1});
+ CommunicationHistorySchema.index({ &quot;call_obj.end_time&quot;: -1 });
+<span class="diff-add">+CommunicationHistorySchema.index({ user: 1, type: 1, sent_at: -1 });</span>
+ 
+ export const CommunicationHistory: Model&lt;ICommunicationHistory&gt; = model&lt;ICommunicationHistory&gt;(&quot;CommunicationHistory&quot;, CommunicationHistorySchema);
+<span class="diff-hunk">diff --git a/routes/follow_up.ts b/routes/follow_up.ts</span>
+<span class="diff-hunk">index 381164d..ddc8e30 100644</span>
+<span class="diff-hunk">--- a/routes/follow_up.ts</span>
+<span class="diff-hunk">+++ b/routes/follow_up.ts</span>
+<span class="diff-hunk">@@ -1,6 +1,7 @@</span>
+ import { Router } from &quot;express&quot;;
+ import { FollowUpController } from &quot;../controllers&quot;;
+ import { verifyToken } from &quot;../middlewares/auth&quot;;
+<span class="diff-add">+import { followUpListDateValidation, Validation } from &quot;../middlewares/validations/common&quot;;</span>
+ 
+ const followUpController = FollowUpController.getInstance();
+ 
+<span class="diff-hunk">@@ -95,6 +96,18 @@ export default (router: Router) =&gt; {</span>
+    *           type: number
+    *           default: 20
+    *         description: Number of records per page (max 100)
+<span class="diff-add">+   *       - in: query</span>
+<span class="diff-add">+   *         name: start_date</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: string</span>
+<span class="diff-add">+   *           format: date</span>
+<span class="diff-add">+   *         description: Start date for follow-up date range filter (YYYY-MM-DD). Must be used with end_date. Max range 90 days.</span>
+<span class="diff-add">+   *       - in: query</span>
+<span class="diff-add">+   *         name: end_date</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: string</span>
+<span class="diff-add">+   *           format: date</span>
+<span class="diff-add">+   *         description: End date for follow-up date range filter (YYYY-MM-DD). Must be used with start_date. Max range 90 days.</span>
+    *     responses:
+    *       200:
+    *         description: List of follow-ups with pagination
+<span class="diff-hunk">@@ -136,7 +149,7 @@ export default (router: Router) =&gt; {</span>
+    *       401:
+    *         description: User not authenticated
+    */
+<span class="diff-del">-  router.get(&quot;/follow-up/list&quot;, verifyToken, followUpController.getFollowUps);</span>
+<span class="diff-add">+  router.get(&quot;/follow-up/list&quot;, verifyToken, followUpListDateValidation, Validation, followUpController.getFollowUps);</span>
+ 
+   /**
+    * @swagger
+<span class="diff-hunk">diff --git a/routes/index.ts b/routes/index.ts</span>
+<span class="diff-hunk">index f364402..9c2b27f 100644</span>
+<span class="diff-hunk">--- a/routes/index.ts</span>
+<span class="diff-hunk">+++ b/routes/index.ts</span>
+<span class="diff-hunk">@@ -4,6 +4,8 @@ import patient from &quot;./patient&quot;;</span>
+ import user from &quot;./users&quot;;
+ import communication_history from &quot;./communication_history&quot;;
+ import followUp from &quot;./follow_up&quot;;
+<span class="diff-add">+import notificationActivity from &quot;./notification_activity&quot;;</span>
+<span class="diff-add">+import messageConversation from &quot;./message_conversation&quot;;</span>
+ const router = express.Router();
+ 
+ export default (): Router =&gt; {
+<span class="diff-hunk">@@ -12,5 +14,7 @@ export default (): Router =&gt; {</span>
+   communication_history(router)
+   user(router)
+   followUp(router)
+<span class="diff-add">+  notificationActivity(router)</span>
+<span class="diff-add">+  messageConversation(router)</span>
+   return router;
+ };
+<span class="diff-hunk">diff --git a/routes/message_conversation.ts b/routes/message_conversation.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..22ad53a</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/routes/message_conversation.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,107 @@</span>
+<span class="diff-add">+import { Router } from &quot;express&quot;;</span>
+<span class="diff-add">+import { MessageConversationController } from &quot;../controllers/message_conversation&quot;;</span>
+<span class="diff-add">+import { verifyToken } from &quot;../middlewares/auth&quot;;</span>
+<span class="diff-add">+import { messageConversationValidation, Validation } from &quot;../middlewares/validations/common&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const messageConversationController = MessageConversationController.getInstance();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export default (router: Router) =&gt; {</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * tags:</span>
+<span class="diff-add">+   *   name: MessageConversation</span>
+<span class="diff-add">+   *   description: API for fetching SMS conversations grouped by patient</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /message-conversations:</span>
+<span class="diff-add">+   *   post:</span>
+<span class="diff-add">+   *     summary: Get SMS conversations grouped by patient (chat list)</span>
+<span class="diff-add">+   *     tags: [MessageConversation]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     requestBody:</span>
+<span class="diff-add">+   *       content:</span>
+<span class="diff-add">+   *         application/json:</span>
+<span class="diff-add">+   *           schema:</span>
+<span class="diff-add">+   *             type: object</span>
+<span class="diff-add">+   *             properties:</span>
+<span class="diff-add">+   *               search:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 description: Search by patient name, phone number, or patient ID</span>
+<span class="diff-add">+   *               page:</span>
+<span class="diff-add">+   *                 type: number</span>
+<span class="diff-add">+   *                 default: 1</span>
+<span class="diff-add">+   *                 description: Page number for pagination</span>
+<span class="diff-add">+   *               limit:</span>
+<span class="diff-add">+   *                 type: number</span>
+<span class="diff-add">+   *                 default: 20</span>
+<span class="diff-add">+   *                 description: Records per page (max 100)</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: List of patient conversations with last message and follow-up info</span>
+<span class="diff-add">+   *         content:</span>
+<span class="diff-add">+   *           application/json:</span>
+<span class="diff-add">+   *             schema:</span>
+<span class="diff-add">+   *               type: object</span>
+<span class="diff-add">+   *               properties:</span>
+<span class="diff-add">+   *                 status:</span>
+<span class="diff-add">+   *                   type: boolean</span>
+<span class="diff-add">+   *                 data:</span>
+<span class="diff-add">+   *                   type: array</span>
+<span class="diff-add">+   *                   items:</span>
+<span class="diff-add">+   *                     type: object</span>
+<span class="diff-add">+   *                     properties:</span>
+<span class="diff-add">+   *                       patientId:</span>
+<span class="diff-add">+   *                         type: number</span>
+<span class="diff-add">+   *                       patientName:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                       patientPhone:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                       lastMessage:</span>
+<span class="diff-add">+   *                         type: object</span>
+<span class="diff-add">+   *                         properties:</span>
+<span class="diff-add">+   *                           content:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                           direction:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                             enum: [inbound, outbound]</span>
+<span class="diff-add">+   *                           sent_at:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                             format: date-time</span>
+<span class="diff-add">+   *                       followUp:</span>
+<span class="diff-add">+   *                         type: object</span>
+<span class="diff-add">+   *                         nullable: true</span>
+<span class="diff-add">+   *                         properties:</span>
+<span class="diff-add">+   *                           _id:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                           followUpDate:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                             format: date-time</span>
+<span class="diff-add">+   *                           status:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                           notes:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                 pagination:</span>
+<span class="diff-add">+   *                   type: object</span>
+<span class="diff-add">+   *                   properties:</span>
+<span class="diff-add">+   *                     page:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     limit:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     total:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     totalPages:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.post(</span>
+<span class="diff-add">+    &quot;/message-conversations&quot;,</span>
+<span class="diff-add">+    verifyToken,</span>
+<span class="diff-add">+    messageConversationValidation,</span>
+<span class="diff-add">+    Validation,</span>
+<span class="diff-add">+    messageConversationController.getConversations,</span>
+<span class="diff-add">+  );</span>
+<span class="diff-add">+};</span>
+<span class="diff-hunk">diff --git a/routes/notification_activity.ts b/routes/notification_activity.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..618882b</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/routes/notification_activity.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,104 @@</span>
+<span class="diff-add">+import { Router } from &quot;express&quot;;</span>
+<span class="diff-add">+import { NotificationActivityController } from &quot;../controllers/notification_activity&quot;;</span>
+<span class="diff-add">+import { verifyToken } from &quot;../middlewares/auth&quot;;</span>
+<span class="diff-add">+import { notificationActivityValidation, Validation } from &quot;../middlewares/validations/common&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const notificationActivityController = NotificationActivityController.getInstance();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export default (router: Router) =&gt; {</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * tags:</span>
+<span class="diff-add">+   *   name: NotificationActivity</span>
+<span class="diff-add">+   *   description: API for fetching user notification activity (calls, SMS, follow-ups)</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /notification-activity:</span>
+<span class="diff-add">+   *   post:</span>
+<span class="diff-add">+   *     summary: Get notification activity for the logged-in user</span>
+<span class="diff-add">+   *     tags: [NotificationActivity]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     requestBody:</span>
+<span class="diff-add">+   *       required: true</span>
+<span class="diff-add">+   *       content:</span>
+<span class="diff-add">+   *         application/json:</span>
+<span class="diff-add">+   *           schema:</span>
+<span class="diff-add">+   *             type: object</span>
+<span class="diff-add">+   *             required:</span>
+<span class="diff-add">+   *               - start_date</span>
+<span class="diff-add">+   *               - end_date</span>
+<span class="diff-add">+   *               - status</span>
+<span class="diff-add">+   *             properties:</span>
+<span class="diff-add">+   *               start_date:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 format: date</span>
+<span class="diff-add">+   *                 description: Start date (YYYY-MM-DD)</span>
+<span class="diff-add">+   *               end_date:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 format: date</span>
+<span class="diff-add">+   *                 description: End date (YYYY-MM-DD)</span>
+<span class="diff-add">+   *               status:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 enum: [calls_made, calls_received, sms, follow_ups]</span>
+<span class="diff-add">+   *                 description: Type of activity to fetch</span>
+<span class="diff-add">+   *               search:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 description: Search by patient name, phone number, or patient ID</span>
+<span class="diff-add">+   *               page:</span>
+<span class="diff-add">+   *                 type: number</span>
+<span class="diff-add">+   *                 default: 1</span>
+<span class="diff-add">+   *                 description: Page number for pagination</span>
+<span class="diff-add">+   *               limit:</span>
+<span class="diff-add">+   *                 type: number</span>
+<span class="diff-add">+   *                 default: 20</span>
+<span class="diff-add">+   *                 description: Records per page (max 100)</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: Notification activity with counts and pagination</span>
+<span class="diff-add">+   *         content:</span>
+<span class="diff-add">+   *           application/json:</span>
+<span class="diff-add">+   *             schema:</span>
+<span class="diff-add">+   *               type: object</span>
+<span class="diff-add">+   *               properties:</span>
+<span class="diff-add">+   *                 status:</span>
+<span class="diff-add">+   *                   type: boolean</span>
+<span class="diff-add">+   *                 data:</span>
+<span class="diff-add">+   *                   type: array</span>
+<span class="diff-add">+   *                   items:</span>
+<span class="diff-add">+   *                     type: object</span>
+<span class="diff-add">+   *                 counts:</span>
+<span class="diff-add">+   *                   type: object</span>
+<span class="diff-add">+   *                   properties:</span>
+<span class="diff-add">+   *                     calls_made:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     calls_received:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     sms:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     follow_ups:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                 pagination:</span>
+<span class="diff-add">+   *                   type: object</span>
+<span class="diff-add">+   *                   properties:</span>
+<span class="diff-add">+   *                     page:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     limit:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     total:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     totalPages:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.post(</span>
+<span class="diff-add">+    &quot;/notification-activity&quot;,</span>
+<span class="diff-add">+    verifyToken,</span>
+<span class="diff-add">+    notificationActivityValidation,</span>
+<span class="diff-add">+    Validation,</span>
+<span class="diff-add">+    notificationActivityController.getNotificationActivity,</span>
+<span class="diff-add">+  );</span>
+<span class="diff-add">+};</span>
+<span class="diff-hunk">diff --git a/types/message_conversation.ts b/types/message_conversation.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..d897ad4</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/types/message_conversation.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,38 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Request body for the message conversations endpoint.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface MessageConversationRequest {</span>
+<span class="diff-add">+  search?: string;</span>
+<span class="diff-add">+  page?: number;</span>
+<span class="diff-add">+  limit?: number;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Represents the last message in a conversation.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface LastMessage {</span>
+<span class="diff-add">+  content: string;</span>
+<span class="diff-add">+  direction: string;</span>
+<span class="diff-add">+  sent_at: Date;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Represents an upcoming follow-up for a patient.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface ConversationFollowUp {</span>
+<span class="diff-add">+  _id: string;</span>
+<span class="diff-add">+  followUpDate: Date;</span>
+<span class="diff-add">+  status: string;</span>
+<span class="diff-add">+  notes?: string;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Represents a single patient conversation in the list.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface MessageConversationItem {</span>
+<span class="diff-add">+  patientId: number;</span>
+<span class="diff-add">+  patientName: string;</span>
+<span class="diff-add">+  patientPhone: string;</span>
+<span class="diff-add">+  lastMessage: LastMessage;</span>
+<span class="diff-add">+  followUp: ConversationFollowUp | null;</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/types/notification_activity.ts b/types/notification_activity.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..f4fde68</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/types/notification_activity.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,42 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Enum representing the notification activity status filter.</span>
+<span class="diff-add">+ * Determines which type of communication records to fetch.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export enum NotificationActivityStatus {</span>
+<span class="diff-add">+  CALLS_MADE = &quot;calls_made&quot;,</span>
+<span class="diff-add">+  CALLS_RECEIVED = &quot;calls_received&quot;,</span>
+<span class="diff-add">+  SMS = &quot;sms&quot;,</span>
+<span class="diff-add">+  FOLLOW_UPS = &quot;follow_ups&quot;,</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Request body for the notification activity endpoint.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface NotificationActivityRequest {</span>
+<span class="diff-add">+  start_date: string;</span>
+<span class="diff-add">+  end_date: string;</span>
+<span class="diff-add">+  status: NotificationActivityStatus;</span>
+<span class="diff-add">+  search?: string;</span>
+<span class="diff-add">+  page?: number;</span>
+<span class="diff-add">+  limit?: number;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Counts for all notification activity categories.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface NotificationActivityCounts {</span>
+<span class="diff-add">+  calls_made: number;</span>
+<span class="diff-add">+  calls_received: number;</span>
+<span class="diff-add">+  sms: number;</span>
+<span class="diff-add">+  follow_ups: number;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Pagination metadata for the notification activity response.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface NotificationActivityPagination {</span>
+<span class="diff-add">+  page: number;</span>
+<span class="diff-add">+  limit: number;</span>
+<span class="diff-add">+  total: number;</span>
+<span class="diff-add">+  totalPages: number;</span>
+<span class="diff-add">+}</span></pre></section>
+</body></html>

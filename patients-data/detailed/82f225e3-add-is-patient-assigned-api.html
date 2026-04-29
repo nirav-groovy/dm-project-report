@@ -1,0 +1,149 @@
+<!doctype html><html><head><meta charset="utf-8"><title>82f225e3 — Add is patient assigned API</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add is patient assigned API <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>82f225e3092e278961cdeb8205e9fe2b8a6e4b64</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-15T19:11:00+05:30</td></tr><tr><td>Diff</td><td>+57 / -0 across 4 file(s)</td></tr><tr><td>Buckets</td><td>feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>1 HIPAA finding(s)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/patient.ts</code></td><td>+23</td><td>-0</td></tr><tr><td><code>repository/data.ts</code></td><td>+28</td><td>-0</td></tr><tr><td><code>routes/patient.ts</code></td><td>+2</td><td>-0</td></tr><tr><td><code>service/data.ts</code></td><td>+4</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (1)</h2><table><thead><tr><th>Control</th><th>Location</th><th>Snippet</th><th>Suggested fix</th></tr></thead><tbody><tr><td><strong>PHI in logs</strong></td><td><code>repository/data.ts:747</code></td><td><pre>appLogger.info(&quot;DataRepository --&gt; isPatientAssignedToRecruiter --&gt; error -&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;, error.message);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr></tbody></table></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (2)</summary><ul><li><code>controllers/patient.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/patients-data/node_modules/typescript/lib/typescript.js:22509
+      Debug.assert(!asteriskToken |</code></li><li><code>service/data.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/patients-data/node_modules/typescript/lib/typescript.js:172989
+        if (listEndToken !== 0 /* </code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/patient.ts b/controllers/patient.ts</span>
+<span class="diff-hunk">index ad6fa12..1c5ac09 100644</span>
+<span class="diff-hunk">--- a/controllers/patient.ts</span>
+<span class="diff-hunk">+++ b/controllers/patient.ts</span>
+<span class="diff-hunk">@@ -698,6 +698,29 @@ export class PatientController {</span>
+     }
+   };
+ 
+<span class="diff-add">+  isPatientAssigned = async (req: UserRequest, res: Response): Promise&lt;Response&gt; =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const { patient_id } = req.params;</span>
+<span class="diff-add">+      const recruiter_email = req?.user?.Email;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (!recruiter_email) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;Unauthorized&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const isAssigned = await this.dataService.isPatientAssignedToRecruiter(Number(patient_id), recruiter_email);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        data: { isAssigned },</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      return res.status(400).json({</span>
+<span class="diff-add">+        status: false,</span>
+<span class="diff-add">+        message: error.message,</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+   getRecruiterNotifySettings = async (req: UserRequest, res: Response): Promise&lt;Response&gt; =&gt; {
+     try {
+       const { patient_id } = req.params;
+<span class="diff-hunk">diff --git a/repository/data.ts b/repository/data.ts</span>
+<span class="diff-hunk">index 488c3a7..17d55e6 100644</span>
+<span class="diff-hunk">--- a/repository/data.ts</span>
+<span class="diff-hunk">+++ b/repository/data.ts</span>
+<span class="diff-hunk">@@ -722,6 +722,34 @@ export class DataRepository {</span>
+     }
+   }
+ 
+<span class="diff-add">+  async isPatientAssignedToRecruiter(patient_id: number, recruiter_email: string) {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const record = await this.recruiterPatientRespository.findOne({</span>
+<span class="diff-add">+        where: {</span>
+<span class="diff-add">+          PatientId: patient_id,</span>
+<span class="diff-add">+          IsActive: 1,</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+        include: [</span>
+<span class="diff-add">+          {</span>
+<span class="diff-add">+            model: this.recruitersRespository,</span>
+<span class="diff-add">+            where: {</span>
+<span class="diff-add">+              Email: recruiter_email,</span>
+<span class="diff-add">+              IsActive: 1,</span>
+<span class="diff-add">+            },</span>
+<span class="diff-add">+            attributes: [&quot;Id&quot;],</span>
+<span class="diff-add">+            required: true,</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        ],</span>
+<span class="diff-add">+        attributes: [&quot;Id&quot;],</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+      return !_.isEmpty(record);</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.info(&quot;DataRepository --&gt; isPatientAssignedToRecruiter --&gt; error -&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;, error.message);</span>
+<span class="diff-add">+      appLogger.info(error);</span>
+<span class="diff-add">+      return false;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Retrieves a list of status entities with confirmation status.
+    *
+<span class="diff-hunk">diff --git a/routes/patient.ts b/routes/patient.ts</span>
+<span class="diff-hunk">index f91c341..989f197 100644</span>
+<span class="diff-hunk">--- a/routes/patient.ts</span>
+<span class="diff-hunk">+++ b/routes/patient.ts</span>
+<span class="diff-hunk">@@ -241,6 +241,8 @@ export default (router: Router) =&gt; {</span>
+   router.post(&quot;/update-recruiter-notify-settings&quot;, verifyToken, updateRecruiterNotifySettings, Validation, patientController.updateRecruiterNotifySettings);
+   router.get(&quot;/get-recruiter-notify-settings/:patient_id&quot;, verifyToken, patientController.getRecruiterNotifySettings);
+ 
+<span class="diff-add">+  router.get(&quot;/is-patient-assigned/:patient_id&quot;, verifyToken, patientController.isPatientAssigned);</span>
+<span class="diff-add">+</span>
+   router.post(&quot;/process-csv-sms-broadcast&quot;, verifyToken, patientController.processCsvSmsBroadcast);
+   router.post(&quot;/process-csv-email-broadcast&quot;, verifyToken, patientController.processCsvEmailBroadcast);
+   router.post(&quot;/broadcast-datalist&quot;, verifyToken, patientController.broadcastDatalist);
+<span class="diff-hunk">diff --git a/service/data.ts b/service/data.ts</span>
+<span class="diff-hunk">index 37413a4..68a34b3 100644</span>
+<span class="diff-hunk">--- a/service/data.ts</span>
+<span class="diff-hunk">+++ b/service/data.ts</span>
+<span class="diff-hunk">@@ -225,6 +225,10 @@ export class DataService {</span>
+     return await this.dataRepository.getPatientRecruiter(patient_id);
+   }
+ 
+<span class="diff-add">+  async isPatientAssignedToRecruiter(patient_id: number, recruiter_email: string) {</span>
+<span class="diff-add">+    return await this.dataRepository.isPatientAssignedToRecruiter(patient_id, recruiter_email);</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Retrieves a list of tags users.
+    * @async</pre></section>
+</body></html>

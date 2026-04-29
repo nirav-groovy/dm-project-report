@@ -1,0 +1,285 @@
+<!doctype html><html><head><meta charset="utf-8"><title>de1aa49e — Remove unwanted code</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>Remove unwanted code <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>de1aa49ec34e7862bb171b0693ad81c6a3ceefb9</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-13T16:52:26+05:30</td></tr><tr><td>Diff</td><td>+0 / -229 across 2 file(s)</td></tr><tr><td>Buckets</td><td>refactor</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (229 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/follow_up.ts</code></td><td>+0</td><td>-217</td></tr><tr><td><code>routes/follow_up.ts</code></td><td>+0</td><td>-12</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/follow_up.ts b/controllers/follow_up.ts</span>
+<span class="diff-hunk">index 7ec09ad..958e0d7 100644</span>
+<span class="diff-hunk">--- a/controllers/follow_up.ts</span>
+<span class="diff-hunk">+++ b/controllers/follow_up.ts</span>
+<span class="diff-hunk">@@ -259,221 +259,4 @@ export class FollowUpController {</span>
+       return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });
+     }
+   };
+<span class="diff-del">-</span>
+<span class="diff-del">-  /**</span>
+<span class="diff-del">-   * Seed sample follow-up data for testing.</span>
+<span class="diff-del">-   * POST /follow-up/seed</span>
+<span class="diff-del">-   */</span>
+<span class="diff-del">-  seedFollowUps = async (_req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-del">-    try {</span>
+<span class="diff-del">-      const patientIds = [278745, 278615, 279201];</span>
+<span class="diff-del">-      const recruiters = [</span>
+<span class="diff-del">-        &quot;nirav.patel.gw@dmclinical.com&quot;,</span>
+<span class="diff-del">-        &quot;chetan.gw@dmclinical.com&quot;,</span>
+<span class="diff-del">-        &quot;nilofar.gw@dmclinical.com&quot;,</span>
+<span class="diff-del">-      ];</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      const now = new Date();</span>
+<span class="diff-del">-      const daysFromNow = (days: number): Date =&gt; {</span>
+<span class="diff-del">-        const d = new Date(now);</span>
+<span class="diff-del">-        d.setDate(d.getDate() + days);</span>
+<span class="diff-del">-        return d;</span>
+<span class="diff-del">-      };</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      const seedData = [</span>
+<span class="diff-del">-        // --- Nirav: 6 records ---</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278745,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[0],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(3),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Initial screening call scheduled&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[0],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278745,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[0],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-5),</span>
+<span class="diff-del">-          status: FollowUpStatus.COMPLETED,</span>
+<span class="diff-del">-          notes: &quot;Patient confirmed eligibility criteria&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[0],</span>
+<span class="diff-del">-          completedAt: daysFromNow(-4),</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278615,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[0],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-2),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Overdue: waiting for lab results callback&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[0],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278615,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[0],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(10),</span>
+<span class="diff-del">-          status: FollowUpStatus.RESCHEDULED,</span>
+<span class="diff-del">-          notes: &quot;Patient requested later date&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[0],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 279201,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[0],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-10),</span>
+<span class="diff-del">-          status: FollowUpStatus.CANCELLED,</span>
+<span class="diff-del">-          notes: &quot;Patient withdrew from study&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[0],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 279201,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[0],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(7),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Schedule consent review meeting&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[0],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-        // --- Chetan: 5 records ---</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278745,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[1],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(1),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Verify insurance documentation&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[1],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278615,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[1],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-7),</span>
+<span class="diff-del">-          status: FollowUpStatus.COMPLETED,</span>
+<span class="diff-del">-          notes: &quot;Informed consent form signed&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[1],</span>
+<span class="diff-del">-          completedAt: daysFromNow(-6),</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278615,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[1],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-1),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Overdue: need to confirm visit schedule&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[1],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 279201,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[1],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(14),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Two-week post-enrollment check-in&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[1],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 279201,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[1],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-15),</span>
+<span class="diff-del">-          status: FollowUpStatus.RESCHEDULED,</span>
+<span class="diff-del">-          notes: &quot;Moved to next available slot&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[1],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-        // --- Nilofar: 6 records ---</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278745,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[2],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(5),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Pre-screening questionnaire review&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[2],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278745,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[2],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-20),</span>
+<span class="diff-del">-          status: FollowUpStatus.COMPLETED,</span>
+<span class="diff-del">-          notes: &quot;Baseline vitals collected successfully&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[2],</span>
+<span class="diff-del">-          completedAt: daysFromNow(-19),</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278615,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[2],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-3),</span>
+<span class="diff-del">-          status: FollowUpStatus.CANCELLED,</span>
+<span class="diff-del">-          notes: &quot;Duplicate entry - patient already contacted&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[2],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 279201,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[2],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(21),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Three-week treatment follow-up assessment&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[2],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 279201,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[2],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-8),</span>
+<span class="diff-del">-          status: FollowUpStatus.COMPLETED,</span>
+<span class="diff-del">-          notes: &quot;Adverse event monitoring call completed&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[2],</span>
+<span class="diff-del">-          completedAt: daysFromNow(-7),</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278615,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[2],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(2),</span>
+<span class="diff-del">-          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-del">-          notes: &quot;Remind patient about upcoming site visit&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[2],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        {</span>
+<span class="diff-del">-          patientId: 278745,</span>
+<span class="diff-del">-          recruiterEmail: recruiters[2],</span>
+<span class="diff-del">-          followUpDate: daysFromNow(-12),</span>
+<span class="diff-del">-          status: FollowUpStatus.RESCHEDULED,</span>
+<span class="diff-del">-          notes: &quot;Patient had scheduling conflict, moved forward&quot;,</span>
+<span class="diff-del">-          createdByEmail: recruiters[2],</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-      ];</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      // Clear existing seed data for these patients/recruiters</span>
+<span class="diff-del">-      const deleted = await FollowUp.deleteMany({</span>
+<span class="diff-del">-        patientId: { $in: patientIds },</span>
+<span class="diff-del">-        recruiterEmail: { $in: recruiters },</span>
+<span class="diff-del">-      });</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      const result = await FollowUp.insertMany(seedData);</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      // Build summary</span>
+<span class="diff-del">-      const statusCounts: Record&lt;string, number&gt; = {};</span>
+<span class="diff-del">-      const recruiterCounts: Record&lt;string, number&gt; = {};</span>
+<span class="diff-del">-      const patientCounts: Record&lt;number, number&gt; = {};</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      for (const doc of result) {</span>
+<span class="diff-del">-        statusCounts[doc.status] = (statusCounts[doc.status] || 0) + 1;</span>
+<span class="diff-del">-        recruiterCounts[doc.recruiterEmail] = (recruiterCounts[doc.recruiterEmail] || 0) + 1;</span>
+<span class="diff-del">-        patientCounts[doc.patientId] = (patientCounts[doc.patientId] || 0) + 1;</span>
+<span class="diff-del">-      }</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      const overdueCount = result.filter(</span>
+<span class="diff-del">-        (d) =&gt; d.status === FollowUpStatus.UPCOMING &amp;&amp; d.followUpDate &lt; now</span>
+<span class="diff-del">-      ).length;</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-      return res.status(201).json({</span>
+<span class="diff-del">-        status: true,</span>
+<span class="diff-del">-        message: `Cleared ${deleted.deletedCount} old records, inserted ${result.length} follow-ups`,</span>
+<span class="diff-del">-        summary: {</span>
+<span class="diff-del">-          total: result.length,</span>
+<span class="diff-del">-          byStatus: statusCounts,</span>
+<span class="diff-del">-          byRecruiter: recruiterCounts,</span>
+<span class="diff-del">-          byPatient: patientCounts,</span>
+<span class="diff-del">-          overdueCount,</span>
+<span class="diff-del">-        },</span>
+<span class="diff-del">-        data: result,</span>
+<span class="diff-del">-      });</span>
+<span class="diff-del">-    } catch (error) {</span>
+<span class="diff-del">-      appLogger.error(&quot;FollowUpController/seedFollowUps error:&quot;, error);</span>
+<span class="diff-del">-      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-del">-    }</span>
+<span class="diff-del">-  };</span>
+ }
+<span class="diff-hunk">diff --git a/routes/follow_up.ts b/routes/follow_up.ts</span>
+<span class="diff-hunk">index ddc8e30..2b08b6d 100644</span>
+<span class="diff-hunk">--- a/routes/follow_up.ts</span>
+<span class="diff-hunk">+++ b/routes/follow_up.ts</span>
+<span class="diff-hunk">@@ -51,18 +51,6 @@ export default (router: Router) =&gt; {</span>
+    */
+   router.post(&quot;/follow-up&quot;, verifyToken, followUpController.createFollowUp);
+ 
+<span class="diff-del">-  /**</span>
+<span class="diff-del">-   * @swagger</span>
+<span class="diff-del">-   * /follow-up/seed:</span>
+<span class="diff-del">-   *   post:</span>
+<span class="diff-del">-   *     summary: Seed sample follow-up data for testing</span>
+<span class="diff-del">-   *     tags: [FollowUp]</span>
+<span class="diff-del">-   *     responses:</span>
+<span class="diff-del">-   *       201:</span>
+<span class="diff-del">-   *         description: Sample data seeded successfully</span>
+<span class="diff-del">-   */</span>
+<span class="diff-del">-  router.post(&quot;/follow-up/seed&quot;, followUpController.seedFollowUps);</span>
+<span class="diff-del">-</span>
+   /**
+    * @swagger
+    * /follow-up/list:</pre></section>
+</body></html>

@@ -1,0 +1,559 @@
+<!doctype html><html><head><meta charset="utf-8"><title>f9945105 — Add time in followup feature &amp; set notifications</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add time in followup feature &amp; set notifications <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>f9945105aabb6f35ddb76d56d98d3f12e1c8bd75</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-23T12:08:06+05:30</td></tr><tr><td>Diff</td><td>+310 / -14 across 7 file(s)</td></tr><tr><td>Buckets</td><td>config, db-schema, feature, messaging</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>3 HIPAA finding(s)</li><li>large diff (324 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>config/params.ts</code></td><td>+4</td><td>-0</td></tr><tr><td><code>controllers/follow_up.ts</code></td><td>+156</td><td>-14</td></tr><tr><td><code>models/mongodb/follow_up.ts</code></td><td>+20</td><td>-0</td></tr><tr><td><code>service/messageHandlers/followupNotificationHandler.ts</code></td><td>+113</td><td>-0</td></tr><tr><td><code>service/messageHandlers/index.ts</code></td><td>+1</td><td>-0</td></tr><tr><td><code>service/messageHandlers/patientDataHandler.ts</code></td><td>+5</td><td>-0</td></tr><tr><td><code>types/follow_up.ts</code></td><td>+11</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (3)</h2><table><thead><tr><th>Control</th><th>Location</th><th>Snippet</th><th>Suggested fix</th></tr></thead><tbody><tr><td><strong>PHI in logs</strong></td><td><code>controllers/follow_up.ts:68</code></td><td><pre>console.log(&quot;[FOLLOWUP] Patient Service bus called&quot;);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>service/messageHandlers/followupNotificationHandler.ts:73</code></td><td><pre>console.log(&quot;[FOLLOWUP] Patient Service bus received&quot;, reminderType);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr><tr><td><strong>PHI in logs</strong></td><td><code>service/messageHandlers/followupNotificationHandler.ts:109</code></td><td><pre>appLogger.info(`Socket notification event sent for ${reminderType} reminder to ${recruiterEmail}`);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr></tbody></table></section>
+<section id="eslint"><h2>ESLint findings (1)</h2><table><thead><tr><th>Location</th><th>Severity</th><th>Rule</th><th>Message</th></tr></thead><tbody><tr><td><code>controllers/follow_up.ts:68</code></td><td><span class='badge b-sev-warn'>warn</span></td><td><code>no-console</code></td><td>Unexpected console statement.</td></tr></tbody></table><details><summary>Scan errors (2)</summary><ul><li><code>models/mongodb/follow_up.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/patients-data/node_modules/typescript/lib/typescript.js:142174
+ &quot;        case 178 /* SetAccessor </code></li><li><code>service/messageHandlers/followupNotificationHandler.ts</code><br><code></code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/config/params.ts b/config/params.ts</span>
+<span class="diff-hunk">index cc813d9..526816c 100644</span>
+<span class="diff-hunk">--- a/config/params.ts</span>
+<span class="diff-hunk">+++ b/config/params.ts</span>
+<span class="diff-hunk">@@ -105,6 +105,10 @@ const params = {</span>
+     reply_window_days: 7, // inbound reply only counts if within this window of the outbound
+     multiple_outbound_strategy: &quot;most_recent&quot;, // only most recent outbound flips to Replied
+   },
+<span class="diff-add">+  followUp: {</span>
+<span class="diff-add">+    reminder_before_mins: 15,</span>
+<span class="diff-add">+    reminder_overdue_mins: 1,</span>
+<span class="diff-add">+  },</span>
+ };
+ 
+ export default params;
+\ No newline at end of file
+<span class="diff-hunk">diff --git a/controllers/follow_up.ts b/controllers/follow_up.ts</span>
+<span class="diff-hunk">index 2c0b39d..2855410 100644</span>
+<span class="diff-hunk">--- a/controllers/follow_up.ts</span>
+<span class="diff-hunk">+++ b/controllers/follow_up.ts</span>
+<span class="diff-hunk">@@ -3,23 +3,102 @@ import { UserRequest } from &quot;../types/request&quot;;</span>
+ import { FollowUp } from &quot;../models/mongodb/follow_up&quot;;
+ import { FollowUpStatus } from &quot;../types/follow_up&quot;;
+ import { PatientRepository } from &quot;../repository/patient&quot;;
+<span class="diff-add">+import { ServiceBusUtils } from &quot;../utils/serviceBus&quot;;</span>
+ import appLogger from &quot;../utils/logger&quot;;
+<span class="diff-add">+import params from &quot;../config/params&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const env = process.env.NODE_ENV || &quot;development&quot;;</span>
+<span class="diff-add">+const FOLLOWUP_NOTIFICATION_QUEUE = `${env}_services_communication`;</span>
+ 
+ /**
+  * Controller class responsible for managing patient follow-ups.
+  */
+ export class FollowUpController {
+   private static instance: FollowUpController | null = null;
+<span class="diff-add">+  private readonly serviceBusUtils: ServiceBusUtils;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  private constructor() {</span>
+<span class="diff-add">+    this.serviceBusUtils = ServiceBusUtils.getInstance();</span>
+<span class="diff-add">+  }</span>
+ 
+   public static getInstance() {
+     FollowUpController.instance ??= new FollowUpController();
+     return FollowUpController.instance;
+   }
+ 
+<span class="diff-add">+  private async scheduleNotifications(</span>
+<span class="diff-add">+    followupId: string,</span>
+<span class="diff-add">+    dueDate: Date,</span>
+<span class="diff-add">+    recruiterEmail: string,</span>
+<span class="diff-add">+    patientName: string</span>
+<span class="diff-add">+  ): Promise&lt;{ reminder15min?: any; reminderOverdue?: any }&gt; {</span>
+<span class="diff-add">+    const sequenceNumbers: any = {};</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const reminder15minTime = new Date(dueDate.getTime() - params.followUp.reminder_before_mins * 60 * 1000);</span>
+<span class="diff-add">+      const reminderOverdueTime = new Date(dueDate.getTime() + params.followUp.reminder_overdue_mins * 60 * 1000);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const reminder15minMessage = {</span>
+<span class="diff-add">+        body: {</span>
+<span class="diff-add">+          type: &quot;patientDataHandler&quot;,</span>
+<span class="diff-add">+          data: {</span>
+<span class="diff-add">+            event: &quot;followup-reminder-15min&quot;,</span>
+<span class="diff-add">+            followupId,</span>
+<span class="diff-add">+            recruiterEmail,</span>
+<span class="diff-add">+            patientName,</span>
+<span class="diff-add">+            dueDate: dueDate.toISOString(),</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+        scheduledEnqueueTimeUtc: reminder15minTime,</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const reminderOverdueMessage = {</span>
+<span class="diff-add">+        body: {</span>
+<span class="diff-add">+          type: &quot;patientDataHandler&quot;,</span>
+<span class="diff-add">+          data: {</span>
+<span class="diff-add">+            event: &quot;followup-reminder-overdue&quot;,</span>
+<span class="diff-add">+            followupId,</span>
+<span class="diff-add">+            recruiterEmail,</span>
+<span class="diff-add">+            patientName,</span>
+<span class="diff-add">+            dueDate: dueDate.toISOString(),</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+        scheduledEnqueueTimeUtc: reminderOverdueTime,</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+      console.log(&quot;[FOLLOWUP] Patient Service bus called&quot;);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const seq15min = await this.serviceBusUtils.sendMessage(FOLLOWUP_NOTIFICATION_QUEUE, reminder15minMessage, true);</span>
+<span class="diff-add">+      const seqOverdue = await this.serviceBusUtils.sendMessage(FOLLOWUP_NOTIFICATION_QUEUE, reminderOverdueMessage, true);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      sequenceNumbers.reminder15min = seq15min;</span>
+<span class="diff-add">+      sequenceNumbers.reminderOverdue = seqOverdue;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      appLogger.info(`Scheduled followup notifications for ${followupId}:`, sequenceNumbers);</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;Error scheduling notifications:&quot;, error);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return sequenceNumbers;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  private async cancelScheduledNotifications(sequenceNumbers: any): Promise&lt;void&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      if (sequenceNumbers?.reminder15min) {</span>
+<span class="diff-add">+        await this.serviceBusUtils.cancelScheduledMessage(FOLLOWUP_NOTIFICATION_QUEUE, sequenceNumbers.reminder15min);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+      if (sequenceNumbers?.reminderOverdue) {</span>
+<span class="diff-add">+        await this.serviceBusUtils.cancelScheduledMessage(FOLLOWUP_NOTIFICATION_QUEUE, sequenceNumbers.reminderOverdue);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;Error canceling scheduled notifications:&quot;, error);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+   /**
+    * Create a new follow-up record.
+    * POST /follow-up
+<span class="diff-del">-   * Body: { patientId, followUpDate, notes? }</span>
+<span class="diff-add">+   * Body: { patientId, followUpDate, userTimezone?, notes? }</span>
+<span class="diff-add">+   * followUpDate: ISO 8601 UTC datetime (e.g., &quot;2026-05-15T14:30:00Z&quot;)</span>
+    */
+   createFollowUp = async (req: UserRequest, res: Response) =&gt; {
+     try {
+<span class="diff-hunk">@@ -28,7 +107,7 @@ export class FollowUpController {</span>
+         return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });
+       }
+ 
+<span class="diff-del">-      const { patientId, followUpDate, notes } = req.body;</span>
+<span class="diff-add">+      const { patientId, followUpDate, userTimezone, notes } = req.body;</span>
+       if (!patientId || !followUpDate) {
+         return res.status(400).json({
+           status: false,
+<span class="diff-hunk">@@ -38,9 +117,13 @@ export class FollowUpController {</span>
+ 
+       const parsedDate = new Date(followUpDate);
+       if (Number.isNaN(parsedDate.getTime())) {
+<span class="diff-del">-        return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format&quot; });</span>
+<span class="diff-add">+        return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format (use ISO 8601 UTC)&quot; });</span>
+       }
+ 
+<span class="diff-add">+      const patientRepo = PatientRepository.getInstance();</span>
+<span class="diff-add">+      const patient = await patientRepo.findOneById(patientId);</span>
+<span class="diff-add">+      const patientName = patient?.FullName || &quot;&quot;;</span>
+<span class="diff-add">+</span>
+       const followUp = await FollowUp.create({
+         patientId,
+         recruiterEmail: userEmail,
+<span class="diff-hunk">@@ -48,10 +131,22 @@ export class FollowUpController {</span>
+         status: FollowUpStatus.UPCOMING,
+         notes: notes || &quot;&quot;,
+         createdByEmail: userEmail,
+<span class="diff-add">+        userTimezone: userTimezone || &quot;UTC&quot;,</span>
+       });
+ 
+<span class="diff-add">+      const sequenceNumbers = await this.scheduleNotifications(</span>
+<span class="diff-add">+        followUp._id.toString(),</span>
+<span class="diff-add">+        parsedDate,</span>
+<span class="diff-add">+        userEmail,</span>
+<span class="diff-add">+        patientName</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (Object.keys(sequenceNumbers).length &gt; 0) {</span>
+<span class="diff-add">+        await FollowUp.findByIdAndUpdate(followUp._id, { $set: { sequenceNumbers } });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+       const isOverdue = followUp.status === FollowUpStatus.UPCOMING &amp;&amp; followUp.followUpDate &lt; new Date();
+<span class="diff-del">-      return res.status(201).json({ status: true, data: { ...followUp.toObject(), isOverdue } });</span>
+<span class="diff-add">+      return res.status(201).json({ status: true, data: { ...followUp.toObject(), sequenceNumbers, isOverdue } });</span>
+     } catch (error) {
+       appLogger.error(&quot;FollowUpController/createFollowUp error:&quot;, error);
+       return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });
+<span class="diff-hunk">@@ -159,7 +254,7 @@ export class FollowUpController {</span>
+   /**
+    * Update a follow-up record (status, notes, reschedule).
+    * PUT /follow-up/:id
+<span class="diff-del">-   * Body: { status?, notes?, followUpDate? (for reschedule) }</span>
+<span class="diff-add">+   * Body: { status?, notes?, followUpDate? (for reschedule), userTimezone? }</span>
+    */
+   updateFollowUp = async (req: UserRequest, res: Response) =&gt; {
+     try {
+<span class="diff-hunk">@@ -169,7 +264,7 @@ export class FollowUpController {</span>
+       }
+ 
+       const { id } = req.params;
+<span class="diff-del">-      const { status, notes, followUpDate } = req.body;</span>
+<span class="diff-add">+      const { status, notes, followUpDate, userTimezone } = req.body;</span>
+ 
+       const existing = await FollowUp.findOne({ _id: id, recruiterEmail: userEmail });
+       if (!existing) {
+<span class="diff-hunk">@@ -190,31 +285,60 @@ export class FollowUpController {</span>
+         if (status === FollowUpStatus.COMPLETED) {
+           updateData.completedAt = new Date();
+         }
+<span class="diff-add">+</span>
+<span class="diff-add">+        if (status !== FollowUpStatus.UPCOMING &amp;&amp; existing.sequenceNumbers) {</span>
+<span class="diff-add">+          await this.cancelScheduledNotifications(existing.sequenceNumbers);</span>
+<span class="diff-add">+          updateData.sequenceNumbers = null;</span>
+<span class="diff-add">+        }</span>
+       }
+ 
+       if (notes !== undefined) {
+         updateData.notes = notes;
+       }
+ 
+<span class="diff-add">+      if (userTimezone !== undefined) {</span>
+<span class="diff-add">+        updateData.userTimezone = userTimezone;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+       if (followUpDate !== undefined &amp;&amp; status !== FollowUpStatus.RESCHEDULED) {
+         const parsedEditDate = new Date(followUpDate);
+         if (Number.isNaN(parsedEditDate.getTime())) {
+<span class="diff-del">-          return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format&quot; });</span>
+<span class="diff-add">+          return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format (use ISO 8601 UTC)&quot; });</span>
+         }
+         updateData.followUpDate = parsedEditDate;
+<span class="diff-add">+</span>
+<span class="diff-add">+        if (existing.sequenceNumbers) {</span>
+<span class="diff-add">+          await this.cancelScheduledNotifications(existing.sequenceNumbers);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          const patientRepo = PatientRepository.getInstance();</span>
+<span class="diff-add">+          const patient = await patientRepo.findOneById(existing.patientId);</span>
+<span class="diff-add">+          const patientName = patient?.FullName || &quot;&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          const newSequenceNumbers = await this.scheduleNotifications(</span>
+<span class="diff-add">+            id,</span>
+<span class="diff-add">+            parsedEditDate,</span>
+<span class="diff-add">+            userEmail,</span>
+<span class="diff-add">+            patientName</span>
+<span class="diff-add">+          );</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+          updateData.sequenceNumbers = newSequenceNumbers;</span>
+<span class="diff-add">+        }</span>
+       }
+ 
+       // Handle reschedule: create new follow-up linked to original
+       if (status === FollowUpStatus.RESCHEDULED &amp;&amp; followUpDate) {
+         const parsedDate = new Date(followUpDate);
+         if (Number.isNaN(parsedDate.getTime())) {
+<span class="diff-del">-          return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format&quot; });</span>
+<span class="diff-add">+          return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format (use ISO 8601 UTC)&quot; });</span>
+         }
+ 
+<span class="diff-del">-        // Mark original as rescheduled</span>
+<span class="diff-del">-        await FollowUp.findByIdAndUpdate(id, { $set: { status: FollowUpStatus.RESCHEDULED } });</span>
+<span class="diff-add">+        await this.cancelScheduledNotifications(existing.sequenceNumbers);</span>
+<span class="diff-add">+        await FollowUp.findByIdAndUpdate(id, { $set: { status: FollowUpStatus.RESCHEDULED, sequenceNumbers: null } });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        const patientRepo = PatientRepository.getInstance();</span>
+<span class="diff-add">+        const patient = await patientRepo.findOneById(existing.patientId);</span>
+<span class="diff-add">+        const patientName = patient?.FullName || &quot;&quot;;</span>
+ 
+<span class="diff-del">-        // Create new follow-up linked to the original</span>
+         const newFollowUp = await FollowUp.create({
+           patientId: existing.patientId,
+           recruiterEmail: userEmail,
+<span class="diff-hunk">@@ -223,12 +347,24 @@ export class FollowUpController {</span>
+           notes: notes || existing.notes || &quot;&quot;,
+           createdByEmail: userEmail,
+           rescheduledFrom: id,
+<span class="diff-add">+          userTimezone: userTimezone || existing.userTimezone || &quot;UTC&quot;,</span>
+         });
+ 
+<span class="diff-add">+        const newSequenceNumbers = await this.scheduleNotifications(</span>
+<span class="diff-add">+          newFollowUp._id.toString(),</span>
+<span class="diff-add">+          parsedDate,</span>
+<span class="diff-add">+          userEmail,</span>
+<span class="diff-add">+          patientName</span>
+<span class="diff-add">+        );</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        if (Object.keys(newSequenceNumbers).length &gt; 0) {</span>
+<span class="diff-add">+          await FollowUp.findByIdAndUpdate(newFollowUp._id, { $set: { sequenceNumbers: newSequenceNumbers } });</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+</span>
+         const isOverdue = newFollowUp.status === FollowUpStatus.UPCOMING &amp;&amp; newFollowUp.followUpDate &lt; new Date();
+         return res.status(200).json({
+           status: true,
+<span class="diff-del">-          data: { ...newFollowUp.toObject(), isOverdue },</span>
+<span class="diff-add">+          data: { ...newFollowUp.toObject(), sequenceNumbers: newSequenceNumbers, isOverdue },</span>
+           message: &quot;Follow-up rescheduled successfully&quot;,
+         });
+       }
+<span class="diff-hunk">@@ -254,12 +390,18 @@ export class FollowUpController {</span>
+       }
+ 
+       const { id } = req.params;
+<span class="diff-del">-      const result = await FollowUp.findOneAndDelete({ _id: id, recruiterEmail: userEmail });</span>
+<span class="diff-add">+      const existing = await FollowUp.findOne({ _id: id, recruiterEmail: userEmail });</span>
+ 
+<span class="diff-del">-      if (!result) {</span>
+<span class="diff-add">+      if (!existing) {</span>
+         return res.status(404).json({ status: false, message: &quot;Follow-up not found&quot; });
+       }
+ 
+<span class="diff-add">+      if (existing.sequenceNumbers) {</span>
+<span class="diff-add">+        await this.cancelScheduledNotifications(existing.sequenceNumbers);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      await FollowUp.findOneAndDelete({ _id: id, recruiterEmail: userEmail });</span>
+<span class="diff-add">+</span>
+       return res.status(200).json({ status: true, message: &quot;Follow-up deleted successfully&quot; });
+     } catch (error) {
+       appLogger.error(&quot;FollowUpController/deleteFollowUp error:&quot;, error);
+<span class="diff-hunk">diff --git a/models/mongodb/follow_up.ts b/models/mongodb/follow_up.ts</span>
+<span class="diff-hunk">index 6fc8555..95cbf7e 100644</span>
+<span class="diff-hunk">--- a/models/mongodb/follow_up.ts</span>
+<span class="diff-hunk">+++ b/models/mongodb/follow_up.ts</span>
+<span class="diff-hunk">@@ -46,6 +46,26 @@ const FollowUpSchema: Schema&lt;IFollowUp&gt; = new Schema&lt;IFollowUp&gt;(</span>
+       required: false,
+       type: Date,
+     },
+<span class="diff-add">+    userTimezone: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+      default: &quot;UTC&quot;,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    sequenceNumbers: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: {</span>
+<span class="diff-add">+        reminder15min: {</span>
+<span class="diff-add">+          low: Number,</span>
+<span class="diff-add">+          high: Number,</span>
+<span class="diff-add">+          unsigned: Boolean,</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+        reminderOverdue: {</span>
+<span class="diff-add">+          low: Number,</span>
+<span class="diff-add">+          high: Number,</span>
+<span class="diff-add">+          unsigned: Boolean,</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      },</span>
+<span class="diff-add">+    },</span>
+   },
+   {
+     versionKey: false,
+<span class="diff-hunk">diff --git a/service/messageHandlers/followupNotificationHandler.ts b/service/messageHandlers/followupNotificationHandler.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..a3d20f8</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/service/messageHandlers/followupNotificationHandler.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,113 @@</span>
+<span class="diff-add">+import { FollowUp } from &quot;../../models/mongodb/follow_up&quot;;</span>
+<span class="diff-add">+import { FollowUpStatus } from &quot;../../types/follow_up&quot;;</span>
+<span class="diff-add">+import { ServiceBusUtils } from &quot;../../utils/serviceBus&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;../../utils/logger&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const env = process.env.NODE_ENV || &quot;development&quot;;</span>
+<span class="diff-add">+const NOTIFICATION_QUEUE = `${env}_services_communication`;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export async function followupNotificationHandler(message: any): Promise&lt;void&gt; {</span>
+<span class="diff-add">+  appLogger.info(&quot;Handling Followup Notification Message&quot;, message.body);</span>
+<span class="diff-add">+  const serviceBusUtils = ServiceBusUtils.getInstance();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  try {</span>
+<span class="diff-add">+    if (!message.body || typeof message.body !== &quot;object&quot;) {</span>
+<span class="diff-add">+      appLogger.error(&quot;Invalid message format: No body found.&quot;);</span>
+<span class="diff-add">+      return;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (typeof message.body.type !== &quot;string&quot;) {</span>
+<span class="diff-add">+      appLogger.error(&quot;Invalid message format: Type is missing or not a string.&quot;);</span>
+<span class="diff-add">+      return;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (typeof message.body.data !== &quot;object&quot;) {</span>
+<span class="diff-add">+      appLogger.error(&quot;Invalid message data format: Data is missing or not an object.&quot;);</span>
+<span class="diff-add">+      return;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const eventData = message.body.data;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (typeof eventData.event !== &quot;string&quot;) {</span>
+<span class="diff-add">+      appLogger.error(&quot;Invalid event data: event name is missing or not a string.&quot;);</span>
+<span class="diff-add">+      return;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const { event, followupId, recruiterEmail, patientName, dueDate } = eventData;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const followup = await FollowUp.findById(followupId);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (!followup) {</span>
+<span class="diff-add">+      appLogger.warn(`Followup ${followupId} not found`);</span>
+<span class="diff-add">+      return;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (followup.status !== FollowUpStatus.UPCOMING) {</span>
+<span class="diff-add">+      appLogger.info(`Followup ${followupId} status is ${followup.status}, skipping notification`);</span>
+<span class="diff-add">+      return;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    switch (event) {</span>
+<span class="diff-add">+      case &quot;followup-reminder-15min&quot;:</span>
+<span class="diff-add">+        await sendSocketNotificationEvent(recruiterEmail, patientName, dueDate, &quot;15min&quot;, serviceBusUtils);</span>
+<span class="diff-add">+        break;</span>
+<span class="diff-add">+      case &quot;followup-reminder-overdue&quot;:</span>
+<span class="diff-add">+        await sendSocketNotificationEvent(recruiterEmail, patientName, dueDate, &quot;overdue&quot;, serviceBusUtils);</span>
+<span class="diff-add">+        break;</span>
+<span class="diff-add">+      default:</span>
+<span class="diff-add">+        appLogger.warn(`No handler found for followup event: ${event}`);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  } catch (error) {</span>
+<span class="diff-add">+    appLogger.error(&quot;Error processing followup notification message:&quot;, error);</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+async function sendSocketNotificationEvent(</span>
+<span class="diff-add">+  recruiterEmail: string,</span>
+<span class="diff-add">+  patientName: string,</span>
+<span class="diff-add">+  dueDate: string,</span>
+<span class="diff-add">+  reminderType: &quot;15min&quot; | &quot;overdue&quot;,</span>
+<span class="diff-add">+  serviceBusUtils: ServiceBusUtils</span>
+<span class="diff-add">+): Promise&lt;void&gt; {</span>
+<span class="diff-add">+  try {</span>
+<span class="diff-add">+    console.log(&quot;[FOLLOWUP] Patient Service bus received&quot;, reminderType);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const dueDateTime = new Date(dueDate).toLocaleString();</span>
+<span class="diff-add">+    let socketEvent = &quot;followup-reminder&quot;;</span>
+<span class="diff-add">+    let title = &quot;Follow-up Reminder&quot;;</span>
+<span class="diff-add">+    let content = `📞 Reminder: You have a follow-up call with ${patientName} scheduled for ${dueDateTime} in 15 minutes`;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (reminderType === &quot;overdue&quot;) {</span>
+<span class="diff-add">+      socketEvent = &quot;followup-overdue&quot;;</span>
+<span class="diff-add">+      title = &quot;Follow-up Overdue&quot;;</span>
+<span class="diff-add">+      content = `⚠️ Overdue: Follow-up call with ${patientName} (due ${dueDateTime}) is overdue — status: upcoming`;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const socketNotificationMessage = {</span>
+<span class="diff-add">+      body: {</span>
+<span class="diff-add">+        type: &quot;notificationHandler&quot;,</span>
+<span class="diff-add">+        data: {</span>
+<span class="diff-add">+          event: &quot;send-socket-notification&quot;,</span>
+<span class="diff-add">+          data: {</span>
+<span class="diff-add">+            userEmail: recruiterEmail,</span>
+<span class="diff-add">+            socketEvent,</span>
+<span class="diff-add">+            type: &quot;followup&quot;,</span>
+<span class="diff-add">+            socketValue: {</span>
+<span class="diff-add">+              title,</span>
+<span class="diff-add">+              content,</span>
+<span class="diff-add">+              type: reminderType === &quot;15min&quot; ? &quot;reminder&quot; : &quot;overdue&quot;,</span>
+<span class="diff-add">+              dueDate,</span>
+<span class="diff-add">+              patientName,</span>
+<span class="diff-add">+            },</span>
+<span class="diff-add">+          },</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      },</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+    console.log(&quot;[FOLLOWUP] Notification Service bus called&quot;, JSON.stringify(socketNotificationMessage));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    await serviceBusUtils.sendMessage(NOTIFICATION_QUEUE, socketNotificationMessage);</span>
+<span class="diff-add">+    appLogger.info(`Socket notification event sent for ${reminderType} reminder to ${recruiterEmail}`);</span>
+<span class="diff-add">+  } catch (error) {</span>
+<span class="diff-add">+    appLogger.error(&quot;Error sending socket notification event:&quot;, error);</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/service/messageHandlers/index.ts b/service/messageHandlers/index.ts</span>
+<span class="diff-hunk">index 563bc09..ac42b1e 100644</span>
+<span class="diff-hunk">--- a/service/messageHandlers/index.ts</span>
+<span class="diff-hunk">+++ b/service/messageHandlers/index.ts</span>
+<span class="diff-hunk">@@ -10,6 +10,7 @@</span>
+ 
+ export { patientDataHandler } from &quot;./patientDataHandler&quot;;
+ export { patientDataNonPriorityHandler } from &quot;./patientDataNonPriorityHandler&quot;;
+<span class="diff-add">+export { followupNotificationHandler } from &quot;./followupNotificationHandler&quot;;</span>
+ 
+ /**
+  * Future message handlers should be added here following the pattern demonstrated above.
+<span class="diff-hunk">diff --git a/service/messageHandlers/patientDataHandler.ts b/service/messageHandlers/patientDataHandler.ts</span>
+<span class="diff-hunk">index 0f6d370..0c0ab00 100644</span>
+<span class="diff-hunk">--- a/service/messageHandlers/patientDataHandler.ts</span>
+<span class="diff-hunk">+++ b/service/messageHandlers/patientDataHandler.ts</span>
+<span class="diff-hunk">@@ -3,6 +3,7 @@ import { BroadcastManageService } from &quot;../broadcast_manage&quot;;</span>
+ import { CommunicationHistoryService } from &quot;../communication_history&quot;;
+ import { ReferchRecordingEventData } from &quot;../../types/communication_history&quot;;
+ import { CommunicationHistoryController } from &quot;../../controllers/communication_history&quot;;
+<span class="diff-add">+import { followupNotificationHandler } from &quot;./followupNotificationHandler&quot;;</span>
+ import appLogger from &#x27;../../utils/logger&#x27;;
+ 
+ /**
+<span class="diff-hunk">@@ -102,6 +103,10 @@ export async function patientDataHandler(message: any): Promise&lt;void&gt; {</span>
+         appLogger.info(`🚀 ~ patientDataHandler.ts:98 ~ patientDataHandler ~ refetchedRecordings:`, refetchedRecordings); // Need for debugging
+         break;
+       }
+<span class="diff-add">+      case &quot;followup-reminder-15min&quot;:</span>
+<span class="diff-add">+      case &quot;followup-reminder-overdue&quot;:</span>
+<span class="diff-add">+        await followupNotificationHandler(message);</span>
+<span class="diff-add">+        break;</span>
+ 
+       // Add other cases as necessary
+       // case &#x27;another-message-type&#x27;:
+<span class="diff-hunk">diff --git a/types/follow_up.ts b/types/follow_up.ts</span>
+<span class="diff-hunk">index 071962c..6e319bf 100644</span>
+<span class="diff-hunk">--- a/types/follow_up.ts</span>
+<span class="diff-hunk">+++ b/types/follow_up.ts</span>
+<span class="diff-hunk">@@ -8,6 +8,12 @@ export enum FollowUpStatus {</span>
+   CANCELLED = &quot;cancelled&quot;,
+ }
+ 
+<span class="diff-add">+interface SequenceNumber {</span>
+<span class="diff-add">+  low: number;</span>
+<span class="diff-add">+  high: number;</span>
+<span class="diff-add">+  unsigned: boolean;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+ /**
+  * Represents the body of a follow-up record.
+  * @interface
+<span class="diff-hunk">@@ -21,6 +27,11 @@ export interface FollowUpBody {</span>
+   createdByEmail: string;
+   rescheduledFrom?: string;
+   completedAt?: Date;
+<span class="diff-add">+  userTimezone?: string;</span>
+<span class="diff-add">+  sequenceNumbers?: {</span>
+<span class="diff-add">+    reminder15min?: SequenceNumber;</span>
+<span class="diff-add">+    reminderOverdue?: SequenceNumber;</span>
+<span class="diff-add">+  };</span>
+ }
+ 
+ export interface FollowUpResponse extends FollowUpBody {</pre></section>
+</body></html>

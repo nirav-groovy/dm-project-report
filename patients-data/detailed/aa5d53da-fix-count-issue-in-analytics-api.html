@@ -1,0 +1,170 @@
+<!doctype html><html><head><meta charset="utf-8"><title>aa5d53da — Fix count issue in analytics API</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>Fix count issue in analytics API <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>aa5d53da2715d10eb4e66f19a343d5f58d0849ee</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-22T12:40:37+05:30</td></tr><tr><td>Diff</td><td>+22 / -29 across 2 file(s)</td></tr><tr><td>Buckets</td><td>bugfix, messaging</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/follow_up.ts</code></td><td>+10</td><td>-3</td></tr><tr><td><code>controllers/notification_activity.ts</code></td><td>+12</td><td>-26</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (1)</summary><ul><li><code>controllers/follow_up.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/patients-data/node_modules/typescript/lib/typescript.js:153117
+  function&quot;getUnmatchedAttributes(</code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/follow_up.ts b/controllers/follow_up.ts</span>
+<span class="diff-hunk">index 8b465b8..2c0b39d 100644</span>
+<span class="diff-hunk">--- a/controllers/follow_up.ts</span>
+<span class="diff-hunk">+++ b/controllers/follow_up.ts</span>
+<span class="diff-hunk">@@ -101,13 +101,12 @@ export class FollowUpController {</span>
+         query.followUpDate = { $gte: startOfDay, $lte: endOfDay };
+       }
+ 
+<span class="diff-del">-      // Apply status-based filter</span>
+       if (filter === &quot;upcoming&quot;) {
+         query.status = FollowUpStatus.UPCOMING;
+<span class="diff-del">-        if (!start_date) query.followUpDate = { $gte: now };</span>
+<span class="diff-add">+        query.followUpDate = { ...query.followUpDate, $gte: now };</span>
+       } else if (filter === &quot;overdue&quot;) {
+         query.status = FollowUpStatus.UPCOMING;
+<span class="diff-del">-        if (!start_date) query.followUpDate = { $lt: now };</span>
+<span class="diff-add">+        query.followUpDate = { ...query.followUpDate, $lt: now };</span>
+       } else if (filter === &quot;completed&quot;) {
+         query.status = FollowUpStatus.COMPLETED;
+       } else if (filter === &quot;rescheduled&quot;) {
+<span class="diff-hunk">@@ -197,6 +196,14 @@ export class FollowUpController {</span>
+         updateData.notes = notes;
+       }
+ 
+<span class="diff-add">+      if (followUpDate !== undefined &amp;&amp; status !== FollowUpStatus.RESCHEDULED) {</span>
+<span class="diff-add">+        const parsedEditDate = new Date(followUpDate);</span>
+<span class="diff-add">+        if (Number.isNaN(parsedEditDate.getTime())) {</span>
+<span class="diff-add">+          return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format&quot; });</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+        updateData.followUpDate = parsedEditDate;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+       // Handle reschedule: create new follow-up linked to original
+       if (status === FollowUpStatus.RESCHEDULED &amp;&amp; followUpDate) {
+         const parsedDate = new Date(followUpDate);
+<span class="diff-hunk">diff --git a/controllers/notification_activity.ts b/controllers/notification_activity.ts</span>
+<span class="diff-hunk">index bf88215..9896f7b 100644</span>
+<span class="diff-hunk">--- a/controllers/notification_activity.ts</span>
+<span class="diff-hunk">+++ b/controllers/notification_activity.ts</span>
+<span class="diff-hunk">@@ -197,6 +197,7 @@ export class NotificationActivityController {</span>
+     const smsQuery: Record&lt;string, any&gt; = {
+       ...comBase,
+       type: CommunicationType.sms,
+<span class="diff-add">+      direction: DirectionType.outbound,</span>
+     };
+ 
+     const followUpQuery: Record&lt;string, any&gt; = {
+<span class="diff-hunk">@@ -281,6 +282,7 @@ export class NotificationActivityController {</span>
+       query.direction = DirectionType.inbound;
+     } else if (status === NotificationActivityStatus.SMS) {
+       query.type = CommunicationType.sms;
+<span class="diff-add">+      query.direction = DirectionType.outbound;</span>
+     }
+ 
+     if (comSearchCondition) {
+<span class="diff-hunk">@@ -408,62 +410,46 @@ export class NotificationActivityController {</span>
+ 
+   /**
+    * Enriches outbound SMS records with replyStatus (Replied, Pending, NoReply).
+<span class="diff-add">+   * If patient replies even once, ALL messages to that patient marked Replied.</span>
+    */
+   private async enrichWithReplyStatus(data: any[]): Promise&lt;any[]&gt; {
+<span class="diff-del">-    const outboundSms = data.filter((d) =&gt; d.direction === DirectionType.outbound);</span>
+<span class="diff-del">-    if (outboundSms.length === 0) return data;</span>
+<span class="diff-del">-</span>
+<span class="diff-del">-    const patientPhones = [...new Set(outboundSms.map((d) =&gt; d.to).filter((p): p is string =&gt; Boolean(p)))];</span>
+<span class="diff-add">+    const patientPhones = [...new Set(data.map((d) =&gt; d.to).filter((p): p is string =&gt; Boolean(p)))];</span>
+     if (patientPhones.length === 0) return data;
+ 
+<span class="diff-del">-    // For each phone, find the overall latest outbound sent_at and latest inbound received_at</span>
+<span class="diff-add">+    // For each phone, check if any inbound reply exists</span>
+     const latestInteractions = await CommunicationHistory.aggregate([
+       {
+         $match: {
+           $or: [
+<span class="diff-del">-            { to: { $in: patientPhones }, direction: DirectionType.outbound, type: CommunicationType.sms },</span>
+             { from: { $in: patientPhones }, direction: DirectionType.inbound, type: CommunicationType.sms },
+           ],
+         },
+       },
+       {
+         $group: {
+<span class="diff-del">-          _id: {</span>
+<span class="diff-del">-            phone: { $cond: [{ $eq: [&quot;$direction&quot;, DirectionType.outbound] }, &quot;$to&quot;, &quot;$from&quot;] },</span>
+<span class="diff-del">-          },</span>
+<span class="diff-del">-          latestOutboundSentAt: {</span>
+<span class="diff-del">-            $max: { $cond: [{ $eq: [&quot;$direction&quot;, DirectionType.outbound] }, &quot;$sent_at&quot;, null] },</span>
+<span class="diff-del">-          },</span>
+<span class="diff-del">-          latestInboundReceivedAt: {</span>
+<span class="diff-del">-            $max: { $cond: [{ $eq: [&quot;$direction&quot;, DirectionType.inbound] }, &quot;$received_at&quot;, null] },</span>
+<span class="diff-del">-          },</span>
+<span class="diff-add">+          _id: &quot;$from&quot;,</span>
+<span class="diff-add">+          latestInboundReceivedAt: { $max: &quot;$received_at&quot; },</span>
+         },
+       },
+     ]);
+ 
+<span class="diff-del">-    const latestInteractionMap = new Map(latestInteractions.map((li: any) =&gt; [li._id.phone, li]));</span>
+<span class="diff-add">+    const latestInteractionMap = new Map(latestInteractions.map((li: any) =&gt; [li._id, li]));</span>
+ 
+     const now = moment();
+     const pendingThreshold = params.sms_reply_status.pending_threshold_hours;
+     const replyWindow = params.sms_reply_status.reply_window_days;
+ 
+     return data.map((item) =&gt; {
+<span class="diff-del">-      if (item.direction !== DirectionType.outbound || item.type !== CommunicationType.sms) {</span>
+<span class="diff-del">-        return item;</span>
+<span class="diff-del">-      }</span>
+<span class="diff-del">-</span>
+       const phone = item.to;
+       const interactions = latestInteractionMap.get(phone);
+ 
+<span class="diff-del">-      let replyStatus = &quot;NoReply&quot;; // Default</span>
+<span class="diff-add">+      let replyStatus = &quot;NoReply&quot;;</span>
+ 
+<span class="diff-del">-      if (interactions) {</span>
+<span class="diff-add">+      if (interactions?.latestInboundReceivedAt) {</span>
+         const itemSentAt = moment(item.sent_at);
+<span class="diff-del">-        const latestOutboundTime = moment(interactions.latestOutboundSentAt);</span>
+<span class="diff-del">-        const isMostRecentOutbound = itemSentAt.isSame(latestOutboundTime);</span>
+<span class="diff-del">-        const latestInboundTime = interactions.latestInboundReceivedAt ? moment(interactions.latestInboundReceivedAt) : null;</span>
+<span class="diff-add">+        const latestInboundTime = moment(interactions.latestInboundReceivedAt);</span>
+ 
+<span class="diff-del">-        if (isMostRecentOutbound &amp;&amp; latestInboundTime?.isAfter(itemSentAt)) {</span>
+<span class="diff-add">+        if (latestInboundTime.isAfter(itemSentAt)) {</span>
+           const windowEnd = itemSentAt.clone().add(replyWindow, &quot;days&quot;);
+           if (latestInboundTime.isSameOrBefore(windowEnd)) {
+             replyStatus = &quot;Replied&quot;;</pre></section>
+</body></html>

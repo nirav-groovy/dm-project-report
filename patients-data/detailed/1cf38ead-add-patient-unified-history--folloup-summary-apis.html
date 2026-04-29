@@ -1,0 +1,658 @@
+<!doctype html><html><head><meta charset="utf-8"><title>1cf38ead — Add patient-unified-history, folloup summary APIs</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>Add patient-unified-history, folloup summary APIs <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>1cf38ead086157dc507140f97747fac210a9bb1a</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-14T19:30:07+05:30</td></tr><tr><td>Diff</td><td>+438 / -13 across 10 file(s)</td></tr><tr><td>Buckets</td><td>db-schema, feature, messaging</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>1 HIPAA finding(s)</li><li>large diff (451 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/communication_history.ts</code></td><td>+36</td><td>-0</td></tr><tr><td><code>controllers/follow_up.ts</code></td><td>+68</td><td>-0</td></tr><tr><td><code>controllers/notification_activity.ts</code></td><td>+7</td><td>-7</td></tr><tr><td><code>models/mongodb/communication_history.ts</code></td><td>+1</td><td>-1</td></tr><tr><td><code>routes/communication_history.ts</code></td><td>+2</td><td>-0</td></tr><tr><td><code>routes/follow_up.ts</code></td><td>+48</td><td>-0</td></tr><tr><td><code>routes/notification_activity.ts</code></td><td>+5</td><td>-5</td></tr><tr><td><code>service/index.ts</code></td><td>+1</td><td>-0</td></tr><tr><td><code>service/unified_history.ts</code></td><td>+223</td><td>-0</td></tr><tr><td><code>types/communication_history.ts</code></td><td>+47</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (1)</h2><table><thead><tr><th>Control</th><th>Location</th><th>Snippet</th><th>Suggested fix</th></tr></thead><tbody><tr><td><strong>PHI in logs</strong></td><td><code>controllers/communication_history.ts:2113</code></td><td><pre>appLogger.info(&quot;CommunicationHistoryController/patientUnifiedHistory ::: &quot;, error?.message);</pre></td><td><div class='fix'>Logger/console call references PHI/PII variables. Either remove the field, or log only an opaque id (hashed user id, message id) instead of the PHI value.</div></td></tr></tbody></table></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (2)</summary><ul><li><code>routes/communication_history.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/patients-data/node_modules/typescript/lib/typescript.js:30772
+            const result = parseDel</code></li><li><code>service/unified_history.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/patients-data/node_modules/typescript/lib/typescript.js:20942
+ &quot;    },
+ ^^^^^^^
+
+SyntaxError: Inv</code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/communication_history.ts b/controllers/communication_history.ts</span>
+<span class="diff-hunk">index 38f331c..a991b69 100644</span>
+<span class="diff-hunk">--- a/controllers/communication_history.ts</span>
+<span class="diff-hunk">+++ b/controllers/communication_history.ts</span>
+<span class="diff-hunk">@@ -6,6 +6,7 @@ import {</span>
+   ResponseBotAuditService,
+   PatientService,
+   ConfigService,
+<span class="diff-add">+  UnifiedHistoryService,</span>
+ } from &quot;../service&quot;;
+ import { DepartmentRepository } from &quot;../repository&quot;;
+ import { CommonUtils, InternalAPIs } from &quot;../utils&quot;;
+<span class="diff-hunk">@@ -62,6 +63,7 @@ export class CommunicationHistoryController {</span>
+   private readonly responseBotAuditService: ResponseBotAuditService;
+   private readonly configService: ConfigService;
+   private readonly departmentRepository: DepartmentRepository;
+<span class="diff-add">+  private readonly unifiedHistoryService: UnifiedHistoryService;</span>
+ 
+   private twilioAccountSID: string;
+   private twilioAuthToken: string;
+<span class="diff-hunk">@@ -83,6 +85,7 @@ export class CommunicationHistoryController {</span>
+ 
+     this.commonUtils = CommonUtils.getInstance();
+     this.internalAPIUtils = InternalAPIs.getInstance();
+<span class="diff-add">+    this.unifiedHistoryService = UnifiedHistoryService.getInstance();</span>
+   }
+ 
+   public static async getInstance() {
+<span class="diff-hunk">@@ -2081,4 +2084,37 @@ export class CommunicationHistoryController {</span>
+ 
+     return `${hours.toString().padStart(2, &#x27;0&#x27;)}:${minutes.toString().padStart(2, &#x27;0&#x27;)}:${remainingSeconds.toString().padStart(2, &#x27;0&#x27;)}`;
+   }
+<span class="diff-add">+</span>
+<span class="diff-add">+  patientUnifiedHistory = async (req: UserRequest, res: Response): Promise&lt;Response&gt; =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const patient_id = req.query?.patient_id as string;</span>
+<span class="diff-add">+      if (!patient_id) {</span>
+<span class="diff-add">+        return res.status(400).json({ status: false, message: &quot;patient_id is required&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const { PAGE_LIMIT } = process.env;</span>
+<span class="diff-add">+      const pageSize = Number.parseInt(req.query?.pageSize as string) || Number.parseInt(PAGE_LIMIT ?? &quot;15&quot;);</span>
+<span class="diff-add">+      const pageNo = Number.parseInt(req.query?.PageNo as string) || 1;</span>
+<span class="diff-add">+      const filter = (req.query?.filter as string) || &quot;all&quot;;</span>
+<span class="diff-add">+      const refreshCache = req.query?.refreshCache === &quot;true&quot;;</span>
+<span class="diff-add">+      const userEmail = req.user?.Email || &quot;&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const result = await this.unifiedHistoryService.getUnifiedHistory(</span>
+<span class="diff-add">+        Number.parseInt(patient_id),</span>
+<span class="diff-add">+        filter,</span>
+<span class="diff-add">+        userEmail,</span>
+<span class="diff-add">+        pageNo,</span>
+<span class="diff-add">+        pageSize,</span>
+<span class="diff-add">+        refreshCache</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json(result);</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.info(&quot;CommunicationHistoryController/patientUnifiedHistory ::: &quot;, error?.message);</span>
+<span class="diff-add">+      return res.status(500).json({</span>
+<span class="diff-add">+        status: false,</span>
+<span class="diff-add">+        message: error.message || &quot;Failed to fetch unified history&quot;,</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+ }
+<span class="diff-hunk">diff --git a/controllers/follow_up.ts b/controllers/follow_up.ts</span>
+<span class="diff-hunk">index 958e0d7..8b465b8 100644</span>
+<span class="diff-hunk">--- a/controllers/follow_up.ts</span>
+<span class="diff-hunk">+++ b/controllers/follow_up.ts</span>
+<span class="diff-hunk">@@ -259,4 +259,72 @@ export class FollowUpController {</span>
+       return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });
+     }
+   };
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Dashboard summary for follow-ups.</span>
+<span class="diff-add">+   * GET /follow-up/summary</span>
+<span class="diff-add">+   * Returns: active count, overdue count, and today&#x27;s top 3 upcoming follow-ups.</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  getFollowUpSummary = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userEmail = req.user?.Email;</span>
+<span class="diff-add">+      if (!userEmail) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const now = new Date();</span>
+<span class="diff-add">+      const todayStart = new Date(now);</span>
+<span class="diff-add">+      todayStart.setUTCHours(0, 0, 0, 0);</span>
+<span class="diff-add">+      const todayEnd = new Date(now);</span>
+<span class="diff-add">+      todayEnd.setUTCHours(23, 59, 59, 999);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const baseQuery = { recruiterEmail: userEmail, status: FollowUpStatus.UPCOMING };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const [activeCount, overdueCount, todayFollowUps] = await Promise.all([</span>
+<span class="diff-add">+        // Active = upcoming + followUpDate &gt;= now</span>
+<span class="diff-add">+        FollowUp.countDocuments({ ...baseQuery, followUpDate: { $gte: now } }),</span>
+<span class="diff-add">+        // Overdue = upcoming + followUpDate &lt; now</span>
+<span class="diff-add">+        FollowUp.countDocuments({ ...baseQuery, followUpDate: { $lt: now } }),</span>
+<span class="diff-add">+        // Today&#x27;s top 3 upcoming</span>
+<span class="diff-add">+        FollowUp.find({</span>
+<span class="diff-add">+          ...baseQuery,</span>
+<span class="diff-add">+          followUpDate: { $gte: todayStart, $lte: todayEnd },</span>
+<span class="diff-add">+        })</span>
+<span class="diff-add">+          .sort({ followUpDate: 1 })</span>
+<span class="diff-add">+          .limit(3),</span>
+<span class="diff-add">+      ]);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Enrich today&#x27;s follow-ups with patient names</span>
+<span class="diff-add">+      const uniquePatientIds = [...new Set(todayFollowUps.map((d) =&gt; d.patientId))];</span>
+<span class="diff-add">+      const patientRepo = PatientRepository.getInstance();</span>
+<span class="diff-add">+      const patients = await Promise.all(</span>
+<span class="diff-add">+        uniquePatientIds.map((id) =&gt; patientRepo.findOneById(id))</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+      const patientMap = new Map(</span>
+<span class="diff-add">+        patients.filter(Boolean).map((p: any) =&gt; [p.Id, p])</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const enrichedToday = todayFollowUps.map((d) =&gt; {</span>
+<span class="diff-add">+        const patient = patientMap.get(d.patientId);</span>
+<span class="diff-add">+        const isOverdue = d.followUpDate &lt; now;</span>
+<span class="diff-add">+        return {</span>
+<span class="diff-add">+          ...d.toObject(),</span>
+<span class="diff-add">+          patientName: patient?.FullName || &quot;&quot;,</span>
+<span class="diff-add">+          isOverdue,</span>
+<span class="diff-add">+        };</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        data: {</span>
+<span class="diff-add">+          activeCount,</span>
+<span class="diff-add">+          overdueCount,</span>
+<span class="diff-add">+          todayFollowUps: enrichedToday,</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;FollowUpController/getFollowUpSummary error:&quot;, error);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+ }
+<span class="diff-hunk">diff --git a/controllers/notification_activity.ts b/controllers/notification_activity.ts</span>
+<span class="diff-hunk">index e2240cb..c4ee271 100644</span>
+<span class="diff-hunk">--- a/controllers/notification_activity.ts</span>
+<span class="diff-hunk">+++ b/controllers/notification_activity.ts</span>
+<span class="diff-hunk">@@ -20,11 +20,11 @@ export class NotificationActivityController {</span>
+   }
+ 
+   /**
+<span class="diff-del">-   * POST /notification-activity</span>
+<span class="diff-del">-   * Returns paginated notification activity for the logged-in user</span>
+<span class="diff-add">+   * POST /notification-analytics</span>
+<span class="diff-add">+   * Returns paginated notification analytics for the logged-in user</span>
+    * with counts for all categories.
+    */
+<span class="diff-del">-  getNotificationActivity = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+  getNotificationAnalytics = async (req: UserRequest, res: Response) =&gt; {</span>
+     try {
+       const userEmail = req.user?.Email;
+       if (!userEmail) {
+<span class="diff-hunk">@@ -85,7 +85,7 @@ export class NotificationActivityController {</span>
+         },
+       });
+     } catch (error: any) {
+<span class="diff-del">-      appLogger.error(&quot;NotificationActivityController/getNotificationActivity error:&quot;, error?.message);</span>
+<span class="diff-add">+      appLogger.error(&quot;NotificationActivityController/getNotificationAnalytics error:&quot;, error?.message);</span>
+       return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });
+     }
+   };
+<span class="diff-hunk">@@ -104,7 +104,7 @@ export class NotificationActivityController {</span>
+    * Builds $or search conditions for CommunicationHistory (patient name, number, ID).
+    */
+   private buildComSearchCondition(search?: string): any | null {
+<span class="diff-del">-    if (!search || !search.trim()) return null;</span>
+<span class="diff-add">+    if (!search?.trim()) return null;</span>
+ 
+     const searchStr = search.trim();
+     const searchRegex = new RegExp(searchStr, &quot;i&quot;);
+<span class="diff-hunk">@@ -133,7 +133,7 @@ export class NotificationActivityController {</span>
+    * Patient name search is handled post-query since FollowUp doesn&#x27;t store names.
+    */
+   private buildFollowUpSearchCondition(search?: string): any | null {
+<span class="diff-del">-    if (!search || !search.trim()) return null;</span>
+<span class="diff-add">+    if (!search?.trim()) return null;</span>
+ 
+     const parsedId = Number.parseInt(search.trim());
+     if (!Number.isNaN(parsedId)) {
+<span class="diff-hunk">@@ -286,7 +286,7 @@ export class NotificationActivityController {</span>
+ 
+     // If search is a non-numeric string (name search), we need to fetch more
+     // and filter post-enrichment since FollowUp doesn&#x27;t store patient names
+<span class="diff-del">-    const isNameSearch = search?.trim() &amp;&amp; isNaN(parseInt(search.trim()));</span>
+<span class="diff-add">+    const isNameSearch = search?.trim() &amp;&amp; Number.isNaN(Number.parseInt(search.trim()));</span>
+ 
+     let data: any[];
+     let total: number;
+<span class="diff-hunk">diff --git a/models/mongodb/communication_history.ts b/models/mongodb/communication_history.ts</span>
+<span class="diff-hunk">index 13fc8de..0b75da4 100644</span>
+<span class="diff-hunk">--- a/models/mongodb/communication_history.ts</span>
+<span class="diff-hunk">+++ b/models/mongodb/communication_history.ts</span>
+<span class="diff-hunk">@@ -203,7 +203,7 @@ CommunicationHistorySchema.index({ _id: 1 });</span>
+ CommunicationHistorySchema.index({ _id: -1 });
+ CommunicationHistorySchema.index({ communication_id: 1 });
+ CommunicationHistorySchema.index({ communication_id: -1 });
+<span class="diff-del">-CommunicationHistorySchema.index({ &quot;patient_obj.Id&quot;: 1, status: 1 });</span>
+<span class="diff-add">+CommunicationHistorySchema.index({ &quot;patient_obj.Id&quot;: 1, status: 1, type: 1 });</span>
+ CommunicationHistorySchema.index({ to: 1 });
+ CommunicationHistorySchema.index({ to: -1 });
+ CommunicationHistorySchema.index({ from: 1 });
+<span class="diff-hunk">diff --git a/routes/communication_history.ts b/routes/communication_history.ts</span>
+<span class="diff-hunk">index 030ceb5..c0edffa 100644</span>
+<span class="diff-hunk">--- a/routes/communication_history.ts</span>
+<span class="diff-hunk">+++ b/routes/communication_history.ts</span>
+<span class="diff-hunk">@@ -286,4 +286,6 @@ export default async (router: Router) =&gt; {</span>
+   );
+ 
+   router.post(&quot;/check-communication-status&quot;, communicationHistoryController.checkCommunicationStatus);
+<span class="diff-add">+</span>
+<span class="diff-add">+  router.get(&quot;/patient-unified-history&quot;, verifyToken, communicationHistoryController.patientUnifiedHistory);</span>
+ };
+<span class="diff-hunk">diff --git a/routes/follow_up.ts b/routes/follow_up.ts</span>
+<span class="diff-hunk">index 2b08b6d..19c8fef 100644</span>
+<span class="diff-hunk">--- a/routes/follow_up.ts</span>
+<span class="diff-hunk">+++ b/routes/follow_up.ts</span>
+<span class="diff-hunk">@@ -206,4 +206,52 @@ export default (router: Router) =&gt; {</span>
+    *         description: User not authenticated
+    */
+   router.delete(&quot;/follow-up/:id&quot;, verifyToken, followUpController.deleteFollowUp);
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /follow-up/summary:</span>
+<span class="diff-add">+   *   get:</span>
+<span class="diff-add">+   *     summary: Dashboard summary — active count, overdue count, today&#x27;s top 3</span>
+<span class="diff-add">+   *     tags: [FollowUp]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: Follow-up summary for dashboard widget</span>
+<span class="diff-add">+   *         content:</span>
+<span class="diff-add">+   *           application/json:</span>
+<span class="diff-add">+   *             schema:</span>
+<span class="diff-add">+   *               type: object</span>
+<span class="diff-add">+   *               properties:</span>
+<span class="diff-add">+   *                 status:</span>
+<span class="diff-add">+   *                   type: boolean</span>
+<span class="diff-add">+   *                 data:</span>
+<span class="diff-add">+   *                   type: object</span>
+<span class="diff-add">+   *                   properties:</span>
+<span class="diff-add">+   *                     activeCount:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     overdueCount:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     todayFollowUps:</span>
+<span class="diff-add">+   *                       type: array</span>
+<span class="diff-add">+   *                       items:</span>
+<span class="diff-add">+   *                         type: object</span>
+<span class="diff-add">+   *                         properties:</span>
+<span class="diff-add">+   *                           patientId:</span>
+<span class="diff-add">+   *                             type: number</span>
+<span class="diff-add">+   *                           followUpDate:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                             format: date-time</span>
+<span class="diff-add">+   *                           status:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                           notes:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                           patientName:</span>
+<span class="diff-add">+   *                             type: string</span>
+<span class="diff-add">+   *                           isOverdue:</span>
+<span class="diff-add">+   *                             type: boolean</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.get(&quot;/follow-up/summary&quot;, verifyToken, followUpController.getFollowUpSummary);</span>
+ };
+<span class="diff-hunk">diff --git a/routes/notification_activity.ts b/routes/notification_activity.ts</span>
+<span class="diff-hunk">index 618882b..e2722b0 100644</span>
+<span class="diff-hunk">--- a/routes/notification_activity.ts</span>
+<span class="diff-hunk">+++ b/routes/notification_activity.ts</span>
+<span class="diff-hunk">@@ -10,14 +10,14 @@ export default (router: Router) =&gt; {</span>
+    * @swagger
+    * tags:
+    *   name: NotificationActivity
+<span class="diff-del">-   *   description: API for fetching user notification activity (calls, SMS, follow-ups)</span>
+<span class="diff-add">+   *   description: API for fetching user notification analytics (calls, SMS, follow-ups)</span>
+    */
+ 
+   /**
+    * @swagger
+<span class="diff-del">-   * /notification-activity:</span>
+<span class="diff-add">+   * /notification-analytics:</span>
+    *   post:
+<span class="diff-del">-   *     summary: Get notification activity for the logged-in user</span>
+<span class="diff-add">+   *     summary: Get notification analytics for the logged-in user</span>
+    *     tags: [NotificationActivity]
+    *     security:
+    *       - bearerAuth: []
+<span class="diff-hunk">@@ -95,10 +95,10 @@ export default (router: Router) =&gt; {</span>
+    *         description: User not authenticated
+    */
+   router.post(
+<span class="diff-del">-    &quot;/notification-activity&quot;,</span>
+<span class="diff-add">+    &quot;/notification-analytics&quot;,</span>
+     verifyToken,
+     notificationActivityValidation,
+     Validation,
+<span class="diff-del">-    notificationActivityController.getNotificationActivity,</span>
+<span class="diff-add">+    notificationActivityController.getNotificationAnalytics,</span>
+   );
+ };
+<span class="diff-hunk">diff --git a/service/index.ts b/service/index.ts</span>
+<span class="diff-hunk">index 9c871bd..84ec210 100644</span>
+<span class="diff-hunk">--- a/service/index.ts</span>
+<span class="diff-hunk">+++ b/service/index.ts</span>
+<span class="diff-hunk">@@ -11,3 +11,4 @@ export { CommunicationResponseActionService } from &quot;./communication_response_act</span>
+ export { ResponseBotAuditService } from &quot;./response_bot_audit&quot;;
+ export { PatientConfigService } from &quot;./patient_config&quot;;
+ export { ConfigService } from &quot;./config&quot;;
+<span class="diff-add">+export { UnifiedHistoryService } from &quot;./unified_history&quot;;</span>
+<span class="diff-hunk">diff --git a/service/unified_history.ts b/service/unified_history.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..1d78016</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/service/unified_history.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,223 @@</span>
+<span class="diff-add">+import sequelize from &quot;sequelize&quot;;</span>
+<span class="diff-add">+import { connectMssqlDb } from &quot;../config/mssql&quot;;</span>
+<span class="diff-add">+import { CommunicationHistoryService } from &quot;./communication_history&quot;;</span>
+<span class="diff-add">+import { CommonUtils } from &quot;../utils&quot;;</span>
+<span class="diff-add">+import {</span>
+<span class="diff-add">+  UnifiedHistoryItem,</span>
+<span class="diff-add">+  ComtrakInteractionItem,</span>
+<span class="diff-add">+} from &quot;../types/communication_history&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;../utils/logger&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const CACHE_TTL_SECONDS = 180;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export class UnifiedHistoryService {</span>
+<span class="diff-add">+  private static instance: UnifiedHistoryService | null = null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  private readonly commonUtils: CommonUtils;</span>
+<span class="diff-add">+  private readonly communicationHistoryService: CommunicationHistoryService;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  constructor() {</span>
+<span class="diff-add">+    this.commonUtils = CommonUtils.getInstance();</span>
+<span class="diff-add">+    this.communicationHistoryService = CommunicationHistoryService.getInstance();</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  public static getInstance(): UnifiedHistoryService {</span>
+<span class="diff-add">+    if (!UnifiedHistoryService.instance) {</span>
+<span class="diff-add">+      UnifiedHistoryService.instance = new UnifiedHistoryService();</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+    return UnifiedHistoryService.instance;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async fetchComtrakInteractions(patientId: number): Promise&lt;ComtrakInteractionItem[]&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const db = await connectMssqlDb();</span>
+<span class="diff-add">+      const data: ComtrakInteractionItem[] = await db.sequelize.query(</span>
+<span class="diff-add">+        &quot;EXEC GetPatientInteractionsByPatientIdwithPagination @PatientId = :patientId&quot;,</span>
+<span class="diff-add">+        {</span>
+<span class="diff-add">+          type: sequelize.QueryTypes.SELECT,</span>
+<span class="diff-add">+          replacements: { patientId },</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+      );</span>
+<span class="diff-add">+      return data;</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.info(&quot;UnifiedHistoryService/fetchComtrakInteractions ::: &quot;, error?.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  normalizeComtrakItem(item: ComtrakInteractionItem, patientId: number): UnifiedHistoryItem {</span>
+<span class="diff-add">+    return {</span>
+<span class="diff-add">+      id: String(item.InteractionId),</span>
+<span class="diff-add">+      source: &quot;comtrak&quot;,</span>
+<span class="diff-add">+      type: &quot;interaction&quot;,</span>
+<span class="diff-add">+      direction: null,</span>
+<span class="diff-add">+      date: item.CreatedOn ? new Date(item.CreatedOn).toISOString() : new Date().toISOString(),</span>
+<span class="diff-add">+      content: item.Notes || null,</span>
+<span class="diff-add">+      performedBy: item.recruiterName || null,</span>
+<span class="diff-add">+      performedByEmail: item.recruiterEmail || null,</span>
+<span class="diff-add">+      patientId,</span>
+<span class="diff-add">+      studyName: item.StudyName || null,</span>
+<span class="diff-add">+      siteName: item.SiteName || null,</span>
+<span class="diff-add">+      status: item.Status || null,</span>
+<span class="diff-add">+      subStatusName: item.SubStatusName || null,</span>
+<span class="diff-add">+      confirmationName: item.ConfirmationName || null,</span>
+<span class="diff-add">+      scheduledDate: item.ScheduleDate || null,</span>
+<span class="diff-add">+      followUpDate: item.FollowUpDate || null,</span>
+<span class="diff-add">+      visitName: item.VisitName || null,</span>
+<span class="diff-add">+      studyVisitStatusName: item.StudyVisitStatusName ?? null,</span>
+<span class="diff-add">+      visitStatus: item.VisitStatus ?? null,</span>
+<span class="diff-add">+      callObj: null,</span>
+<span class="diff-add">+      subject: null,</span>
+<span class="diff-add">+      mediaUrl: null,</span>
+<span class="diff-add">+      senderConfig: null,</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  normalizeCommModuleItem(item: any, patientId: number): UnifiedHistoryItem {</span>
+<span class="diff-add">+    return {</span>
+<span class="diff-add">+      id: String(item._id || item.communication_id),</span>
+<span class="diff-add">+      source: &quot;commodule&quot;,</span>
+<span class="diff-add">+      type: item.type === &quot;phone&quot; ? &quot;phone&quot; : &quot;sms&quot;,</span>
+<span class="diff-add">+      direction: item.direction || null,</span>
+<span class="diff-add">+      date: item.sent_at ? new Date(item.sent_at).toISOString() : new Date().toISOString(),</span>
+<span class="diff-add">+      content: item.content?.body || null,</span>
+<span class="diff-add">+      performedBy: item.sender_name || item.user || null,</span>
+<span class="diff-add">+      performedByEmail: item.type === &quot;phone&quot; ? (item.call_obj?.recruiter_email || item.user || null) : (item.user || null),</span>
+<span class="diff-add">+      patientId,</span>
+<span class="diff-add">+      studyName: null,</span>
+<span class="diff-add">+      siteName: null,</span>
+<span class="diff-add">+      status: null,</span>
+<span class="diff-add">+      subStatusName: null,</span>
+<span class="diff-add">+      confirmationName: null,</span>
+<span class="diff-add">+      scheduledDate: null,</span>
+<span class="diff-add">+      followUpDate: null,</span>
+<span class="diff-add">+      visitName: null,</span>
+<span class="diff-add">+      studyVisitStatusName: null,</span>
+<span class="diff-add">+      visitStatus: null,</span>
+<span class="diff-add">+      callObj: item.call_obj || null,</span>
+<span class="diff-add">+      subject: item.subject || null,</span>
+<span class="diff-add">+      mediaUrl: item.media_url || null,</span>
+<span class="diff-add">+      senderConfig: item.sender_config || null,</span>
+<span class="diff-add">+    };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  private async fetchAndCacheAll(patientId: number) {</span>
+<span class="diff-add">+    let comtrakAvailable = true;</span>
+<span class="diff-add">+    let commoduleAvailable = true;</span>
+<span class="diff-add">+    let comtrakItems: ComtrakInteractionItem[] = [];</span>
+<span class="diff-add">+    let commModuleItems: any[] = [];</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const [comtrakResult, commModuleResult] = await Promise.allSettled([</span>
+<span class="diff-add">+      this.fetchComtrakInteractions(patientId),</span>
+<span class="diff-add">+      this.communicationHistoryService.getCommunicationHistory(0, 0, {</span>
+<span class="diff-add">+        &quot;patient_obj.Id&quot;: patientId,</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        type: { $in: [&quot;phone&quot;, &quot;sms&quot;] },</span>
+<span class="diff-add">+      }, false, true),</span>
+<span class="diff-add">+    ]);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (comtrakResult.status === &quot;fulfilled&quot;) {</span>
+<span class="diff-add">+      comtrakItems = comtrakResult.value;</span>
+<span class="diff-add">+    } else {</span>
+<span class="diff-add">+      comtrakAvailable = false;</span>
+<span class="diff-add">+      appLogger.info(&quot;UnifiedHistoryService/fetchAndCacheAll ~ Comtrak fetch failed:&quot;, comtrakResult.reason?.message);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (commModuleResult.status === &quot;fulfilled&quot;) {</span>
+<span class="diff-add">+      commModuleItems = commModuleResult.value?.data || [];</span>
+<span class="diff-add">+    } else {</span>
+<span class="diff-add">+      commoduleAvailable = false;</span>
+<span class="diff-add">+      appLogger.info(&quot;UnifiedHistoryService/fetchAndCacheAll ~ CommModule fetch failed:&quot;, commModuleResult.reason?.message);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    if (!comtrakAvailable &amp;&amp; !commoduleAvailable) {</span>
+<span class="diff-add">+      throw new Error(&quot;Both data sources failed&quot;);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const normalizedComtrak = comtrakItems.map((item) =&gt; this.normalizeComtrakItem(item, patientId));</span>
+<span class="diff-add">+    const normalizedCommModule = commModuleItems.map((item: any) =&gt; this.normalizeCommModuleItem(item, patientId));</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    // TODO: Consider stripping heavy fields (callObj, senderConfig, mediaUrl) from cache</span>
+<span class="diff-add">+    // and fetching them on-demand to reduce Redis memory usage</span>
+<span class="diff-add">+    const merged = [...normalizedComtrak, ...normalizedCommModule];</span>
+<span class="diff-add">+    merged.sort((a, b) =&gt; new Date(b.date).getTime() - new Date(a.date).getTime());</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    const cachedAt = new Date().toISOString();</span>
+<span class="diff-add">+    const cachePayload = { data: merged, cachedAt };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      await this.commonUtils.setCache(`unified:${patientId}`, cachePayload, CACHE_TTL_SECONDS);</span>
+<span class="diff-add">+    } catch (cacheError: any) {</span>
+<span class="diff-add">+      appLogger.info(&quot;UnifiedHistoryService/fetchAndCacheAll ~ Cache set failed:&quot;, cacheError?.message);</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+    return { merged, cachedAt, comtrakAvailable, commoduleAvailable };</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  async getUnifiedHistory(</span>
+<span class="diff-add">+    patientId: number,</span>
+<span class="diff-add">+    filter: string,</span>
+<span class="diff-add">+    userEmail: string,</span>
+<span class="diff-add">+    pageNo: number,</span>
+<span class="diff-add">+    pageSize: number,</span>
+<span class="diff-add">+    refreshCache: boolean = false</span>
+<span class="diff-add">+  ) {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const cacheKey = `unified:${patientId}`;</span>
+<span class="diff-add">+      let comtrakAvailable = true;</span>
+<span class="diff-add">+      let commoduleAvailable = true;</span>
+<span class="diff-add">+      let allItems: UnifiedHistoryItem[];</span>
+<span class="diff-add">+      let cachedAt: string | null = null;</span>
+<span class="diff-add">+      let fromCache = false;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const cached = refreshCache ? null : await this.commonUtils.getCache(cacheKey);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (cached?.data &amp;&amp; cached?.cachedAt) {</span>
+<span class="diff-add">+        allItems = cached.data as UnifiedHistoryItem[];</span>
+<span class="diff-add">+        cachedAt = cached.cachedAt;</span>
+<span class="diff-add">+        fromCache = true;</span>
+<span class="diff-add">+      } else {</span>
+<span class="diff-add">+        const result = await this.fetchAndCacheAll(patientId);</span>
+<span class="diff-add">+        allItems = result.merged;</span>
+<span class="diff-add">+        cachedAt = result.cachedAt;</span>
+<span class="diff-add">+        comtrakAvailable = result.comtrakAvailable;</span>
+<span class="diff-add">+        commoduleAvailable = result.commoduleAvailable;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Apply &quot;my&quot; filter in-memory (no separate cache needed)</span>
+<span class="diff-add">+      let filtered = allItems;</span>
+<span class="diff-add">+      if (filter === &quot;my&quot; &amp;&amp; userEmail) {</span>
+<span class="diff-add">+        const lowerEmail = userEmail.toLowerCase();</span>
+<span class="diff-add">+        filtered = allItems.filter((item) =&gt;</span>
+<span class="diff-add">+          item.performedByEmail?.toLowerCase() === lowerEmail</span>
+<span class="diff-add">+        );</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const totalCount = filtered.length;</span>
+<span class="diff-add">+      const start = (pageNo - 1) * pageSize;</span>
+<span class="diff-add">+      const paginatedData = filtered.slice(start, start + pageSize);</span>
+<span class="diff-add">+      const pagination = await this.commonUtils.pagination(totalCount, pageNo, pageSize);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const cacheExpiresAt = cachedAt</span>
+<span class="diff-add">+        ? new Date(new Date(cachedAt).getTime() + CACHE_TTL_SECONDS * 1000).toISOString()</span>
+<span class="diff-add">+        : null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return {</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        data: paginatedData,</span>
+<span class="diff-add">+        pagination,</span>
+<span class="diff-add">+        comtrakAvailable,</span>
+<span class="diff-add">+        commoduleAvailable,</span>
+<span class="diff-add">+        cache: {</span>
+<span class="diff-add">+          fromCache,</span>
+<span class="diff-add">+          cachedAt,</span>
+<span class="diff-add">+          expiresAt: cacheExpiresAt,</span>
+<span class="diff-add">+          ttl: CACHE_TTL_SECONDS,</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      };</span>
+<span class="diff-add">+    } catch (error: any) {</span>
+<span class="diff-add">+      appLogger.info(&quot;UnifiedHistoryService/getUnifiedHistory ::: &quot;, error?.message);</span>
+<span class="diff-add">+      throw error;</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/types/communication_history.ts b/types/communication_history.ts</span>
+<span class="diff-hunk">index c76076e..e8d0bf1 100644</span>
+<span class="diff-hunk">--- a/types/communication_history.ts</span>
+<span class="diff-hunk">+++ b/types/communication_history.ts</span>
+<span class="diff-hunk">@@ -275,3 +275,50 @@ export interface AttachmentObject {</span>
+   type?: string;
+   disposition?: string;
+ }
+<span class="diff-add">+</span>
+<span class="diff-add">+export interface UnifiedHistoryItem {</span>
+<span class="diff-add">+  id: string;</span>
+<span class="diff-add">+  source: &quot;comtrak&quot; | &quot;commodule&quot;;</span>
+<span class="diff-add">+  type: &quot;interaction&quot; | &quot;phone&quot; | &quot;sms&quot;;</span>
+<span class="diff-add">+  direction: &quot;inbound&quot; | &quot;outbound&quot; | null;</span>
+<span class="diff-add">+  date: string;</span>
+<span class="diff-add">+  content: string | null;</span>
+<span class="diff-add">+  performedBy: string | null;</span>
+<span class="diff-add">+  performedByEmail: string | null;</span>
+<span class="diff-add">+  patientId: number;</span>
+<span class="diff-add">+  studyName: string | null;</span>
+<span class="diff-add">+  siteName: string | null;</span>
+<span class="diff-add">+  status: string | null;</span>
+<span class="diff-add">+  subStatusName: string | null;</span>
+<span class="diff-add">+  confirmationName: string | null;</span>
+<span class="diff-add">+  scheduledDate: string | null;</span>
+<span class="diff-add">+  followUpDate: string | null;</span>
+<span class="diff-add">+  visitName: string | null;</span>
+<span class="diff-add">+  studyVisitStatusName: string | null;</span>
+<span class="diff-add">+  visitStatus: string | null;</span>
+<span class="diff-add">+  callObj: any | null;</span>
+<span class="diff-add">+  subject: string | null;</span>
+<span class="diff-add">+  mediaUrl: any | null;</span>
+<span class="diff-add">+  senderConfig: any | null;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export interface ComtrakInteractionItem {</span>
+<span class="diff-add">+  InteractionId: number;</span>
+<span class="diff-add">+  StudyId: number;</span>
+<span class="diff-add">+  SiteId: number | null;</span>
+<span class="diff-add">+  StudyName: string;</span>
+<span class="diff-add">+  SiteName: string;</span>
+<span class="diff-add">+  Status: string;</span>
+<span class="diff-add">+  CreatedOn: string;</span>
+<span class="diff-add">+  recruiterName: string;</span>
+<span class="diff-add">+  recruiterEmail: string | null;</span>
+<span class="diff-add">+  SubStatusName: string | null;</span>
+<span class="diff-add">+  ConfirmationName: string | null;</span>
+<span class="diff-add">+  ScheduleDate: string | null;</span>
+<span class="diff-add">+  FollowUpDate: string | null;</span>
+<span class="diff-add">+  Notes: string | null;</span>
+<span class="diff-add">+  IsEdit: boolean;</span>
+<span class="diff-add">+  VisitName: string | null;</span>
+<span class="diff-add">+  StudyVisitStatusName: string;</span>
+<span class="diff-add">+  VisitStatus: string;</span>
+<span class="diff-add">+}</span></pre></section>
+</body></html>

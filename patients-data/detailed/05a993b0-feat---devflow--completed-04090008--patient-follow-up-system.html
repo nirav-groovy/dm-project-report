@@ -1,0 +1,607 @@
+<!doctype html><html><head><meta charset="utf-8"><title>05a993b0 — feat: [DevFlow] Completed 04090008: Patient Follow-up System</title><style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,sans-serif;margin:0;padding:24px;background:#f6f8fa;color:#24292e;line-height:1.5;max-width:1400px}
+h1,h2,h3{border-bottom:1px solid #e1e4e8;padding-bottom:6px;margin-top:28px}
+h1{margin-top:0}
+table{border-collapse:collapse;width:100%;background:#fff;margin:12px 0}
+th,td{padding:8px 12px;text-align:left;border:1px solid #e1e4e8;vertical-align:top;font-size:13px}
+th{background:#f6f8fa;font-weight:600}
+table.kv{width:auto;min-width:480px}
+table.kv td:first-child{font-weight:600;background:#f6f8fa;width:160px;white-space:nowrap}
+table.kv td:nth-child(2){font-family:SFMono-Regular,Consolas,monospace;font-size:13px;word-break:break-all}
+code,pre{font-family:SFMono-Regular,Consolas,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid #e1e4e8;white-space:pre}
+.diff-add{background:#e6ffed;color:#22863a;display:block}
+.diff-del{background:#ffeef0;color:#b31d28;display:block}
+.diff-hunk{background:#f1f8ff;color:#005cc5;display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.b-imp{background:#d73a49}.b-reg{background:#6a737d}.b-skip{background:#959da5}
+.b-sev-err{background:#d73a49}.b-sev-warn{background:#dbab09}
+a{color:#0366d6;text-decoration:none}a:hover{text-decoration:underline}
+.crumb{color:#586069;margin-bottom:12px;font-size:13px}
+section{background:#fff;padding:16px 20px;border-radius:6px;border:1px solid #e1e4e8;margin:16px 0}
+.fix{background:#fffbdd;padding:8px;border-left:3px solid #dbab09;margin:6px 0;font-family:-apple-system,Segoe UI,sans-serif;font-size:13px}
+details>summary{cursor:pointer;padding:8px;background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;margin:6px 0;font-weight:600}
+.note{background:#f1f8ff;border-left:3px solid #0366d6;padding:8px 12px;margin:8px 0;font-size:13px}
+.count-link{font-weight:600}
+.count-zero{color:#959da5}
+</style></head><body>
+<div class="crumb"><a href="../index.html">← patients-data</a> · <a href="../../index.html">project-report</a></div>
+<h1>feat: [DevFlow] Completed 04090008: Patient Follow-up System <span class="badge b-imp">IMPORTANT</span></h1>
+<section id="meta"><h2>Metadata</h2><table class="kv"><tbody><tr><td>SHA</td><td>05a993b02d9ebbfa3a09a76c6952dfb71458bf5d</td></tr><tr><td>Author</td><td>Nirav Patel &lt;nirav.patel@groovyweb.co&gt;</td></tr><tr><td>Date</td><td>2026-04-10T11:55:02+05:30</td></tr><tr><td>Diff</td><td>+504 / -1 across 6 file(s)</td></tr><tr><td>Buckets</td><td>db-schema, feature</td></tr></tbody></table></section>
+<section id="importance"><h2>Importance</h2><ul><li>large diff (505 lines)</li><li>touches PHI-adjacent paths</li></ul></section>
+<section id="files"><h2>Changed files</h2><table><thead><tr><th>File</th><th>Add</th><th>Del</th></tr></thead><tbody><tr><td><code>controllers/follow_up.ts</code></td><td>+217</td><td>-0</td></tr><tr><td><code>controllers/index.ts</code></td><td>+2</td><td>-1</td></tr><tr><td><code>models/mongodb/follow_up.ts</code></td><td>+57</td><td>-0</td></tr><tr><td><code>routes/follow_up.ts</code></td><td>+196</td><td>-0</td></tr><tr><td><code>routes/index.ts</code></td><td>+2</td><td>-0</td></tr><tr><td><code>types/follow_up.ts</code></td><td>+30</td><td>-0</td></tr></tbody></table></section>
+<section id="hipaa"><h2>HIPAA findings (0)</h2><div class="note">No HIPAA findings on added lines.</div></section>
+<section id="eslint"><h2>ESLint findings (0)</h2><div class="note">No ESLint issues on changed lines.</div><details><summary>Scan errors (3)</summary><ul><li><code>controllers/follow_up.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+/home/groovy/Desktop/projects/dm-clinical/comm-module/patients-data/node_modules/typescript/lib/typescript.js:20942
+ &quot;    },
+ ^^^^^^^
+
+SyntaxError: Inv</code></li><li><code>controllers/index.ts</code><br><code></code></li><li><code>types/follow_up.ts</code><br><code>
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+SyntaxError: Failed to load parser &#x27;@typescript-eslint/parser&#x27; declared in &#x27;--config&#x27;: Unexpected token &#x27;export&#x27;
+    at compileSourceTextModule (node:i</code></li></ul></details></section>
+<section id="diff"><h2>Diff</h2><pre><span class="diff-hunk">diff --git a/controllers/follow_up.ts b/controllers/follow_up.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..f432d0d</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/controllers/follow_up.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,217 @@</span>
+<span class="diff-add">+import { Response } from &quot;express&quot;;</span>
+<span class="diff-add">+import { UserRequest } from &quot;../types/request&quot;;</span>
+<span class="diff-add">+import { FollowUp } from &quot;../models/mongodb/follow_up&quot;;</span>
+<span class="diff-add">+import { FollowUpStatus } from &quot;../types/follow_up&quot;;</span>
+<span class="diff-add">+import appLogger from &quot;../utils/logger&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Controller class responsible for managing patient follow-ups.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export class FollowUpController {</span>
+<span class="diff-add">+  private static instance: FollowUpController | null = null;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  public static getInstance() {</span>
+<span class="diff-add">+    FollowUpController.instance ??= new FollowUpController();</span>
+<span class="diff-add">+    return FollowUpController.instance;</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Create a new follow-up record.</span>
+<span class="diff-add">+   * POST /follow-up</span>
+<span class="diff-add">+   * Body: { patientId, followUpDate, notes? }</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  createFollowUp = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userId = req.user?._id;</span>
+<span class="diff-add">+      if (!userId) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const { patientId, followUpDate, notes } = req.body;</span>
+<span class="diff-add">+      if (!patientId || !followUpDate) {</span>
+<span class="diff-add">+        return res.status(400).json({</span>
+<span class="diff-add">+          status: false,</span>
+<span class="diff-add">+          message: &quot;patientId and followUpDate are required&quot;,</span>
+<span class="diff-add">+        });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const parsedDate = new Date(followUpDate);</span>
+<span class="diff-add">+      if (isNaN(parsedDate.getTime())) {</span>
+<span class="diff-add">+        return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const followUp = await FollowUp.create({</span>
+<span class="diff-add">+        patientId,</span>
+<span class="diff-add">+        recruiterId: userId,</span>
+<span class="diff-add">+        followUpDate: parsedDate,</span>
+<span class="diff-add">+        status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-add">+        notes: notes || &quot;&quot;,</span>
+<span class="diff-add">+        createdBy: userId,</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(201).json({ status: true, data: followUp });</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;FollowUpController/createFollowUp error:&quot;, error);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Get follow-ups for the logged-in user with optional filtering.</span>
+<span class="diff-add">+   * GET /follow-up/list?filter=upcoming|overdue|all&amp;patientId=123&amp;page=1&amp;limit=20</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  getFollowUps = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userId = req.user?._id;</span>
+<span class="diff-add">+      if (!userId) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const {</span>
+<span class="diff-add">+        filter = &quot;all&quot;,</span>
+<span class="diff-add">+        patientId,</span>
+<span class="diff-add">+        page = &quot;1&quot;,</span>
+<span class="diff-add">+        limit = &quot;20&quot;,</span>
+<span class="diff-add">+      } = req.query as Record&lt;string, string&gt;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const pageNum = Math.max(1, parseInt(page));</span>
+<span class="diff-add">+      const limitNum = Math.min(100, Math.max(1, parseInt(limit)));</span>
+<span class="diff-add">+      const skip = (pageNum - 1) * limitNum;</span>
+<span class="diff-add">+      const now = new Date();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const query: any = { recruiterId: userId };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (patientId) {</span>
+<span class="diff-add">+        query.patientId = parseInt(patientId);</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (filter === &quot;upcoming&quot;) {</span>
+<span class="diff-add">+        query.followUpDate = { $gte: now };</span>
+<span class="diff-add">+        query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+      } else if (filter === &quot;overdue&quot;) {</span>
+<span class="diff-add">+        query.followUpDate = { $lt: now };</span>
+<span class="diff-add">+        query.status = FollowUpStatus.UPCOMING;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const [data, total] = await Promise.all([</span>
+<span class="diff-add">+        FollowUp.find(query).sort({ followUpDate: 1 }).skip(skip).limit(limitNum),</span>
+<span class="diff-add">+        FollowUp.countDocuments(query),</span>
+<span class="diff-add">+      ]);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({</span>
+<span class="diff-add">+        status: true,</span>
+<span class="diff-add">+        data,</span>
+<span class="diff-add">+        pagination: {</span>
+<span class="diff-add">+          page: pageNum,</span>
+<span class="diff-add">+          limit: limitNum,</span>
+<span class="diff-add">+          total,</span>
+<span class="diff-add">+          totalPages: Math.ceil(total / limitNum),</span>
+<span class="diff-add">+        },</span>
+<span class="diff-add">+      });</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;FollowUpController/getFollowUps error:&quot;, error);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Update a follow-up record (status, notes, reschedule).</span>
+<span class="diff-add">+   * PUT /follow-up/:id</span>
+<span class="diff-add">+   * Body: { status?, notes?, followUpDate? (for reschedule) }</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  updateFollowUp = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userId = req.user?._id;</span>
+<span class="diff-add">+      if (!userId) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const { id } = req.params;</span>
+<span class="diff-add">+      const { status, notes, followUpDate } = req.body;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const existing = await FollowUp.findOne({ _id: id, recruiterId: userId });</span>
+<span class="diff-add">+      if (!existing) {</span>
+<span class="diff-add">+        return res.status(404).json({ status: false, message: &quot;Follow-up not found&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const updateData: any = {};</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (status) {</span>
+<span class="diff-add">+        const validStatuses = Object.values(FollowUpStatus);</span>
+<span class="diff-add">+        if (!validStatuses.includes(status)) {</span>
+<span class="diff-add">+          return res.status(400).json({</span>
+<span class="diff-add">+            status: false,</span>
+<span class="diff-add">+            message: `status must be one of: ${validStatuses.join(&quot;, &quot;)}`,</span>
+<span class="diff-add">+          });</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+        updateData.status = status;</span>
+<span class="diff-add">+        if (status === FollowUpStatus.COMPLETED) {</span>
+<span class="diff-add">+          updateData.completedAt = new Date();</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (notes !== undefined) {</span>
+<span class="diff-add">+        updateData.notes = notes;</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      // Handle reschedule: create new follow-up linked to original</span>
+<span class="diff-add">+      if (status === FollowUpStatus.RESCHEDULED &amp;&amp; followUpDate) {</span>
+<span class="diff-add">+        const parsedDate = new Date(followUpDate);</span>
+<span class="diff-add">+        if (isNaN(parsedDate.getTime())) {</span>
+<span class="diff-add">+          return res.status(400).json({ status: false, message: &quot;Invalid followUpDate format&quot; });</span>
+<span class="diff-add">+        }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        // Mark original as rescheduled</span>
+<span class="diff-add">+        await FollowUp.findByIdAndUpdate(id, { $set: { status: FollowUpStatus.RESCHEDULED } });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        // Create new follow-up linked to the original</span>
+<span class="diff-add">+        const newFollowUp = await FollowUp.create({</span>
+<span class="diff-add">+          patientId: existing.patientId,</span>
+<span class="diff-add">+          recruiterId: userId,</span>
+<span class="diff-add">+          followUpDate: parsedDate,</span>
+<span class="diff-add">+          status: FollowUpStatus.UPCOMING,</span>
+<span class="diff-add">+          notes: notes || existing.notes || &quot;&quot;,</span>
+<span class="diff-add">+          createdBy: userId,</span>
+<span class="diff-add">+          rescheduledFrom: id,</span>
+<span class="diff-add">+        });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+        return res.status(200).json({</span>
+<span class="diff-add">+          status: true,</span>
+<span class="diff-add">+          data: newFollowUp,</span>
+<span class="diff-add">+          message: &quot;Follow-up rescheduled successfully&quot;,</span>
+<span class="diff-add">+        });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const updated = await FollowUp.findByIdAndUpdate(id, { $set: updateData }, { new: true });</span>
+<span class="diff-add">+      return res.status(200).json({ status: true, data: updated });</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;FollowUpController/updateFollowUp error:&quot;, error);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * Delete a follow-up record.</span>
+<span class="diff-add">+   * DELETE /follow-up/:id</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  deleteFollowUp = async (req: UserRequest, res: Response) =&gt; {</span>
+<span class="diff-add">+    try {</span>
+<span class="diff-add">+      const userId = req.user?._id;</span>
+<span class="diff-add">+      if (!userId) {</span>
+<span class="diff-add">+        return res.status(401).json({ status: false, message: &quot;User not authenticated&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      const { id } = req.params;</span>
+<span class="diff-add">+      const result = await FollowUp.findOneAndDelete({ _id: id, recruiterId: userId });</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      if (!result) {</span>
+<span class="diff-add">+        return res.status(404).json({ status: false, message: &quot;Follow-up not found&quot; });</span>
+<span class="diff-add">+      }</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+      return res.status(200).json({ status: true, message: &quot;Follow-up deleted successfully&quot; });</span>
+<span class="diff-add">+    } catch (error) {</span>
+<span class="diff-add">+      appLogger.error(&quot;FollowUpController/deleteFollowUp error:&quot;, error);</span>
+<span class="diff-add">+      return res.status(500).json({ status: false, message: &quot;Internal server error&quot; });</span>
+<span class="diff-add">+    }</span>
+<span class="diff-add">+  };</span>
+<span class="diff-add">+}</span>
+<span class="diff-hunk">diff --git a/controllers/index.ts b/controllers/index.ts</span>
+<span class="diff-hunk">index 909d225..2a4f975 100644</span>
+<span class="diff-hunk">--- a/controllers/index.ts</span>
+<span class="diff-hunk">+++ b/controllers/index.ts</span>
+<span class="diff-hunk">@@ -1,4 +1,5 @@</span>
+ export { DataController } from &quot;./data&quot;;
+ export { PatientController } from &quot;./patient&quot;;
+ export { CommunicationHistoryController } from &quot;./communication_history&quot;;
+<span class="diff-del">-export { UsersController } from &quot;./users&quot;;</span>
+\ No newline at end of file
+<span class="diff-add">+export { UsersController } from &quot;./users&quot;;</span>
+<span class="diff-add">+export { FollowUpController } from &quot;./follow_up&quot;;</span>
+\ No newline at end of file
+<span class="diff-hunk">diff --git a/models/mongodb/follow_up.ts b/models/mongodb/follow_up.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..6d0befe</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/models/mongodb/follow_up.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,57 @@</span>
+<span class="diff-add">+import { Schema, Document, Model, model } from &quot;mongoose&quot;;</span>
+<span class="diff-add">+import { FollowUpBody, FollowUpStatus } from &quot;../../types/follow_up&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Interface representing a follow-up document.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+type IFollowUp = FollowUpBody &amp; Document;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const FollowUpSchema: Schema&lt;IFollowUp&gt; = new Schema&lt;IFollowUp&gt;(</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    patientId: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: Number,</span>
+<span class="diff-add">+      index: true,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    recruiterId: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: Number,</span>
+<span class="diff-add">+      index: true,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    followUpDate: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: Date,</span>
+<span class="diff-add">+      index: true,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    status: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+      enum: Object.values(FollowUpStatus),</span>
+<span class="diff-add">+      default: FollowUpStatus.UPCOMING,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    notes: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: String,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    createdBy: {</span>
+<span class="diff-add">+      required: true,</span>
+<span class="diff-add">+      type: Number,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    rescheduledFrom: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: Schema.Types.ObjectId,</span>
+<span class="diff-add">+      ref: &quot;FollowUp&quot;,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+    completedAt: {</span>
+<span class="diff-add">+      required: false,</span>
+<span class="diff-add">+      type: Date,</span>
+<span class="diff-add">+    },</span>
+<span class="diff-add">+  },</span>
+<span class="diff-add">+  {</span>
+<span class="diff-add">+    versionKey: false,</span>
+<span class="diff-add">+    collection: &quot;follow_ups&quot;,</span>
+<span class="diff-add">+    timestamps: true,</span>
+<span class="diff-add">+  }</span>
+<span class="diff-add">+);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export const FollowUp: Model&lt;IFollowUp&gt; = model&lt;IFollowUp&gt;(&quot;FollowUp&quot;, FollowUpSchema);</span>
+<span class="diff-hunk">diff --git a/routes/follow_up.ts b/routes/follow_up.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..4ad8f67</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/routes/follow_up.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,196 @@</span>
+<span class="diff-add">+import { Router } from &quot;express&quot;;</span>
+<span class="diff-add">+import { FollowUpController } from &quot;../controllers&quot;;</span>
+<span class="diff-add">+import { verifyToken } from &quot;../middlewares/auth&quot;;</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+const followUpController = FollowUpController.getInstance();</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export default (router: Router) =&gt; {</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * tags:</span>
+<span class="diff-add">+   *   name: FollowUp</span>
+<span class="diff-add">+   *   description: API endpoints for managing patient follow-ups (recalls/callbacks)</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /follow-up:</span>
+<span class="diff-add">+   *   post:</span>
+<span class="diff-add">+   *     summary: Create a new patient follow-up record</span>
+<span class="diff-add">+   *     tags: [FollowUp]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     requestBody:</span>
+<span class="diff-add">+   *       required: true</span>
+<span class="diff-add">+   *       content:</span>
+<span class="diff-add">+   *         application/json:</span>
+<span class="diff-add">+   *           schema:</span>
+<span class="diff-add">+   *             type: object</span>
+<span class="diff-add">+   *             required:</span>
+<span class="diff-add">+   *               - patientId</span>
+<span class="diff-add">+   *               - followUpDate</span>
+<span class="diff-add">+   *             properties:</span>
+<span class="diff-add">+   *               patientId:</span>
+<span class="diff-add">+   *                 type: number</span>
+<span class="diff-add">+   *                 description: The ID of the patient</span>
+<span class="diff-add">+   *               followUpDate:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 format: date-time</span>
+<span class="diff-add">+   *                 description: Scheduled follow-up date and time (ISO 8601)</span>
+<span class="diff-add">+   *               notes:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 description: Optional notes for the follow-up</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       201:</span>
+<span class="diff-add">+   *         description: Follow-up created successfully</span>
+<span class="diff-add">+   *       400:</span>
+<span class="diff-add">+   *         description: Missing required fields or invalid date</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.post(&quot;/follow-up&quot;, verifyToken, followUpController.createFollowUp);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /follow-up/list:</span>
+<span class="diff-add">+   *   get:</span>
+<span class="diff-add">+   *     summary: Get follow-ups for the logged-in user</span>
+<span class="diff-add">+   *     tags: [FollowUp]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     parameters:</span>
+<span class="diff-add">+   *       - in: query</span>
+<span class="diff-add">+   *         name: filter</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: string</span>
+<span class="diff-add">+   *           enum: [upcoming, overdue, all]</span>
+<span class="diff-add">+   *           default: all</span>
+<span class="diff-add">+   *         description: Filter follow-ups by status relative to current time</span>
+<span class="diff-add">+   *       - in: query</span>
+<span class="diff-add">+   *         name: patientId</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: number</span>
+<span class="diff-add">+   *         description: Filter by specific patient ID</span>
+<span class="diff-add">+   *       - in: query</span>
+<span class="diff-add">+   *         name: page</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: number</span>
+<span class="diff-add">+   *           default: 1</span>
+<span class="diff-add">+   *         description: Page number for pagination</span>
+<span class="diff-add">+   *       - in: query</span>
+<span class="diff-add">+   *         name: limit</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: number</span>
+<span class="diff-add">+   *           default: 20</span>
+<span class="diff-add">+   *         description: Number of records per page (max 100)</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: List of follow-ups with pagination</span>
+<span class="diff-add">+   *         content:</span>
+<span class="diff-add">+   *           application/json:</span>
+<span class="diff-add">+   *             schema:</span>
+<span class="diff-add">+   *               type: object</span>
+<span class="diff-add">+   *               properties:</span>
+<span class="diff-add">+   *                 status:</span>
+<span class="diff-add">+   *                   type: boolean</span>
+<span class="diff-add">+   *                 data:</span>
+<span class="diff-add">+   *                   type: array</span>
+<span class="diff-add">+   *                   items:</span>
+<span class="diff-add">+   *                     type: object</span>
+<span class="diff-add">+   *                     properties:</span>
+<span class="diff-add">+   *                       patientId:</span>
+<span class="diff-add">+   *                         type: number</span>
+<span class="diff-add">+   *                       recruiterId:</span>
+<span class="diff-add">+   *                         type: number</span>
+<span class="diff-add">+   *                       followUpDate:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                         format: date-time</span>
+<span class="diff-add">+   *                       status:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                         enum: [upcoming, completed, rescheduled, cancelled]</span>
+<span class="diff-add">+   *                       notes:</span>
+<span class="diff-add">+   *                         type: string</span>
+<span class="diff-add">+   *                 pagination:</span>
+<span class="diff-add">+   *                   type: object</span>
+<span class="diff-add">+   *                   properties:</span>
+<span class="diff-add">+   *                     page:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     limit:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     total:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *                     totalPages:</span>
+<span class="diff-add">+   *                       type: number</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.get(&quot;/follow-up/list&quot;, verifyToken, followUpController.getFollowUps);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /follow-up/{id}:</span>
+<span class="diff-add">+   *   put:</span>
+<span class="diff-add">+   *     summary: Update a follow-up record (status, notes, or reschedule)</span>
+<span class="diff-add">+   *     tags: [FollowUp]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     parameters:</span>
+<span class="diff-add">+   *       - in: path</span>
+<span class="diff-add">+   *         name: id</span>
+<span class="diff-add">+   *         required: true</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: string</span>
+<span class="diff-add">+   *         description: The follow-up record ID</span>
+<span class="diff-add">+   *     requestBody:</span>
+<span class="diff-add">+   *       required: true</span>
+<span class="diff-add">+   *       content:</span>
+<span class="diff-add">+   *         application/json:</span>
+<span class="diff-add">+   *           schema:</span>
+<span class="diff-add">+   *             type: object</span>
+<span class="diff-add">+   *             properties:</span>
+<span class="diff-add">+   *               status:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 enum: [upcoming, completed, rescheduled, cancelled]</span>
+<span class="diff-add">+   *               notes:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *               followUpDate:</span>
+<span class="diff-add">+   *                 type: string</span>
+<span class="diff-add">+   *                 format: date-time</span>
+<span class="diff-add">+   *                 description: New date when rescheduling</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: Follow-up updated successfully</span>
+<span class="diff-add">+   *       400:</span>
+<span class="diff-add">+   *         description: Invalid status or date format</span>
+<span class="diff-add">+   *       404:</span>
+<span class="diff-add">+   *         description: Follow-up not found</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.put(&quot;/follow-up/:id&quot;, verifyToken, followUpController.updateFollowUp);</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+  /**</span>
+<span class="diff-add">+   * @swagger</span>
+<span class="diff-add">+   * /follow-up/{id}:</span>
+<span class="diff-add">+   *   delete:</span>
+<span class="diff-add">+   *     summary: Delete a follow-up record</span>
+<span class="diff-add">+   *     tags: [FollowUp]</span>
+<span class="diff-add">+   *     security:</span>
+<span class="diff-add">+   *       - bearerAuth: []</span>
+<span class="diff-add">+   *     parameters:</span>
+<span class="diff-add">+   *       - in: path</span>
+<span class="diff-add">+   *         name: id</span>
+<span class="diff-add">+   *         required: true</span>
+<span class="diff-add">+   *         schema:</span>
+<span class="diff-add">+   *           type: string</span>
+<span class="diff-add">+   *         description: The follow-up record ID</span>
+<span class="diff-add">+   *     responses:</span>
+<span class="diff-add">+   *       200:</span>
+<span class="diff-add">+   *         description: Follow-up deleted successfully</span>
+<span class="diff-add">+   *       404:</span>
+<span class="diff-add">+   *         description: Follow-up not found</span>
+<span class="diff-add">+   *       401:</span>
+<span class="diff-add">+   *         description: User not authenticated</span>
+<span class="diff-add">+   */</span>
+<span class="diff-add">+  router.delete(&quot;/follow-up/:id&quot;, verifyToken, followUpController.deleteFollowUp);</span>
+<span class="diff-add">+};</span>
+<span class="diff-hunk">diff --git a/routes/index.ts b/routes/index.ts</span>
+<span class="diff-hunk">index f6cd711..f364402 100644</span>
+<span class="diff-hunk">--- a/routes/index.ts</span>
+<span class="diff-hunk">+++ b/routes/index.ts</span>
+<span class="diff-hunk">@@ -3,6 +3,7 @@ import data from &quot;./data&quot;;</span>
+ import patient from &quot;./patient&quot;;
+ import user from &quot;./users&quot;;
+ import communication_history from &quot;./communication_history&quot;;
+<span class="diff-add">+import followUp from &quot;./follow_up&quot;;</span>
+ const router = express.Router();
+ 
+ export default (): Router =&gt; {
+<span class="diff-hunk">@@ -10,5 +11,6 @@ export default (): Router =&gt; {</span>
+   patient(router)
+   communication_history(router)
+   user(router)
+<span class="diff-add">+  followUp(router)</span>
+   return router;
+ };
+<span class="diff-hunk">diff --git a/types/follow_up.ts b/types/follow_up.ts</span>
+new file mode 100644
+<span class="diff-hunk">index 0000000..f21e13f</span>
+<span class="diff-hunk">--- /dev/null</span>
+<span class="diff-hunk">+++ b/types/follow_up.ts</span>
+<span class="diff-hunk">@@ -0,0 +1,30 @@</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Possible statuses for a patient follow-up record.</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export enum FollowUpStatus {</span>
+<span class="diff-add">+  UPCOMING = &quot;upcoming&quot;,</span>
+<span class="diff-add">+  COMPLETED = &quot;completed&quot;,</span>
+<span class="diff-add">+  RESCHEDULED = &quot;rescheduled&quot;,</span>
+<span class="diff-add">+  CANCELLED = &quot;cancelled&quot;,</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+/**</span>
+<span class="diff-add">+ * Represents the body of a follow-up record.</span>
+<span class="diff-add">+ * @interface</span>
+<span class="diff-add">+ */</span>
+<span class="diff-add">+export interface FollowUpBody {</span>
+<span class="diff-add">+  patientId: number;</span>
+<span class="diff-add">+  recruiterId: number;</span>
+<span class="diff-add">+  followUpDate: Date;</span>
+<span class="diff-add">+  status: FollowUpStatus;</span>
+<span class="diff-add">+  notes?: string;</span>
+<span class="diff-add">+  createdBy: number;</span>
+<span class="diff-add">+  rescheduledFrom?: string;</span>
+<span class="diff-add">+  completedAt?: Date;</span>
+<span class="diff-add">+}</span>
+<span class="diff-add">+</span>
+<span class="diff-add">+export interface FollowUpResponse extends FollowUpBody {</span>
+<span class="diff-add">+  _id: string;</span>
+<span class="diff-add">+  createdAt: Date;</span>
+<span class="diff-add">+  updatedAt: Date;</span>
+<span class="diff-add">+}</span></pre></section>
+</body></html>
