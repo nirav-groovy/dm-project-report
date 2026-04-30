@@ -40,11 +40,14 @@
   .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #d9e2ec; font-size: 12px; color: #829ab1; text-align: center; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 720px) { .two-col { grid-template-columns: 1fr; } }
+  .back-btn { display: inline-block; margin-bottom: 16px; padding: 8px 14px; background: #334e68; color: #fff; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; }
+  .back-btn:hover { background: #486581; }
 </style>
 </head>
 <body>
 <div class="container">
 
+<a href="index.html" class="back-btn">&larr; Back to report</a>
 <h1>comm-module — Test Coverage Engagement Report</h1>
 <p class="subtitle">Before vs After comparison of unit-test footprint across all sub-modules</p>
 
